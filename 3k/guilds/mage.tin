@@ -62,15 +62,15 @@
 
 
 #nop Auto cast protection spells. Put them in priority order. Spamming in case there is lag.
-        #if (my[prots][SS] && mage[auto][SS]) {!cast $mage[affect][SS]};
-        #if (my[prots][MG] && mage[auto][MG]) {!cast $mage[affect][MG]};
-	#if (my[prots][B] && mage[auto][B]) {!cast $mage[affect][B]};
-	#if (my[prots][MS] && mage[auto][MS]) {!cast $mage[affect][MS]};
-	#if (my[prots][A] && mage[auto][A]) {!cast $mage[affect][A]};
-	#if (my[prots][PG] && mage[auto][PG]) {!cast $mage[affect][PG]};
-	#if (my[prots][PE] && mage[auto][PE]) {!cast $mage[affect][PE]};
-	#if (my[prots][PS] && mage[auto][PS]) {!cast $mage[affect][PS]};
-	#if (my[prots][M] && mage[auto][M]) {!cast $mage[affect][M]};
+        #if (!my[prots][SS] && mage[auto][SS]) {!cast $mage[affect][SS]};
+        #if (!my[prots][MG] && mage[auto][MG]) {!cast $mage[affect][MG]};
+	#if (!my[prots][B] && mage[auto][B]) {!cast $mage[affect][B]};
+	#if (!my[prots][MS] && mage[auto][MS]) {!cast $mage[affect][MS]};
+	#if (!my[prots][A] && mage[auto][A]) {!cast $mage[affect][A]};
+	#if (!my[prots][PG] && mage[auto][PG]) {!cast $mage[affect][PG]};
+	#if (!my[prots][PE] && mage[auto][PE]) {!cast $mage[affect][PE]};
+	#if (!my[prots][PS] && mage[auto][PS]) {!cast $mage[affect][PS]};
+	#if (!my[prots][M] && mage[auto][M]) {!cast $mage[affect][M]};
 	
 	#if (my[gem]<80) {!ffetch gem;#var mage[gem_fetching] {1}};
 
