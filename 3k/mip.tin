@@ -52,7 +52,9 @@
 		#var areacap {};	
 	};
 	#if {"$draw[caption]" == "on"} {
-		#SHOWME {<088> <128>$world_cap <068>Uptime: <168>$uptime_cap  <038>Reboot: <138>$reboot_cap  <fca>Lag: <fcb>$lag_cap  <228>Idle: $idle_cap<088>  $areacap<088>} {$chat[height]+1}
+		#SHOWME {<088> <128>$world_cap <068>Uptime:
+<168>$uptime_cap  <038>Reboot: <138>$reboot_cap  <fca>Lag:
+<fcb>$lag_cap  <228>Idle: $idle_cap<088>  XP/30: $xp30 $areacap<088>} {$chat[height]+1}
 	}
 }
 
@@ -484,9 +486,30 @@
 
 #ALIAS {.mipProcessGlineMage} {
         #IF {%1 == 1} {
-                #NOP
-        }; #ELSEIF {%1 == 2} {
-                #NOP
+          #REGEX {$mip[gline][1]} {Gem:%d\%}   {#VAR {my[gem]}{&1}}{#VAR {my[gem]}{0}};
+          #REGEX {$mip[gline][1]} {MC:%d}      {#VAR {my[mental_cognition]}{&1}}{#VAR {my[mental_cognition]}{0}};
+          #REGEX {$mip[gline][1]} {SS>}        {#VAR {my[prots][SS]} {1}}{#VAR {my[prots][SS]}{0}};
+          #REGEX {$mip[gline][1]} {PA}         {#VAR {my[prots][PA]} {1}}{#VAR {my[prots][PA]}{0}};
+          #REGEX {$mip[gline][1]} {{PS|PS!}}   {#VAR {my[prots][PS]} {1}}{#VAR {my[prots][PS]}{0}};
+          #REGEX {$mip[gline][1]} {{<gA|<yA}}  {#VAR {my[prots][A]}  {1}}{#VAR {my[prots][A]}{0}};
+          #REGEX {$mip[gline][1]} {{<gB|<yB}}  {#VAR {my[prots][B]}  {1}}{#VAR {my[prots][B]}{0}};
+          #REGEX {$mip[gline][1]} {MB}         {#VAR {my[prots][MB]} {1}}{#VAR {my[prots][MB]}{0}};
+          #REGEX {$mip[gline][1]} {MS}         {#VAR {my[prots][MS]}   {1}}{#VAR {my[prots][MS]}{0}};
+          #REGEX {$mip[gline][1]} {{M>|M!>}}   {#VAR {my[prots][M]}   {1}}{#VAR {my[prots][M]}{0}};
+          #REGEX {$mip[gline][1]} {RS}         {#VAR {my[prots][RS]}   {1}}{#VAR {my[prots][RS]}{0}};
+          #REGEX {$mip[gline][1]} {MG>}        {#VAR {my[prots][MG]}   {1}}{#VAR {my[prots][MG]}{0}};
+          #REGEX {$mip[gline][1]} {mg}         {#VAR {my[prots][mg]}   {1}}{#VAR {my[prots][mg]}{0}};
+          #REGEX {$mip[gline][1]} {PG}         {#VAR {my[prots][PG]}   {1}}{#VAR {my[prots][PG]}{0}};
+          #REGEX {$mip[gline][1]} {PE}         {#VAR {my[prots][PE]}   {1}}{#VAR {my[prots][PE]}{0}};
+          #REGEX {$mip[gline][1]} {*I%d*}      {#VAR {my[immersion][rounds]} {&1}}{#VAR {my[immersion][rounds]}{0}};
+        }; 
+        #ELSEIF {%1 == 2} {
+          #REGEX {$mip[gline][2]}{G: %d\/%d\%}{#VAR {my[golem][current]}{&1};#VAR {my[golem][reset]}{&2}};
+          #REGEX {$mip[gline][2]}{S: %d\/%d\%}{#VAR {my[super][current]}{&1};#VAR {my[super][reset]}{&2}};
+          #REGEX {$mip[gline][2]}{G2N:%d\%}{#VAR {my[g2n]}{&1}};
+          #REGEX {$mip[gline][2]}{I: %d}{#VAR {my[immersion][count]}{&1}};
+         #REGEX {$mip[gline][2]}{{golem|Straw|Rope|Wood|Flesh|Clay|Stone|Iron|Crystal}:%+0..5p}
+{#VAR {my[summon][golem]}{&2}} {#VAR {my[summon][golem]}{0}};
         }; #ELSE {
                 #ECHO {<171> Invalid Gline Number <088>}
         }

@@ -1,0 +1,123 @@
+#class {mage} {open}
+
+#var guild mage
+
+#var mage[affect][S] {shield};
+#var mage[affect][A] {armor};
+#var mage[affect][PE] {protection from evil};
+#var mage[affect][PG] {protection from good};
+#var mage[affect][mg] {minor globe};
+#var mage[affect][MG] {major globe};
+#var mage[affect][SS] {stoneskin};
+#var mage[affect][B] {blink};
+#var mage[affect][DS] {detect scrying};
+#var mage[affect][MB] {mind blank};
+#var mage[affect][b] {blur};
+#var mage[affect][PA] {prismatic aura};
+#var mage[affect][MI] {mirror image};
+#var mage[affect][I] {invisibility};
+#var mage[affect][MS] {magnificent shield};
+#var mage[affect][PS] {prismatic sphere};
+#var mage[affect][M] {mantle};
+#var mage[affect][L] {levitate};
+#var mage[affect][<P>] {perform};
+
+#var mage[auto][S] {0};
+#var mage[auto][A] {1};
+#var mage[auto][PE] {0};
+#var mage[auto][PG] {1};
+#var mage[auto][mg] {0};
+#var mage[auto][MG] {1};
+#var mage[auto][SS] {1};
+#var mage[auto][B] {1};
+#var mage[auto][DS] {0};
+#var mage[auto][MB] {0};
+#var mage[auto][b] {0};
+#var mage[auto][PA] {0};
+#var mage[auto][MI] {0};
+#var mage[auto][I] {0};
+#var mage[auto][MS] {1};
+#var mage[auto][PS] {0};
+#var mage[auto][M] {0};
+#var mage[auto][L] {0};
+#var mage[auto][<P>] {0};
+
+#var mage[gem_fetching] {0};
+
+#act { HP: (\d+)/(\d+) SP: (\d+)/(\d+)} {
+	#var my[hp][current]	%1;
+	#var my[hp][max]	%2;
+	#var my[sp][current]    %3;
+	#var my[sp][max]        %4M
+
+#nop	#var my[hp][delta]	%4;
+#nop	#var my[gp1][current]	%5;
+#nop	#var my[gp1][max]	%6;
+#nop	#var my[gp1][delta]	%7;
+#nop	#var my[gp2][current]	%8;
+#nop	#var gxp		%9;
+#nop	#format {glvl} {%d} {$gxp};
+#nop	#math {gxp_per} {($gxp-$glvl)*100}
+
+
+
+#nop Auto cast protection spells. Put them in priority order. Spamming in case there is lag.
+        #if (my[prots][SS] && mage[auto][SS]) {!cast $mage[affect][SS]};
+        #if (my[prots][MG] && mage[auto][MG]) {!cast $mage[affect][MG]};
+	#if (my[prots][B] && mage[auto][B]) {!cast $mage[affect][B]};
+	#if (my[prots][MS] && mage[auto][MS]) {!cast $mage[affect][MS]};
+	#if (my[prots][A] && mage[auto][A]) {!cast $mage[affect][A]};
+	#if (my[prots][PG] && mage[auto][PG]) {!cast $mage[affect][PG]};
+	#if (my[prots][PE] && mage[auto][PE]) {!cast $mage[affect][PE]};
+	#if (my[prots][PS] && mage[auto][PS]) {!cast $mage[affect][PS]};
+	#if (my[prots][M] && mage[auto][M]) {!cast $mage[affect][M]};
+	
+	#if (my[gem]<80) {!ffetch gem;#var mage[gem_fetching] {1}};
+
+
+        #if (my[immersion][rounds]==0 && my[immersion][count]>0 && my[sp][current]<4000) {!cast mystic immersion}; 
+}
+
+#act {Xoox the fuzzy hedgehog hands something to Orthas.} {
+	#var mage[gem_fetching] {0};
+}
+
+#alias {update_status} {
+        #if {"$cooler" == "on" || $corpses[cooler] > 0} {
+                #format {sb1_cooler} {%+2s} {$corpses[cooler]};
+                #var {sb1_cooler} { CL:<130>$sb1_cooler<088>}
+        } {
+                #var {sb1_cooler} {}
+        };
+        #if {"$freezer" == "on" || $corpses[freezer] > 0} {
+                #format {sb2_freezer} {%+2s} {$corpses[freezer]};
+                #var {sb2_freezer} { FZ:<130>$sb2_freezer<088>}
+        } {
+                #var {sb2_freezer} {}
+        };
+        #var {my[hp][graph]}    {@graph{$my[hp][current];${my[hp][max]}}};
+        #var {my[gp1][graph]}   {@graph{$my[gp1][current];$my[gp1][max]}};
+        #var {my[gp2][graph]}   {@graph{$my[gp2][current];$my[gp2][max]}};
+#nop        #var {gxp_graph}        {@graph{$gxp_per;100}};
+        #var {enemy[graph]}     {@graph{$enemy[hp];100}};
+        #format {hp}            {%+4s} {@colscale{$my[hp][current];$my[hp][max]}};
+        #format {hp_max}        {%+4s} {<128>$my[hp][max]<088>};
+        #format {gp1}           {%+4s} {@colscale{$my[gp1][current];$my[gp1][max]}};
+        #format {gp1_max}	{%+4s} {<128>$my[gp1][max]<088>};
+        #format {gp2}           {%+3s} {@colscale{$my[gp2][current];$my[gp2][max]}};
+        #format {ehealth}       {%+6s} {@colscale{$enemy[hp];100}};
+#nop        #format {gxp_col}       {%+7s} {@colscale{$gxp;100}};
+#nop        #format {corpses[inventory]}     {%+2s} {$corpses[inventory]};
+        #format {corpses[coffin]}  {%+2s} {$corpses[coffin]};
+        #format {corpses[freezer]} {%+2s} {$corpses[freezer]};
+        #showme {<088>HP:$hp/$hp_max Sat:$gp1\%   Cnc: $gp2\%    Gxp:
+$my[g2n]\%  E:$ehealth\%    IC:<130>${corpses[inventory]}<088> ${sb1_cooler}} {-4};
+        #showme {H:${my[hp][graph]} P:${my[gp1][graph]} HT:${my[gp2][graph]} G:${gxp_graph} E:${enemy[graph]} CF:<130>${corpses[coffin]}<088>${sb2_freezer}} {-3};
+	#showme {$mip[gline][1]  $mip[gline][2]} {-6}
+}
+
+#alias {corpsetrig} {
+  #nop
+}
+
+#class {mage} {close}
