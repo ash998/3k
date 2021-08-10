@@ -97,7 +97,7 @@ $my[sp][current]<4000} {cast mystic immersion};
         };
         #var {my[hp][graph]}    {@graph{$my[hp][current];${my[hp][max]}}};
 	#var {my[sp][graph]} {@graph{$my[sp][current];${my[sp][max]}}}; 
-        #var {my[gp1][graph]}   {@graph{$my[gp1][current];$my[gp1][max]}};
+        #var {my[gp1][graph]}   {@graph{$my[gp1][current];100}};
         #var {my[gp2][graph]}   {@graph{$my[gp2][current];$my[gp2][max]}};
 #nop        #var {gxp_graph}        {@graph{$gxp_per;100}};
         #var {enemy[graph]}     {@graph{$enemy[hp];100}};
@@ -113,7 +113,7 @@ $my[sp][current]<4000} {cast mystic immersion};
         #format {corpses[freezer]} {%+2s} {$corpses[freezer]};
         #showme {<088>HP:$hp/$hp_max Sat:$gp1\%   Cnc: $gp2\%    Gxp: $my[g2n]\%  E:$ehealth\%    IC:<130>${corpses[inventory]}<088> ${sb1_cooler}} {-4};
         #showme {HP:${my[hp][graph]} SP:${my[sp][graph]} Sat:${my[gp2][graph]} E:${enemy[graph]} CF:<130>${corpses[coffin]}<088>${sb2_freezer}} {-3};
-	#showme {$mip[gline][1]  $mip[gline][2]} {-6}
+	#showme {$mip[gline][1]  $mip[gline][2] <128>R:<088>$mip[round]} {-6}
 }
 
 #alias {corpsetrig} {
