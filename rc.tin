@@ -11,7 +11,7 @@
 #CONFIG           {MOUSE}		{ON}
 #CONFIG           {PACKET PATCH}	{0.80}
 #CONFIG           {REPEAT CHAR}		{!}
-#CONFIG           {REPEAT ENTER}	{ON}
+#CONFIG           {REPEAT ENTER}	{OFF}
 #CONFIG           {SCROLL LOCK}		{ON}
 #CONFIG           {SPEEDWALK}		{OFF}
 #CONFIG           {TINTIN CHAR}		{#}
@@ -30,6 +30,7 @@
 #PATHDIR          {u}	{d}	{16}
 #PATHDIR          {w}	{e}	{8}
 
+
 #EVENT {SESSION CONNECTED} {
 	#var world {%0};
 	#format logfile {.tt/logs/%0_%t.log} {%Y%m%d};
@@ -44,7 +45,7 @@
 #alias {switchto} {
         #zap;
         #if {"%0" == ""} {
-                connect inix
+                connect orthas
         } {
                 connect %0
         };
