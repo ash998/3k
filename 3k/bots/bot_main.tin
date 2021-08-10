@@ -46,15 +46,65 @@ prompt >$nl$
 	#var singlestep 1
 }
 
-#alias {_check_mob} {#NOP}
+#nop #alias {_check_mob} {#NOP}
+
+#act {{^:RS:}} {_room_short} {1};
+
+#alias {_room_short} {
+        #var stepping 1;
+        #var foundplayer 0;
+	#var goldfound 0;
+	#var itemfound 0;
+	#var foundmob 0;
+
+        #if {!$halt && $bot} {
+                #act {^>$} {
+	                #unact {^>$};
+	                _eval_room;
+                } {1}
+	}
+}
+
+#alias {_eval_room} {
+        #if {$itemfound && !$foundplayer && $vacuum} {
+	        #send !get all
+	};
+	
+	#if {$goldfound && !$foundplayer} {
+	        #send !divvy gold
+	};
+	
+	#if {!$foundmob || $foundplayer} {
+	        #var stepping 1;
+	        #path walk;
+	} {
+	        #var stepping 0;
+	        #if {"$mobname" != ""} {
+		        kill $mobname
+		};
+	}
+}
+
+#alias {_check_mob} {
+        #var foundmob {1+$foundmob};
+}
 
 #alias {..} {
-	#undelay gohome;
+        #act {{^:RS:}} {_room_short} {1};
+	#alias {_check_mob} {#var foundmob {1+$foundmob};};
+	#var halt 0;
+	#var bot 1;
+	#var stepping 1;
+	#send !glance;
+}
+
+#alias {..old} {
+        #undelay gohome;
 	#var bot 1;
 	#var halt 0;
 	#class {xbot} {open};
 	#delay {4};
-	#act {{^=S=}} {xx} {1};
+	#act {{^:RS:}} {xx} {1};
 	#alias {xx} {
 		#var stepping 1;
 		#var foundplayer 0;
@@ -65,7 +115,7 @@ prompt >$nl$
 				#send !get all
 			};
 			#if {$goldfound && !$foundplayer} {
-				#send !get coins
+				#send !divvy gold
 			};
 			#path walk;
 			#unact {^>$}
@@ -93,7 +143,7 @@ prompt >$nl$
 		}
 	};
 	#send !glance;
-	#class {xbot} {close}
+	#class {xbot} {close};
 }
 
 #act { gold coins.$} {
@@ -128,14 +178,13 @@ prompt >$nl$
 #alias {nodogtank} {#unalias {kill}};
 
 #act {^=K=%1 dealt the killing blow to} {
-	corpsetrig;
 	#if {!$singlestep} {
 		.bot
 	}
 } {1}
 
 /* Detect Players */
-#act {^=P= %*} {
+#act {^:P: %*} {
 	#var party_simple $party;
 	#list party_simple simplify;
 	#var party_found 0;
