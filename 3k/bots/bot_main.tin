@@ -20,7 +20,7 @@ prompt >$nl$
 #alias {.pause} {
 	#class {xbot} {kill};
 	#var stepping 0;
-	#alias {_check_mob} {.pause}
+	#var halt 1
 }
 
 #alias {.stop} {
