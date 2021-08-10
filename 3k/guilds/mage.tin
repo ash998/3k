@@ -44,11 +44,11 @@
 
 #var mage[gem_fetching] {0};
 
-#act { HP: (\d+)/(\d+) SP: (\d+)/(\d+)} {
-	#var my[hp][current]	%1;
-	#var my[hp][max]	%2;
-	#var my[sp][current]    %3;
-	#var my[sp][max]        %4M
+#act {{^ HP: (\d+)/(\d+) SP: (\d+)/(\d+)}} {
+	#var my[hp][current]	{%2};
+	#var my[hp][max]	{%3};
+	#var my[sp][current]    {%4};
+	#var my[sp][max]        {%5};
 
 #nop	#var my[hp][delta]	%4;
 #nop	#var my[gp1][current]	%5;
@@ -57,25 +57,25 @@
 #nop	#var my[gp2][current]	%8;
 #nop	#var gxp		%9;
 #nop	#format {glvl} {%d} {$gxp};
-#nop	#math {gxp_per} {($gxp-$glvl)*100}
+#nop	#math {gxp_per} {($gxp-$glvl)*100};
 
-
-
-#nop Auto cast protection spells. Put them in priority order. Spamming in case there is lag.
-        #if (!my[prots][SS] && mage[auto][SS]) {!cast $mage[affect][SS]};
-        #if (!my[prots][MG] && mage[auto][MG]) {!cast $mage[affect][MG]};
-	#if (!my[prots][B] && mage[auto][B]) {!cast $mage[affect][B]};
-	#if (!my[prots][MS] && mage[auto][MS]) {!cast $mage[affect][MS]};
-	#if (!my[prots][A] && mage[auto][A]) {!cast $mage[affect][A]};
-	#if (!my[prots][PG] && mage[auto][PG]) {!cast $mage[affect][PG]};
-	#if (!my[prots][PE] && mage[auto][PE]) {!cast $mage[affect][PE]};
-	#if (!my[prots][PS] && mage[auto][PS]) {!cast $mage[affect][PS]};
-	#if (!my[prots][M] && mage[auto][M]) {!cast $mage[affect][M]};
+#nop Auto cast protection spells. Put them in priority order. Spamming
+in case there is lag.;
+        #if {!$my[prots][SS] && $mage[auto][SS]} {cast $mage[affect][SS]};
+        #if {!$my[prots][MG] && $mage[auto][MG]} {cast $mage[affect][MG]};
+	#if {!$my[prots][B] && $mage[auto][B]} {cast $mage[affect][B]};
+	#if {!$my[prots][MS] && $mage[auto][MS]} {cast $mage[affect][MS]};
+	#if {!$my[prots][A] && $mage[auto][A]} {cast $mage[affect][A]};
+	#if {!$my[prots][PG] && $mage[auto][PG]} {cast $mage[affect][PG]};
+	#if {!$my[prots][PE] && $mage[auto][PE]} {cast $mage[affect][PE]};
+	#if {!$my[prots][PS] && $mage[auto][PS]} {cast $mage[affect][PS]};
+	#if {!$my[prots][M] && $mage[auto][M]} {cast $mage[affect][M]};
 	
-	#if (my[gem]<80) {!ffetch gem;#var mage[gem_fetching] {1}};
+	#if {$my[gem]<80} {ffetch gem;#var mage[gem_fetching] {1};};
 
 
-        #if (my[immersion][rounds]==0 && my[immersion][count]>0 && my[sp][current]<4000) {!cast mystic immersion}; 
+        #if {$my[immersion][rounds]==0 && $my[immersion][count]>0 &&
+$my[sp][current]<4000} {cast mystic immersion}; 
 }
 
 #act {Xoox the fuzzy hedgehog hands something to Orthas.} {
@@ -96,6 +96,7 @@
                 #var {sb2_freezer} {}
         };
         #var {my[hp][graph]}    {@graph{$my[hp][current];${my[hp][max]}}};
+	#var {my[sp][graph]} {@graph{$my[sp][current];${my[sp][max]}}}; 
         #var {my[gp1][graph]}   {@graph{$my[gp1][current];$my[gp1][max]}};
         #var {my[gp2][graph]}   {@graph{$my[gp2][current];$my[gp2][max]}};
 #nop        #var {gxp_graph}        {@graph{$gxp_per;100}};
@@ -110,14 +111,13 @@
 #nop        #format {corpses[inventory]}     {%+2s} {$corpses[inventory]};
         #format {corpses[coffin]}  {%+2s} {$corpses[coffin]};
         #format {corpses[freezer]} {%+2s} {$corpses[freezer]};
-        #showme {<088>HP:$hp/$hp_max Sat:$gp1\%   Cnc: $gp2\%    Gxp:
-$my[g2n]\%  E:$ehealth\%    IC:<130>${corpses[inventory]}<088> ${sb1_cooler}} {-4};
-        #showme {H:${my[hp][graph]} P:${my[gp1][graph]} HT:${my[gp2][graph]} G:${gxp_graph} E:${enemy[graph]} CF:<130>${corpses[coffin]}<088>${sb2_freezer}} {-3};
+        #showme {<088>HP:$hp/$hp_max Sat:$gp1\%   Cnc: $gp2\%    Gxp: $my[g2n]\%  E:$ehealth\%    IC:<130>${corpses[inventory]}<088> ${sb1_cooler}} {-4};
+        #showme {HP:${my[hp][graph]} SP:${my[sp][graph]} Sat:${my[gp2][graph]} E:${enemy[graph]} CF:<130>${corpses[coffin]}<088>${sb2_freezer}} {-3};
 	#showme {$mip[gline][1]  $mip[gline][2]} {-6}
 }
 
 #alias {corpsetrig} {
-  #nop
+  study spellbook
 }
 
 #class {mage} {close}
