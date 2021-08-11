@@ -487,7 +487,7 @@
 #ALIAS {.mipProcessGlineMage} {
         #IF {%1 == 1} {
           #REGEX {$mip[gline][1]} {Gem:%d\%}   {#VAR {my[gem]}{&1}}{#VAR {my[gem]}{0}};
-          #REGEX {$mip[gline][1]} {MC:%d}      {#VAR {my[mental_cognition]}{&1}}{#VAR {my[mental_cognition]}{0}};
+          #REGEX {$mip[gline][1]} {MC:%d}      {#VAR {my[mental_cognition]}{&1}}{#VAR {my[mental_cognition]}{100}};
           #REGEX {$mip[gline][1]} {SS}        {#VAR {my[prots][SS]} {1}}{#VAR {my[prots][SS]}{0}};
           #REGEX {$mip[gline][1]} {PA}         {#VAR {my[prots][PA]} {1}}{#VAR {my[prots][PA]}{0}};
           #REGEX {$mip[gline][1]} {{PS|PS!}}   {#VAR {my[prots][PS]} {1}}{#VAR {my[prots][PS]}{0}};
