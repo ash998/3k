@@ -1,7 +1,32 @@
+#class {mage_vars} {open}
+#var magev[auto][S] {0};
+#var magev[auto][A] {1};
+#var magev[auto][PE] {0};
+#var magev[auto][PG] {1};
+#var magev[auto][mg] {0};
+#var magev[auto][MG] {1};
+#var magev[auto][SS] {1};
+#var magev[auto][B] {1};
+#var magev[auto][DS] {0};
+#var magev[auto][MB] {0};
+#var magev[auto][b] {0};
+#var magev[auto][PA] {1};
+#var magev[auto][MI] {0};
+#var magev[auto][I] {0};
+#var magev[auto][MS] {1};
+#var magev[auto][PS] {0};
+#var magev[auto][M] {0};
+#var magev[auto][L] {0};
+#var magev[auto][<P>] {0};
+#var magev[auto][min_mc] {85};
+#var magev[auto][min_sp] {3000};
+#var magev[auto][max_sat] {95};   
+#class mage_vars read {.tt/3k/vars/mage.var};
+#class {mage_vars} {close}
+
 #class {mage} {open}
 
 #var guild mage
-
 #var mage[affect][S] {shield};
 #var mage[affect][A] {armor};
 #var mage[affect][PE] {protection from evil};
@@ -21,29 +46,6 @@
 #var mage[affect][M] {mantle};
 #var mage[affect][L] {levitate};
 #var mage[affect][<P>] {perform};
-
-#var mage[auto][S] {0};
-#var mage[auto][A] {1};
-#var mage[auto][PE] {0};
-#var mage[auto][PG] {1};
-#var mage[auto][mg] {0};
-#var mage[auto][MG] {1};
-#var mage[auto][SS] {1};
-#var mage[auto][B] {1};
-#var mage[auto][DS] {0};
-#var mage[auto][MB] {0};
-#var mage[auto][b] {0};
-#var mage[auto][PA] {1};
-#var mage[auto][MI] {0};
-#var mage[auto][I] {0};
-#var mage[auto][MS] {1};
-#var mage[auto][PS] {0};
-#var mage[auto][M] {0};
-#var mage[auto][L] {0};
-#var mage[auto][<P>] {0};
-#var mage[auto][min_mc] {85};
-#var mage[auto][min_sp] {3000};
-#var mage[auto][max_sat] {95};
 
 #var mage[gem_fetching] {0};
 
@@ -68,16 +70,16 @@
 
 #nop Auto cast protection spells. Put them in priority order. Spamming
 in case there is lag.;
-        #if {!$my[prots][SS] && $mage[auto][SS]} {cast $mage[affect][SS]};
-        #if {!$my[prots][MG] && $mage[auto][MG]} {cast $mage[affect][MG]};
-	#if {!$my[prots][B] && $mage[auto][B]} {cast $mage[affect][B]};
-	#if {!$my[prots][MS] && $mage[auto][MS]} {cast $mage[affect][MS]};
-	#if {!$my[prots][A] && $mage[auto][A]} {cast $mage[affect][A]};
-	#if {!$my[prots][PG] && $mage[auto][PG]} {cast $mage[affect][PG]};
-	#if {!$my[prots][PE] && $mage[auto][PE]} {cast $mage[affect][PE]};
-	#if {!$my[prots][PS] && $mage[auto][PS]} {cast $mage[affect][PS]};
-	#if {!$my[prots][M] && $mage[auto][M]} {cast $mage[affect][M]};
-	#if {!$my[prots][PA] && $mage[auto][PA]} {cast $mage[affect][PA]}; 
+        #if {!$my[prots][SS] && $magev[auto][SS]} {cast $mage[affect][SS]};
+        #if {!$my[prots][MG] && $magev[auto][MG]} {cast $mage[affect][MG]};
+	#if {!$my[prots][B] && $magev[auto][B]} {cast $mage[affect][B]};
+	#if {!$my[prots][MS] && $magev[auto][MS]} {cast $mage[affect][MS]};
+	#if {!$my[prots][A] && $magev[auto][A]} {cast $mage[affect][A]};
+	#if {!$my[prots][PG] && $magev[auto][PG]} {cast $mage[affect][PG]};
+	#if {!$my[prots][PE] && $magev[auto][PE]} {cast $mage[affect][PE]};
+	#if {!$my[prots][PS] && $magev[auto][PS]} {cast $mage[affect][PS]};
+	#if {!$my[prots][M] && $magev[auto][M]} {cast $mage[affect][M]};
+	#if {!$my[prots][PA] && $magev[auto][PA]} {cast $mage[affect][PA]}; 
 	
 	#if {$my[gem]<80} {ffetch gem;#var mage[gem_fetching] {1};};
 
@@ -94,15 +96,14 @@ $my[sp][current]<4000} {cast mystic immersion};
 
 	    #nop $my[mental_cognition] is zero when at 100%;
 #nop Mental Cognition;
-            #if {$my[mental_cognition] &&
-$my[mental_cognition]<$mage[auto][min_mc] && !$mage[downtime][mental_cognition]} {pause_bot;#var mage[downtime][mental_cognition] 1};
+            #if {$my[mental_cognition] && $my[mental_cognition]<$magev[auto][min_mc] && !$mage[downtime][mental_cognition]} {pause_bot;#var mage[downtime][mental_cognition] 1};
 #nop Spell Points;
 
-            #if {$my[sp][current]<$mage[auto][min_sp] &&
+            #if {$my[sp][current]<$magev[auto][min_sp] &&
 !$mage[downtime][spell_points]} {pause_bot;#var mage[downtime][spell_points] 1};
 #nop Saturation;
 
-            #if {$my[gp1][current]>$mage[auto][max_sat] &&
+            #if {$my[gp1][current]>$magev[auto][max_sat] &&
 !$mage[downtime][saturation]} {pause_bot;#var mage[downtime][saturation] 1};
 
         };
@@ -116,7 +117,7 @@ $my[mental_cognition]<$mage[auto][min_mc] && !$mage[downtime][mental_cognition]}
 }
 
 
-#alias {unpause_bot} {
+#alias {unpause_bot} { 
         #if {!$halt} {#return};
 
         #var stay_paused 0;
@@ -143,7 +144,7 @@ spellbook.}
 #alias {update_status} {
         #if {$bot} {
 	    #if {$mage[downtime][spell_points] && $my[sp][current]==$my[sp][max]} {#var mage[downtime][spell_points] 0;unpause_bot};
-            #if {$mage[downtime][mental_cognition] && $my[gp1][current]==0} {#var mage[downtime][mental_cognition] 0;unpause_bot};
+            #if {$mage[downtime][saturation] && $my[gp1][current]==0} {#var mage[downtime][saturation] 0;unpause_bot};
         };
         #if {"$cooler" == "on" || $corpses[cooler] > 0} {
                 #format {sb1_cooler} {%+2s} {$corpses[cooler]};
@@ -181,5 +182,7 @@ spellbook.}
 #alias {corpsetrig} {
   study spellbook
 }
+
+#alias {save_guild_vars} {#class mage_vars write {.tt/3k/vars/mage.var}}
 
 #class {mage} {close}

@@ -31,7 +31,8 @@
 	#class farmvar write .tt/3k/vars/farm.var;
 	#class mapvar write .tt/3k/vars/map.var;
 	#class pubvar write .tt/3k/vars/pub.var;
-	#class shopvar write .tt/3k/vars/shop.var
+	#class shopvar write .tt/3k/vars/shop.var;
+	save_guild_vars;
 }
 
 #CLASS {vars} CLOSE
