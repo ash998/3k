@@ -33,7 +33,7 @@
 #var mage[auto][DS] {0};
 #var mage[auto][MB] {0};
 #var mage[auto][b] {0};
-#var mage[auto][PA] {0};
+#var mage[auto][PA] {1};
 #var mage[auto][MI] {0};
 #var mage[auto][I] {0};
 #var mage[auto][MS] {1};
@@ -41,8 +41,15 @@
 #var mage[auto][M] {0};
 #var mage[auto][L] {0};
 #var mage[auto][<P>] {0};
+#var mage[auto][min_mc] {85}:
+#var mage[auto][min_sp] {3000};
+#var mage[auto][max_sat] {95};
 
 #var mage[gem_fetching] {0};
+
+#var mage[downtime][mental_cognition] {0};
+#var mage[downtime][spell_points] {0};
+#var mage[downtime][saturation] {0};
 
 #act {{^ HP: (\d+)/(\d+) SP: (\d+)/(\d+)}} {
 	#var my[hp][current]	{%2};
@@ -70,22 +77,70 @@ in case there is lag.;
 	#if {!$my[prots][PE] && $mage[auto][PE]} {cast $mage[affect][PE]};
 	#if {!$my[prots][PS] && $mage[auto][PS]} {cast $mage[affect][PS]};
 	#if {!$my[prots][M] && $mage[auto][M]} {cast $mage[affect][M]};
+	#if {!$my[prots][PA] && $mage[auto][PA]} {cast $mage[affect][PA]}; 
 	
 	#if {$my[gem]<80} {ffetch gem;#var mage[gem_fetching] {1};};
 
 
         #if {$my[immersion][rounds]==0 && $my[immersion][count]>0 &&
 $my[sp][current]<4000} {cast mystic immersion}; 
-}
+
         #if {($my[super][current] && $my[gp1][current]>80) ||
-{$my[super][current] && $my[gp1][current]>5 && $my[super][reset]>95}}
+($my[super][current] && $my[gp1][current]>5 && $my[super][reset]>95)}
 {cast explosive release};
+
+#nop If botting, add downtime based on various parameters;
+        #if {$bot} {
+	    #nop $my[mental_cognition] is zero when at 100%;
+#nop Mental Cognition;
+            #if {$my[mental_cognition] &&
+$my[mental_cognition]<$mage[auto][min_mc] && !$mage[downtime][mental_cognition]} {pause_bot;#var mage[downtime][mental_cognition] 1};
+#nop Spell Points;
+            #if {$my[sp][current]<$mage[auto][min_sp] &&
+!$mage[downtime][spell_points]} {pause_bot;#var mage[downtime][spell_points] 1};
+#nop Saturation;
+            #if {$my[gp1]>$mage[auto][max_sat] &&
+!$mage[downtime][saturation]} {pause_bot;#var mage[downtime][saturation] 1};
+	};
+
+
+
+}
+
+#alias {pause_bot} {
+        #if {!$halt} {.tmp_pause}
+}
+
+
+#alias {unpause_bot} {
+        #if {!$halt} {#return};
+
+        #var stay_paused 0;
+
+        #nop Only unpause if all the things we're pausing for are fixed;
+        
+	#foreach {*mage[downtime][]} {item} {#if {$mage[downtime][$item]} {#var stay_paused 1}};
+	
+	#if {!$stay_paused} {.tmp_unpause}
+}
+
 
 #act {Xoox the fuzzy hedgehog hands something to Orthas.} {
 	#var mage[gem_fetching] {0};
 }
 
+
+#act {Having absorbed all you can, you carefully close your
+spellbook.} 
+{
+        #if {$bot && $halt && $mage[downtime][mental_cognition]} {#var mage[downtime][mental_cognition] 0;unpause_bot}
+};
+
 #alias {update_status} {
+        #if {$bot} {
+	    #if {$mage[downtime][spell_points] && $my[sp][current]==$my[sp][max]} {#var mage[downtime][spell_points] 0;unpause_bot};
+            #if {$mage[downtime][mental_cognition] && $my[gp1]==0} {#var mage[downtime][mental_cognition] 0;unpause_bot};
+        };
         #if {"$cooler" == "on" || $corpses[cooler] > 0} {
                 #format {sb1_cooler} {%+2s} {$corpses[cooler]};
                 #var {sb1_cooler} { CL:<130>$sb1_cooler<088>}
@@ -115,7 +170,7 @@ $my[sp][current]<4000} {cast mystic immersion};
         #format {corpses[coffin]}  {%+2s} {$corpses[coffin]};
         #format {corpses[freezer]} {%+2s} {$corpses[freezer]};
         #showme {<088>HP:$hp/$hp_max Sat:$gp1\%   Cnc: $gp2\%    Gxp: $my[g2n]\%  E:$ehealth\%    IC:<130>${corpses[inventory]}<088> ${sb1_cooler}} {-4};
-        #showme {HP:${my[hp][graph]} SP:${my[sp][graph]} Sat:${my[gp2][graph]} E:${enemy[graph]} CF:<130>${corpses[coffin]}<088>${sb2_freezer}} {-3};
+        #showme {HP:${my[hp][graph]} SP:${my[sp][graph]} Sat:${my[gp1][graph]} E:${enemy[graph]} CF:<130>${corpses[coffin]}<088>${sb2_freezer}} {-3};
 	#showme {$mip[gline][1]  $mip[gline][2] <128>R:<088>$mip[round]} {-6}
 }
 
