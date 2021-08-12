@@ -21,6 +21,9 @@
 #class pubvar kill
 #read .tt/3k/vars/pub.var
 
+#class botcycle kill
+#read .tt/3k/vars/botcycle.var
+
 #event {SESSION DISCONNECTED} {
 	#NOP Save Map vnum per world;
 	#map get roomvnum {map[$world][position]};
@@ -33,6 +36,7 @@
 	#class pubvar write .tt/3k/vars/pub.var;
 	#class shopvar write .tt/3k/vars/shop.var;
 	save_guild_vars;
+        #class botcycle_vars write {.tt/3k/vars/botcycle.var}
 }
 
 #CLASS {vars} CLOSE

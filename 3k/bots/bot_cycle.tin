@@ -1,7 +1,21 @@
+#class {botcycle_vars} {open}
+
+#var dungeon[scaler][zelligars][orthas][mage] {81};
+#var dungeon[scaler][chess][orthas][mage] {81};
+#var dungeon[scaler][mahjongg][orthas][mage] {70};
+
+#class botcycle_vars read {.tt/3k/vars/botcycle.var};
+
+#class {botcycle_vars} {close}
+
 #class {botcycle} {open}
 #NOP REQUIRED:  draw.tin  //canvas dimensions
 
+
+
 #var cycle 0
+
+
 
 #alias {ba} {
 	#list {botcycle} {add} {%1};
@@ -18,6 +32,9 @@
 
 #alias {thisarea} {
 	#list {botcycle} {get} {$cycle} {currentarea};
+       
+        #if {$dungeon[scaler][$currentarea][$world][$guild]} {scaler $dungeon[scaler][$currentarea][$world][$guild]}
+	
 	go $currentarea;
 	#delay {1} {- $currentarea};
 	#delay {2} {..}
@@ -30,6 +47,9 @@
 		#var cycle 1
 	};
 	#list {botcycle} {get} {$cycle} {currentarea};
+	
+	#if {$dungeon[scaler][$currentarea][$world][$guild]} {scaler $dungeon[scaler][$currentarea][$world][$guild]}
+	
 	go $currentarea;
 	#delay {1} {- $currentarea};
 	#delay {2} {..}
@@ -124,5 +144,6 @@
 #alias {bas3}		{ba {whorehouse;rim2;whorehouse;dundee8;whorehouse;dundee7;whorehouse;dundee6}}
 #alias {basa}		{ba {aegis1;aegis2;aegis3;aegis4;aegis5}}
 #alias {badundee}	{ba {dundee1;dundee2;dundee3;dundee4;dundee5;dundee6;dundee7;dundee8}}
+#alias {bao}            {ba {chess;zelligars;chess;mahjongg;chess;mahjongg}}
 
 #class {botcycle} {close}

@@ -1,0 +1,31 @@
+#CLASS {botcycle_vars} OPEN
+
+#VARIABLE {dungeon}
+{
+    {scaler} 
+    {
+        {chess} 
+        {
+            {orthas} 
+            {
+                {mage} {81}
+            }
+        }
+        {mahjongg} 
+        {
+            {orthas} 
+            {
+                {mage} {70}
+            }
+        }
+        {zelligars} 
+        {
+            {orthas} 
+            {
+                {mage} {81}
+            }
+        }
+    }
+}
+
+#CLASS {botcycle_vars} CLOSE
