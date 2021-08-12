@@ -185,4 +185,43 @@ spellbook.}
 
 #alias {save_guild_vars} {#class mage_vars write {.tt/3k/vars/mage.var}}
 
+#alias {mauto} {
+
+  #regex {%0} {{^(.+) (.+)$}}
+  {
+    #var _setting {&2};
+    #var _value {&3};
+  }
+  {
+    #regex {%0} {{^(.+)$}} {
+      #var _setting {&2};
+      #var _value {_noval};
+    }
+    {
+      #var _setting {_noval};
+      #var _value {_noval};
+    }
+  };
+
+
+  #regex {%0} {^$} {
+    #showme Usage: mauto <setting> [<value>];
+    #showme Value can be omitted for settings that toggle on/off (0/1
+values).;
+    #foreach {*magev[auto][]} {item} {#showme Setting $item  Current value: $magev[auto][$item]}; 
+  };
+
+  #if {"$_setting"!="_noval"}
+  {
+    #if {"$_value"!="_noval"} {#var magev[auto][$_setting] {$_value};#showme $_setting is now set to $_value};
+    #if {"$_value"=="_noval"} {
+      #if {$magev[auto][$_setting]} {
+        #var magev[auto][$_setting] {0};#showme $_setting is now toggled off.
+      } 
+      {
+        #var magev[auto][$_setting] {1};#showme $_setting is now toggled on.}
+    }
+  }
+}
+
 #class {mage} {close}

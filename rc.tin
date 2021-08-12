@@ -52,7 +52,7 @@
         #NOP #read .tt/start.tin
 }
 #alias {connect} {
-        #alias {save_guild_vars} {#nop}
+        #alias {save_guild_vars} {#nop};
         #regex {%0} {3s} {
                 #ses {%0} {3scapes.org} {3200};
                 #format {ses_len} {%L} {%0};
