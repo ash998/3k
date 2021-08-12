@@ -1,4 +1,4 @@
-#class {botcycle_vars} {open}
+#class {botcycle_vars} {open};
 
 #var dungeon[scaler][zelligars][orthas][mage] {81};
 #var dungeon[scaler][chess][orthas][mage] {81};
@@ -6,21 +6,39 @@
 
 #class botcycle_vars read {.tt/3k/vars/botcycle.var};
 
-#class {botcycle_vars} {close}
+#alias {dscaler} {
 
-#class {botcycle} {open}
-#NOP REQUIRED:  draw.tin  //canvas dimensions
+  #var _dungeon {_noval};
+  #var _scaler {_noval]};
+  #regex {%0} {{^(.+) (.+)$}}
+  {
+    #var _dungeon {&2};
+    #var _scaler {&3};
+                   
+  };
+  
+  #if {"$_dungeon"=="_noval" || "$_scaler"=="_noval"} {
+    #showme Usage: dscaler <dungeon> <scaler>;
+    #showme Note that this setting is per char per guild.;
+  } {
+    #var dungeon[scaler][$_dungeon][$world][$guild] {$_scaler};
+    #showme The scaler for the $_dungeon dungeon, for $world as $guild, is now set to $_scaler.;
+  };
+};
 
+#class {botcycle_vars} {close};
 
+#class {botcycle} {open};
+#NOP REQUIRED:  draw.tin  //canvas dimensions;
 
-#var cycle 0
+#var cycle 0;
 
 
 
 #alias {ba} {
 	#list {botcycle} {add} {%1};
 	botdraw
-}
+};
 
 #alias {br} {
 	#list {botcycle} {del} {%1};
@@ -28,7 +46,7 @@
 		#math {cycle} {$cycle - 1}
 	};
 	botdraw
-}
+};
 
 #alias {thisarea} {
 	#list {botcycle} {get} {$cycle} {currentarea};
@@ -38,7 +56,7 @@
 	go $currentarea;
 	#delay {1} {- $currentarea};
 	#delay {2} {..}
-}
+};
 
 #alias {nextarea} {
 	#if {$cycle < &{botcycle[]}} {
@@ -53,12 +71,12 @@
 	go $currentarea;
 	#delay {1} {- $currentarea};
 	#delay {2} {..}
-}
+};
 
 #alias {botclear} {
 	#var botcycle {};
 	#var cycle 0
-}
+};
 
 #alias {bc} {
 	#echo {<228> +-------------------+}<088>;
@@ -82,7 +100,7 @@
 		};
 		#echo { <228>+-------------------+}<088>
 	}
-}
+};
 
 #alias {botdraw} {
 	#if {"$draw[canvas]" == "on"} {
@@ -123,27 +141,32 @@
 		#showme {<228>\u251C} $chat[height]+$caption[height]+4 -$canvas[width]+2;
 		#showme {<228>\u2524} $chat[height]+$caption[height]+4 -3
 	}
-}
+};
 
 #alias {cycle} {
 	#var cycle %1
-}
+};
 
 #event {VARIABLE UPDATE cycle} {
 	#delay 0 botdraw
-}
+};
 
 
 #event {VARIABLE UPDATE botcycle} {
 	#delay 0 botdraw
-}
+};
 
-#alias {bas}		{ba {rim2;android;dundee8;dundee7;dundee6;dundee5}}
-#NOP #alias {bas2}	{ba {whorehouse;puppy;mahjongg;rim2;whorehouse;puppy;mahjongg;android;whorehouse;puppy;mahjongg;rim2;whorehouse;puppy;mahjongg;dundee8;whorehouse;puppy;mahjongg;rim2;whorehouse;puppy;mahjongg;dundee7;whorehouse;puppy;mahjongg;rim2;whorehouse;puppy;mahjongg;dundee6}}
-#alias {bas2}		{ba {whorehouse;mahjongg;rim2;whorehouse;mahjongg;dundee8;whorehouse;mahjongg;dundee7;whorehouse;mahjongg;dundee6}}
-#alias {bas3}		{ba {whorehouse;rim2;whorehouse;dundee8;whorehouse;dundee7;whorehouse;dundee6}}
-#alias {basa}		{ba {aegis1;aegis2;aegis3;aegis4;aegis5}}
-#alias {badundee}	{ba {dundee1;dundee2;dundee3;dundee4;dundee5;dundee6;dundee7;dundee8}}
-#alias {bao}            {ba {chess;zelligars;chess;mahjongg;chess;mahjongg}}
+#alias {bas}		{ba {rim2;android;dundee8;dundee7;dundee6;dundee5}};
+#NOP #alias {bas2}	{ba
+{whorehouse;puppy;mahjongg;rim2;whorehouse;puppy;mahjongg;android;whorehouse;puppy;mahjongg;rim2;whorehouse;puppy;mahjongg;dundee8;whorehouse;puppy;mahjongg;rim2;whorehouse;puppy;mahjongg;dundee7;whorehouse;puppy;mahjongg;rim2;whorehouse;puppy;mahjongg;dundee6}};
+#alias {bas2}		{ba
+{whorehouse;mahjongg;rim2;whorehouse;mahjongg;dundee8;whorehouse;mahjongg;dundee7;whorehouse;mahjongg;dundee6}};
+#alias {bas3}		{ba
+{whorehouse;rim2;whorehouse;dundee8;whorehouse;dundee7;whorehouse;dundee6}};
+#alias {basa}		{ba {aegis1;aegis2;aegis3;aegis4;aegis5}};
+#alias {badundee}	{ba
+{dundee1;dundee2;dundee3;dundee4;dundee5;dundee6;dundee7;dundee8}};
+#alias {bao}            {ba
+{chess;zelligars;chess;mahjongg;chess;mahjongg}};
 
 #class {botcycle} {close}
