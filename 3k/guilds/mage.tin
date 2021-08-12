@@ -72,14 +72,24 @@
 in case there is lag.;
         #if {!$my[prots][SS] && $magev[auto][SS]} {cast $mage[affect][SS]};
         #if {!$my[prots][MG] && $magev[auto][MG]} {cast $mage[affect][MG]};
-	#if {!$my[prots][B] && $magev[auto][B]} {cast $mage[affect][B]};
-	#if {!$my[prots][MS] && $magev[auto][MS]} {cast $mage[affect][MS]};
-	#if {!$my[prots][A] && $magev[auto][A]} {cast $mage[affect][A]};
-	#if {!$my[prots][PG] && $magev[auto][PG]} {cast $mage[affect][PG]};
-	#if {!$my[prots][PE] && $magev[auto][PE]} {cast $mage[affect][PE]};
 	#if {!$my[prots][PS] && $magev[auto][PS]} {cast $mage[affect][PS]};
 	#if {!$my[prots][M] && $magev[auto][M]} {cast $mage[affect][M]};
-	#if {!$my[prots][PA] && $magev[auto][PA]} {cast $mage[affect][PA]}; 
+	#if {!$my[prots][mg] && $magev[auto][mg]} {cast $mage[affect][mg]};
+	#if {!$my[prots][B] && $magev[auto][B]} {cast $mage[affect][B]};
+	#if {!$my[prots][MS] && $magev[auto][MS]} {cast $mage[affect][MS]};
+	#if {!$my[prots][S] && $magev[auto][S]} {cast $mage[affect][S]};
+	#if {!$my[prots][A] && $magev[auto][A]} {cast $mage[affect][A]};
+	#if {!$my[prots][b] && $magev[auto][b]} {cast $mage[affect][b]};
+	#if {!$my[prots][PG] && $magev[auto][PG]} {cast $mage[affect][PG]};
+	#if {!$my[prots][PE] && $magev[auto][PE]} {cast $mage[affect][PE]};
+	#if {!$my[prots][MI] && $magev[auto][MI]} {cast $mage[affect][MI]};
+	#if {!$my[prots][I] && $magev[auto][I]} {cast $mage[affect][I]};
+	#if {!$my[prots][PS] && $magev[auto][PS]} {cast $mage[affect][PS]};
+	#if {!$my[prots][M] && $magev[auto][M]} {cast $mage[affect][M]};
+	#if {!$my[prots][PA] && $magev[auto][PA]} {cast $mage[affect][PA]};
+	#if {!$my[prots][MB] && $magev[auto][MB]} {cast $mage[affect][MB]};
+	#if {!$my[prots][DS] && $magev[auto][DS]} {cast $mage[affect][DS]};
+	#if {!$my[prots][L] && $magev[auto][L]} {cast $mage[affect][L]};
 	
 	#if {$my[gem]<80} {ffetch gem;#var mage[gem_fetching] {1};};
 
