@@ -20,6 +20,11 @@
   #if {"$_dungeon"=="_noval" || "$_scaler"=="_noval"} {
     #showme Usage: dscaler <dungeon> <scaler>;
     #showme Note that this setting is per char per guild.;
+    #foreach {*dungeon[scaler][]} {item} {
+      #if {$dungeon[scaler][$item][$world][$guild]} {
+        #show For $world in the $guild guild $item is scaled to $dungeon[scaler][$item][$world][$guild];
+      };
+    };
   } {
     #var dungeon[scaler][$_dungeon][$world][$guild] {$_scaler};
     #showme The scaler for the $_dungeon dungeon, for $world as $guild, is now set to $_scaler.;
