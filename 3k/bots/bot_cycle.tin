@@ -56,7 +56,7 @@
 #alias {thisarea} {
 	#list {botcycle} {get} {$cycle} {currentarea};
        
-        #if {$dungeon[scaler][$currentarea][$world][$guild]} {scaler $dungeon[scaler][$currentarea][$world][$guild]}
+        #if {$dungeon[scaler][$currentarea][$world][$guild]} {scaler $dungeon[scaler][$currentarea][$world][$guild]};
 	
 	go $currentarea;
 	#delay {1} {- $currentarea};
@@ -71,7 +71,7 @@
 	};
 	#list {botcycle} {get} {$cycle} {currentarea};
 	
-	#if {$dungeon[scaler][$currentarea][$world][$guild]} {scaler $dungeon[scaler][$currentarea][$world][$guild]}
+	#if {$dungeon[scaler][$currentarea][$world][$guild]} {scaler $dungeon[scaler][$currentarea][$world][$guild]};
 	
 	go $currentarea;
 	#delay {1} {- $currentarea};
