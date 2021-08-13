@@ -17,6 +17,18 @@ prompt >$nl$
 #var stepping 0
 
 
+#nop some guilds need to pause temporarily
+#alias {.tmp_pause} {
+        #var stepping 0;
+        #var halt 1;     
+}
+
+#nop unpauses the temporary pause
+#alias {.tmp_unpause} {
+        #var halt 0;
+	.bot;
+}
+
 #alias {.pause} {
 	#class {xbot} {kill};
 	#var stepping 0;
@@ -178,7 +190,8 @@ prompt >$nl$
 #alias {nodogtank} {#unalias {kill}};
 
 #act {^=K=%1 dealt the killing blow to} {
-	#if {!$singlestep} {
+        corpsetrig;
+        #if {!$singlestep} {
 		.bot
 	}
 } {1}

@@ -16,3 +16,5 @@
 #act {^Type 'accept' if you wish to be monitored.$} {
 	#send !accept
 }
+#var {xp30} {0}
+#act {^XP Gain for the last 30 minutes: %1} {#var {xp30} {%1}}
