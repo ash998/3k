@@ -12,6 +12,12 @@
 	forge_do
 }
 
+#NOP Type:  forge <item> <from>;
+#NOP This will reforge to defense;
+#alias dforge {
+        forge %1 %2 defense
+}
+
 /* reforge <item> <amount> from <ac> to <defense> */
 #alias {forge_do} {
 	#if {"$reforged" == "no"} {
