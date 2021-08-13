@@ -7,16 +7,14 @@
 
 #var {zellgloves} {0}
 
-#var {botpath} {keep gloves of acid
-protection;n;n;e;w;w;n;nw;n;e;e;e;e;w;s;s;zell_checkgloves;n;n;w;w;w;s;zell_getacidkey;e;e;s;n;w;n;e;e;s;s;e;e;e;n;n;n;n;e;e;s;s;w;w;s;e;e;e;n;n;n;n;w;w;w;w;s;s;s;s;unlock door;w;take key;e;n;n;n;n;e;e;e;e;s;s;s;s;w;w;w;s;w;w;w;n;n;w;n;e;n;s;w;s;w;n;unlock door;w;w;s;s;sw;w;w;w;n;nw;e;e;e;e;n;ne;e;e;e;w;w;w;sw;nw;nw;w;e;sw;e;se;w;w;s;w;se;e;e;e;s;ne;n;n;e;e;s;s;w;se;s;e;s;s}
+#var {botpath} {keep gloves of acid protection;n;n;e;w;w;n;nw;n;e;e;e;e;w;s;s;zell_checkgloves;n;n;w;w;w;s;zell_getacidkey;e;e;s;n;w;n;e;e;s;s;e;e;e;n;n;n;n;e;e;s;s;w;w;s;e;e;e;n;n;n;n;w;w;w;w;s;s;s;s;unlock door;w;take key;e;n;n;n;n;e;e;e;e;s;s;s;s;w;w;w;s;w;w;w;n;n;w;n;e;n;s;w;s;w;n;unlock door;w;w;s;s;sw;w;w;w;n;nw;e;e;e;e;n;ne;e;e;e;w;w;w;sw;nw;nw;w;e;sw;e;se;w;w;s;w;se;e;e;e;s;ne;n;n;e;e;s;s;w;se;s;e;s;s}
 
-#alias {zell_checkgloves} {search shelves;#if {$zellgloves==0} {get gloves;keep gloves
-of acid protection} {zell_walkafterprompt}}
+#alias {zell_checkgloves} {search shelves;#if {$zellgloves==0} {get gloves;keep gloves of acid protection} {zell_walkafterprompt}}
 #alias {zell_getacidkey} {#if {$zellgloves==1} {take key} {#showme GLOVES OF ACID PROTECTION NOT DETECTED}}
 #nop #alias {zell_walkafterprompt} {#act {^>$} {#unact {^>$};..}}
 #alias {zell_walkafterprompt} {..}
 
-#act  {^:MB:{Steel|Clay|Flesh|Stone|Mud|Straw|Glass} Golem} {
+#act  {^=M= {Steel|Clay|Flesh|Stone|Mud|Straw|Glass} Golem} {
 	#var mobname golem;
 	_check_mob;
 };

@@ -28,6 +28,7 @@
 		#case {"Angry Horse"}		{#var mobname {angry horse};#var mobhard 1};
 		#case {"Angry War Elephant"}	{#var mobname elephant;#var mobhard 1}
 	};
+	#var mobhard 0;
 	#if {$mobhard} {
 		#if {$hardmode} {
 			_check_mob
