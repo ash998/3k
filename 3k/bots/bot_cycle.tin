@@ -9,7 +9,7 @@
 #alias {dscaler} {
 
   #var _dungeon {_noval};
-  #var _scaler {_noval]};
+  #var _scaler {_noval};
   #regex {%0} {{^(.+) (.+)$}}
   {
     #var _dungeon {&2};
