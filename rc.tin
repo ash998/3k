@@ -4,7 +4,7 @@
 #CONFIG           {COLOR MODE}		{TRUE}
 #CONFIG           {COLOR PATCH}		{ON}
 #CONFIG           {COMMAND COLOR}	{<078>}
-#CONFIG           {COMMAND ECHO}	{ON}
+#CONFIG           {COMMAND ECHO}	{OFF}
 #CONFIG           {CONNECT RETRY}	{15}
 #CONFIG           {HISTORY SIZE}	{1000}
 #CONFIG           {LOG MODE}		{RAW}
@@ -36,8 +36,11 @@
 	#format logfile {.tt/logs/%0_%t.log} {%Y%m%d};
 	#LOG {APPEND} {$logfile};
 	#delay 0 #read .tt/start.tin;
-	#delay 0 #read .tt/char/%0.tin
+	#delay 0 #read .tt/char/%0.tin;
+        #hist read .tt/logs/history.log;
 }
+
+#EVENT {SEND OUTPUT} {#line ignore #showme <118>%0}
 
 #var world {}
 
