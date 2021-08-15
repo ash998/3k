@@ -23,6 +23,16 @@
 #var magev[auto][max_sat] {95};   
 #var magev[auto][mystic_immersion_at] {4000};
 #var magev[auto][explosive_release_at] {80};
+#var magev[auto][spell_tap] {0};
+
+#nop How much more SP after 90 rounds of MI than before
+#var magev[setting][SPDeltaPerMI] {6000};
+
+#nop How much SP spend per rnd avg. Doesn't have to be very accurate, it will even out towards the end of the MI cycle anyway.
+#var magev[setting][SPSpentPerRnd] {30};
+
+#var magev[setting][MaxSatToSpellTapAt] {85};
+
 #class mage_vars read {.tt/3k/vars/mage.var};
 #class {mage_vars} {close}
 
@@ -54,6 +64,26 @@
 #var mage[downtime][mental_cognition] {0};
 #var mage[downtime][spell_points] {0};
 #var mage[downtime][saturation] {0};
+
+#alias {spell_tap_automation} {
+  #if ($magev[auto][spell_tap])
+  {
+
+#nop How many rounds left in this reset with no MI running;
+    #math {MIFreeRounds} {((100-$my[golem][reset])*6 - ($my[immersion][count]*90 + $my[immersion][rounds]))};
+
+#nop How much SP we need to cover with tap to stay at 90% SP;
+    #math {SPDeficit} {(($MIFreeRounds * $magev[setting][SPSpentPerRnd]) - ($my[immersion][count] * $magev[setting][SPDeltaPerMI]) + (($my[sp][max] * 9 / 10)-$my[sp][current]) - (($magev[setting][SPDeltaPerMI]*$my[immersion][rounds])/90))};
+
+    #echo Deficit: $SPDeficit No MI rnds: $MIFreeRounds;
+  
+    #if ($my[immersion][rounds]=0 and $my[gp1][current]<$magev[setting][MaxSatToSpellTapAt] and $SPDeficit>0)
+    {
+      cast spell tap
+    };
+  };
+};
+
 
 #act {{^ HP: (\d+)/(\d+) SP: (\d+)/(\d+)}} {
 	#var my[hp][current]	{%2};
@@ -97,7 +127,11 @@ in case there is lag.;
 
 
 #nop Mystic Immersion;
-        #if {$my[immersion][rounds]==0 && $my[immersion][count]>0 && $my[sp][current]<$magev[auto][mystic_immersion_at]} {cast mystic immersion}; 
+#nop If it's not running, and there are more available and (sp is lower than the setup threshold OR it's at 98% or higher to reset) -> cast it.
+#nop Also setup vars if it was cast so spell tap automation knows the correct values.
+        #if {$my[immersion][rounds]==0 && $my[immersion][count]>0 && (($my[sp][current]<$magev[auto][mystic_immersion_at]) || $my[golem][reset]>97)} {#math {my[immersion][count]} {$my[immersion][count]-1};#var my[immersion][rounds] {90};cast mystic immersion}; 
+
+        spell_tap_automation;
 
 #nop Explosive Release;
         #if {($my[super][current] && $my[gp1][current]>$magev[auto][explosive_release_at]) || ($my[super][current] && $my[gp1][current]>5 && $my[super][reset]>95)} {cast explosive release};
