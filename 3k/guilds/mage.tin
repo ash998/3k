@@ -151,13 +151,13 @@ in case there is lag.;
 
 #nop NOTE: $my[mental_cognition] is zero when at 100%;
 #nop Mental Cognition;
-            #if {$my[mental_cognition] && $my[mental_cognition]<$magev[auto][min_mc] && !$mage[downtime][mental_cognition]} {pause_bot;#var mage[downtime][mental_cognition] 1};
+            #if {$my[mental_cognition] && $my[mental_cognition]<$magev[auto][min_mc] && !$mage[downtime][mental_cognition]} {pause_bot;#var mage[downtime][mental_cognition] 1;#show !!!!!LOW MC BOT PAUSED!!!!!;};
 
 #nop Spell Points;
-            #if {$my[sp][current]<$magev[auto][min_sp] && !$mage[downtime][spell_points]} {pause_bot;#var mage[downtime][spell_points] 1};
+            #if {$my[sp][current]<$magev[auto][min_sp] && !$mage[downtime][spell_points]} {pause_bot;#var mage[downtime][spell_points] 1;#show !!!!!LOW SP BOT PAUSED!!!!!;};
 
 #nop Saturation;
-            #if {$my[gp1][current]>$magev[auto][max_sat] && !$mage[downtime][saturation]} {pause_bot;#var mage[downtime][saturation] 1};
+            #if {$my[gp1][current]>$magev[auto][max_sat] && !$mage[downtime][saturation]} {pause_bot;#var mage[downtime][saturation] 1;#show !!!!!HIGH SAT BOT PAUSED!!!!!;};
 
         };
 };
