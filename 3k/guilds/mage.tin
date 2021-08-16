@@ -218,7 +218,7 @@ spellbook.}
         #format {corpses[coffin]}  {%+2s} {$corpses[coffin]};
         #format {corpses[freezer]} {%+2s} {$corpses[freezer]};
         #showme {<088>HP:$hp/$hp_max  SP:$sp/$sp_max Sat:$gp1\%    E:$ehealth\%    IC:<130>${corpses[inventory]}<088> ${sb1_cooler} Cnc: $gp2\%    Gxp: $my[g2n]\%    } {-4};
-        #showme {HP:${my[hp][graph]}   SP:${my[sp][graph]}  Sat:${my[gp1][graph]} E:${enemy[graph]} CF:<130>${corpses[coffin]}<088>${sb2_freezer}  <128>Deficit: <088>$mage[info][SPDeficit]} {-3};
+        #showme {HP:${my[hp][graph]}   SP:${my[sp][graph]}  Sat:${my[gp1][graph]} E:${enemy[graph]} CF:<130>${corpses[coffin]}<088>${sb2_freezer} <128>Deficit: <088>$mage[info][SPDeficit]} {-3};
 	#showme {$mip[gline][1]  $mip[gline][2] <128>R:<088>$mip[round]} {-6}
 }
 
