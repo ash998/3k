@@ -64,19 +64,20 @@
 #var mage[downtime][mental_cognition] {0};
 #var mage[downtime][spell_points] {0};
 #var mage[downtime][saturation] {0};
+#var mage[info][SPDeficit] {0};
 
 #alias {spell_tap_automation} {
-  #if {$magev[auto][spell_tap]}
-  {
 
 #nop How many rounds left in this reset with no MI running;
     #math {MIFreeRounds} {((100-$my[golem][reset])*6 - ($my[immersion][count]*90 + $my[immersion][rounds]))};
 
 #nop How much SP we need to cover with tap to stay at 90% SP;
-    #math {SPDeficit} {(($MIFreeRounds * $magev[setting][SPSpentPerRnd]) - ($my[immersion][count] * $magev[setting][SPDeltaPerMI]) + (($my[sp][max] * 9 / 10)-$my[sp][current]) - (($magev[setting][SPDeltaPerMI]*$my[immersion][rounds])/90))};
+    #math {mage[info][SPDeficit]} {(($MIFreeRounds * $magev[setting][SPSpentPerRnd]) - ($my[immersion][count] * $magev[setting][SPDeltaPerMI]) + (($my[sp][max] * 9 / 10)-$my[sp][current]) - (($magev[setting][SPDeltaPerMI]*$my[immersion][rounds])/90))};
 
-    #show Deficit: $SPDeficit No MI rnds: $MIFreeRounds;
-  
+#nop    #show Deficit: $mage[info][SPDeficit] No MI rnds: $MIFreeRounds;
+
+  #if {$magev[auto][spell_tap]}
+  {  
     #if {!$my[immersion][rounds] && $my[gp1][current]<$magev[setting][MaxSatToSpellTapAt] && $SPDeficit>0}
     {
       cast spell tap
@@ -217,7 +218,7 @@ spellbook.}
         #format {corpses[coffin]}  {%+2s} {$corpses[coffin]};
         #format {corpses[freezer]} {%+2s} {$corpses[freezer]};
         #showme {<088>HP:$hp/$hp_max  SP:$sp/$sp_max Sat:$gp1\%    E:$ehealth\%    IC:<130>${corpses[inventory]}<088> ${sb1_cooler} Cnc: $gp2\%    Gxp: $my[g2n]\%    } {-4};
-        #showme {HP:${my[hp][graph]}   SP:${my[sp][graph]}  Sat:${my[gp1][graph]} E:${enemy[graph]} CF:<130>${corpses[coffin]}<088>${sb2_freezer}} {-3};
+        #showme {HP:${my[hp][graph]}   SP:${my[sp][graph]}  Sat:${my[gp1][graph]} E:${enemy[graph]} CF:<130>${corpses[coffin]}<088>${sb2_freezer}  <128>Deficit: <088>$mage[info][SPDeficit]} {-3};
 	#showme {$mip[gline][1]  $mip[gline][2] <128>R:<088>$mip[round]} {-6}
 }
 
