@@ -79,8 +79,9 @@
 #nop    #show Deficit: $mage[info][SPDeficit] No MI rnds: $MIFreeRounds;
 
   #if {$magev[auto][spell_tap]}
-  {  
-    #if {!$my[immersion][rounds] && $my[gp1][current]<$magev[setting][MaxSatToSpellTapAt] && $mage[info][SPDeficit]>0}
+  { 
+    #math {SPToTapAt} {$my[sp][max]-500};
+    #if {!$my[immersion][rounds] && $my[gp1][current]<$magev[setting][MaxSatToSpellTapAt] && $mage[info][SPDeficit]>0 && $my[sp][current]<$SPToTapAt}
     {
       cast spell tap
     };
@@ -132,7 +133,13 @@ in case there is lag.;
 #nop Mystic Immersion;
 #nop If it's not running, and there are more available and (sp is lower than the setup threshold OR it's at 98% or higher to reset) -> cast it.;
 #nop Also setup vars if it was cast so spell tap automation knows the correct values.;
-        #if {$my[immersion][rounds]==0 && $my[immersion][count]>0 && (($my[sp][current]<$magev[auto][mystic_immersion_at]) || $my[golem][reset]>97)} {#math {my[immersion][count]} {$my[immersion][count]-1};#var my[immersion][rounds] {90};cast mystic immersion}; 
+        #if {$my[immersion][rounds]==0 && $my[immersion][count]>0 && (($my[sp][current]<$magev[auto][mystic_immersion_at]) || $my[golem][reset]>97)} 
+        {
+                #math {my[immersion][count]} {$my[immersion][count]-1};
+                #var my[immersion][rounds] {90};
+                #var mage[downtime][spell_points] {0};
+                cast mystic immersion
+        }; 
 
         spell_tap_automation;
 
@@ -200,6 +207,15 @@ spellbook.}
         #if {$bot} {
 	    #if {$mage[downtime][spell_points] && $my[sp][current]==$my[sp][max]} {#var mage[downtime][spell_points] 0;unpause_bot};
             #if {$mage[downtime][saturation] && $my[gp1][current]==0} {#var mage[downtime][saturation] 0;unpause_bot};
+
+            #if {$halt} {
+                #var stay_paused 0;
+                #nop Added this check because MI firing might have unpaused us;
+                #foreach {*mage[downtime][]} {item} {#if {$mage[downtime][$item]} {#var stay_paused 1}};
+                #if {!$stay_paused} {#var halt {0}};
+            };
+
+
         };
         #if {"$cooler" == "on" || $corpses[cooler] > 0} {
                 #format {sb1_cooler} {%+2s} {$corpses[cooler]};
