@@ -60,7 +60,7 @@ prompt >$nl$
 
 #nop #alias {_check_mob} {#NOP}
 
-#act {{^=S= }} {_room_short} {1};
+#act {{^=S=}} {_room_short} {1};
 
 #alias {_room_short} {
         #var stepping 1;
@@ -102,7 +102,7 @@ prompt >$nl$
 }
 
 #alias {..} {
-        #act {{^=S= }} {_room_short} {1};
+        #act {{^=S=}} {_room_short} {1};
 	#alias {_check_mob} {#var foundmob {1+$foundmob};};
 	#var halt 0;
 	#var bot 1;
@@ -116,7 +116,7 @@ prompt >$nl$
 	#var halt 0;
 	#class {xbot} {open};
 	#delay {4};
-	#act {{^=S= }} {xx} {1};
+	#act {{^=S=}} {xx} {1};
 	#alias {xx} {
 		#var stepping 1;
 		#var foundplayer 0;

@@ -15,17 +15,26 @@
         {MG} {1}
         {MI} {0}
         {MS} {1}
-        {PA} {1}
+        {PA} {0}
         {PE} {0}
         {PG} {1}
         {PS} {0}
         {S} {0}
         {SS} {1}
         {b} {0}
+        {explosive_release_at} {80}
         {max_sat} {95}
         {mg} {0}
         {min_mc} {85}
-        {min_sp} {2500}
+        {min_sp} {3000}
+        {mystic_immersion_at} {4000}
+        {spell_tap} {1}
+    }
+    {setting} 
+    {
+        {MaxSatToSpellTapAt} {85}
+        {SPDeltaPerMI} {6000}
+        {SPSpentPerRnd} {30}
     }
 }
 

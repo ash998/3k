@@ -75,7 +75,7 @@
 #nop How much SP we need to cover with tap to stay at 90% SP;
     #math {SPDeficit} {(($MIFreeRounds * $magev[setting][SPSpentPerRnd]) - ($my[immersion][count] * $magev[setting][SPDeltaPerMI]) + (($my[sp][max] * 9 / 10)-$my[sp][current]) - (($magev[setting][SPDeltaPerMI]*$my[immersion][rounds])/90))};
 
-    #echo Deficit: $SPDeficit No MI rnds: $MIFreeRounds;
+    #show Deficit: $SPDeficit No MI rnds: $MIFreeRounds;
   
     #if {!$my[immersion][rounds] && $my[gp1][current]<$magev[setting][MaxSatToSpellTapAt] and $SPDeficit>0}
     {
@@ -127,8 +127,8 @@ in case there is lag.;
 
 
 #nop Mystic Immersion;
-#nop If it's not running, and there are more available and (sp is lower than the setup threshold OR it's at 98% or higher to reset) -> cast it.
-#nop Also setup vars if it was cast so spell tap automation knows the correct values.
+#nop If it's not running, and there are more available and (sp is lower than the setup threshold OR it's at 98% or higher to reset) -> cast it.;
+#nop Also setup vars if it was cast so spell tap automation knows the correct values.;
         #if {$my[immersion][rounds]==0 && $my[immersion][count]>0 && (($my[sp][current]<$magev[auto][mystic_immersion_at]) || $my[golem][reset]>97)} {#math {my[immersion][count]} {$my[immersion][count]-1};#var my[immersion][rounds] {90};cast mystic immersion}; 
 
         spell_tap_automation;
