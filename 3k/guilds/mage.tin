@@ -78,7 +78,7 @@
 
   #if {$magev[auto][spell_tap]}
   {  
-    #if {!$my[immersion][rounds] && $my[gp1][current]<$magev[setting][MaxSatToSpellTapAt] && $SPDeficit>0}
+    #if {!$my[immersion][rounds] && $my[gp1][current]<$magev[setting][MaxSatToSpellTapAt] && $mage[info][SPDeficit]>0}
     {
       cast spell tap
     };
