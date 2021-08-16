@@ -89,14 +89,14 @@
 };
 
 
-#nop #act {{^ HP: (\d+)/(\d+) SP: (\d+)/(\d+)}} {
+#nop #act {{^ HP: (\d+)/(\d+) SP: (\d+)/(\d+)}} {;
 
 #act {^ HP: {\d+}/{\d+} SP: {\d+}/{\d+}{S|}/{\d+}%/{\d+}% Sat: {\d+} Cnc: {\d+} G/MI: {\d+}/{\d+}/{\d+}% ER: {\d+}/{\d+}% G2N: {\d+}%} {
 	#var my[hp][current]	{%1};
 	#var my[hp][max]	{%2};
 	#var my[sp][current]    {%3};
 	#var my[sp][max]        {%4};
-#nop %5 is S if studying spellbook, otherwise blank. Not used
+#nop %5 is S if studying spellbook, otherwise blank. Not used;
         #var my[mental_cognition] {%6};
         #var my[gem]            {%7};
         #var my[gp1]            {%8};
