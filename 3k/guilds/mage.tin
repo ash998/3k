@@ -172,7 +172,15 @@ in case there is lag.;
 
 
 #act {Xoox the fuzzy hedgehog hands something to Orthas.} {
+    #if {"$world"=="orthas"} {
 	#var mage[gem_fetching] {0};
+    };
+};
+
+#act {A dark siamese cat hands something to Killergate.} {
+    #if {"$world"=="killergate"} {
+        #var mage[gem_fetching] {0};
+    };
 };
 
 
