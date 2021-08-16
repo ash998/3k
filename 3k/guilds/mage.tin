@@ -60,11 +60,13 @@
 #var mage[affect][<P>] {perform};
 
 #var mage[gem_fetching] {0};
+#var mage[buffer_explosive_release] {0};
 
 #var mage[downtime][mental_cognition] {0};
 #var mage[downtime][spell_points] {0};
 #var mage[downtime][saturation] {0};
 #var mage[info][SPDeficit] {0};
+
 
 #alias {spell_tap_automation} {
 
@@ -124,7 +126,7 @@ in case there is lag.;
 	#if {!$my[prots][DS] && $magev[auto][DS]} {cast $mage[affect][DS]};
 	#if {!$my[prots][L] && $magev[auto][L]} {cast $mage[affect][L]};
 	
-	#if {$my[gem]<80} {ffetch gem;#var mage[gem_fetching] {1};};
+	#if {$my[gem]<80 && !$mage[gem_fetching]} {ffetch gem;#var mage[gem_fetching] {1};};
 
 
 #nop Mystic Immersion;
@@ -135,7 +137,7 @@ in case there is lag.;
         spell_tap_automation;
 
 #nop Explosive Release;
-        #if {($my[super][current] && $my[gp1][current]>$magev[auto][explosive_release_at]) || ($my[super][current] && $my[gp1][current]>5 && $my[super][reset]>95)} {cast explosive release};
+        #if {!$mage[buffer_explosive_release] && (($my[super][current] && $my[gp1][current]>$magev[auto][explosive_release_at]) || ($my[super][current] && $my[gp1][current]>5 && $my[super][reset]>95))} {#var mage[buffer_explosive_release] {1};cast explosive release};
 
 #nop If botting, add downtime based on various parameters;
         #if {$bot} {
@@ -168,6 +170,10 @@ in case there is lag.;
 	#foreach {*mage[downtime][]} {item} {#if {$mage[downtime][$item]} {#var stay_paused 1}};
 	
 	#if {!$stay_paused} {.tmp_unpause}
+};
+
+#act {{^You raise your hands and focus your mind on the residual magical energy$}} {
+  #var mage[buffer_explosive_release] {0};
 };
 
 
@@ -273,5 +279,34 @@ spellbook.}
     }
   }
 }
+
+#alias refm {
+        #SEND !cast fabricate as dagger#dagger#dagger;
+        #SEND !cast fabricate as dagger#dagger#dagger;
+        #SEND !cast fabricate as dagger#dagger#dagger;
+        #SEND !cast fabricate as dagger#dagger#dagger;
+        #SEND !cast fabricate as item#forge#forge;
+
+        #SEND !get dagger;
+        #SEND !reforge dagger with little from edged to penetrate;
+        #SEND !dispose dagger;
+
+        #SEND !get dagger;
+        #SEND !reforge dagger with little from edged to penetrate;
+        #SEND !dispose dagger;
+
+        #SEND !get dagger;
+        #SEND !reforge dagger with little from edged to penetrate;
+        #SEND !dispose dagger;
+
+        #SEND !get dagger;
+        #SEND !reforge dagger with little from edged to penetrate;
+        #SEND !dispose dagger;
+
+        #SEND !get forge;
+        #SEND !dispose forge;
+};
+
+
 
 #class {mage} {close}
