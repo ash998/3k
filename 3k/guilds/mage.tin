@@ -77,7 +77,7 @@
 
     #show Deficit: $SPDeficit No MI rnds: $MIFreeRounds;
   
-    #if {!$my[immersion][rounds] && $my[gp1][current]<$magev[setting][MaxSatToSpellTapAt] and $SPDeficit>0}
+    #if {!$my[immersion][rounds] && $my[gp1][current]<$magev[setting][MaxSatToSpellTapAt] && $SPDeficit>0}
     {
       cast spell tap
     };
