@@ -66,7 +66,7 @@
 #var mage[downtime][spell_points] {0};
 #var mage[downtime][saturation] {0};
 #var mage[info][SPDeficit] {0};
-
+#var mage[info][incombat] {0};
 
 #alias {spell_tap_automation} {
 
@@ -89,23 +89,27 @@
 };
 
 
-#act {{^ HP: (\d+)/(\d+) SP: (\d+)/(\d+)}} {
-	#var my[hp][current]	{%2};
-	#var my[hp][max]	{%3};
-	#var my[sp][current]    {%4};
-	#var my[sp][max]        {%5};
+#nop #act {{^ HP: (\d+)/(\d+) SP: (\d+)/(\d+)}} {
 
-#nop	#var my[hp][delta]	%4;
-#nop	#var my[gp1][current]	%5;
-#nop	#var my[gp1][max]	%6;
-#nop	#var my[gp1][delta]	%7;
-#nop	#var my[gp2][current]	%8;
-#nop	#var gxp		%9;
-#nop	#format {glvl} {%d} {$gxp};
-#nop	#math {gxp_per} {($gxp-$glvl)*100};
+#act {^ HP: {\d+}/{\d+} SP: {\d+}/{\d+}{S|}/{\d+}%/{\d+}% Sat: {\d+} Cnc: {\d+} G/MI: {\d+}/{\d+}/{\d+}% ER: {\d+}/{\d+}% G2N: {\d+}%} {
+	#var my[hp][current]	{%1};
+	#var my[hp][max]	{%2};
+	#var my[sp][current]    {%3};
+	#var my[sp][max]        {%4};
+#nop %5 is S if studying spellbook, otherwise blank. Not used
+        #var my[mental_cognition] {%6};
+        #var my[gem]            {%7};
+        #var my[gp1]            {%8};
+        #var my[gp2]            {%9};
+        #var my[golems]         {%10};
+        #var my[immersion][count] {%11};
+        #var my[golem][reset]   {%12};
+        #var my[super][current] {%13};
+        #var my[super][reset]   {%14};
+        #var my[g2n]            {%15};
 
-#nop Auto cast protection spells. Put them in priority order. Spamming
-in case there is lag.;
+
+#nop Auto cast protection spells. Put them in priority order. Spamming in case there is lag.;
         #if {!$my[prots][SS] && $magev[auto][SS]} {cast $mage[affect][SS]};
         #if {!$my[prots][MG] && $magev[auto][MG]} {cast $mage[affect][MG]};
 	#if {!$my[prots][PS] && $magev[auto][PS]} {cast $mage[affect][PS]};
@@ -144,7 +148,11 @@ in case there is lag.;
         spell_tap_automation;
 
 #nop Explosive Release;
-        #if {!$mage[buffer_explosive_release] && (($my[super][current] && $my[gp1][current]>$magev[auto][explosive_release_at]) || ($my[super][current] && $my[gp1][current]>5 && $my[super][reset]>95))} {#var mage[buffer_explosive_release] {1};cast explosive release};
+        #if {!$mage[buffer_explosive_release] && $my[super][current] && (($my[gp1][current]>$magev[auto][explosive_release_at]) || ($my[gp1][current]>5 && $my[super][reset]>95))}
+        {
+           #var mage[buffer_explosive_release] {1};
+           cast explosive release
+        };
 
 #nop If botting, add downtime based on various parameters;
         #if {$bot} {
@@ -197,13 +205,14 @@ in case there is lag.;
 };
 
 
-#act {Having absorbed all you can, you carefully close your
-spellbook.} 
+#act {Having absorbed all you can, you carefully close your spellbook.} 
 {
         #if {$bot && $halt && $mage[downtime][mental_cognition]} {#var mage[downtime][mental_cognition] 0;unpause_bot}
 };
 
 #alias {update_status} {
+        #if {"$enemy[hp]" == ""} {#var mage[info][incombat] {0}} {#var mage[info][incombat] {1}};
+
         #if {$bot} {
 	    #if {$mage[downtime][spell_points] && $my[sp][current]==$my[sp][max]} {#var mage[downtime][spell_points] 0;unpause_bot};
             #if {$mage[downtime][saturation] && $my[gp1][current]==0} {#var mage[downtime][saturation] 0;unpause_bot};
