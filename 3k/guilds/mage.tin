@@ -356,5 +356,12 @@
 };
 
 
+#act {Your deeppocket begins to fade} {
+    #if {$idle < $IdleLimit} {#send !cast deeppockets;};
+};
+
+#act {A Strong Fortress of Protection} {
+    #send !study spellbook;
+};
 
 #class {mage} {close}
