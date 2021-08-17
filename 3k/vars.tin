@@ -36,7 +36,8 @@
 	#class pubvar write .tt/3k/vars/pub.var;
 	#class shopvar write .tt/3k/vars/shop.var;
 	save_guild_vars;
-        #class botcycle_vars write {.tt/3k/vars/botcycle.var}
+        #class botcycle_vars write {.tt/3k/vars/botcycle.var};
+        #hist write .tt/logs/history.log;
 }
 
 #CLASS {vars} CLOSE
