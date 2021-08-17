@@ -1,7 +1,7 @@
 #class {utility} {open};
 
 #function {file_exists} {
-        #script {_exists} {if test -f "%0";then echo 1;else return 0; fi};
+        #script {_exists} {if test -f "%0"; then echo 1; else echo 0; fi};
         #return $_exists[1];
 };
 
