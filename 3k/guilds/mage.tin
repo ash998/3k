@@ -99,8 +99,8 @@
 #nop %5 is S if studying spellbook, otherwise blank. Not used;
         #var my[mental_cognition] {%6};
         #var my[gem]            {%7};
-        #var my[gp1]            {%8};
-        #var my[gp2]            {%9};
+        #var my[gp1][current]   {%8};
+        #var my[gp2][current]   {%9};
         #var my[golems]         {%10};
         #var my[immersion][count] {%11};
         #var my[golem][reset]   {%12};
