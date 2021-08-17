@@ -1,44 +1,53 @@
-#class {mage_vars} {open}
-#var magev[auto][S] {0};
-#var magev[auto][A] {1};
-#var magev[auto][PE] {0};
-#var magev[auto][PG] {1};
-#var magev[auto][mg] {0};
-#var magev[auto][MG] {1};
-#var magev[auto][SS] {1};
-#var magev[auto][B] {1};
-#var magev[auto][DS] {0};
-#var magev[auto][MB] {0};
-#var magev[auto][b] {0};
-#var magev[auto][PA] {1};
-#var magev[auto][MI] {0};
-#var magev[auto][I] {0};
-#var magev[auto][MS] {1};
-#var magev[auto][PS] {0};
-#var magev[auto][M] {0};
-#var magev[auto][L] {0};
-#var magev[auto][<P>] {0};
-#var magev[auto][min_mc] {85};
-#var magev[auto][min_sp] {3000};
-#var magev[auto][max_sat] {95};   
-#var magev[auto][mystic_immersion_at] {4000};
-#var magev[auto][explosive_release_at] {80};
-#var magev[auto][spell_tap] {0};
+#if {!@file_exists{.tt/3k/vars/mage.var}}
+{
 
-#nop How much more SP after 90 rounds of MI than before
-#var magev[setting][SPDeltaPerMI] {6000};
+#nop No mage.var file, load some defaults and make it.;
+  #class {mage_vars} {open};
 
-#nop How much SP spend per rnd avg. Doesn't have to be very accurate, it will even out towards the end of the MI cycle anyway.
-#var magev[setting][SPSpentPerRnd] {30};
+  #var magev[auto][S] {0};
+  #var magev[auto][A] {1};
+  #var magev[auto][PE] {0};
+  #var magev[auto][PG] {1};
+  #var magev[auto][mg] {0};
+  #var magev[auto][MG] {1};
+  #var magev[auto][SS] {1};
+  #var magev[auto][B] {1};
+  #var magev[auto][DS] {0};
+  #var magev[auto][MB] {0};
+  #var magev[auto][b] {0};
+  #var magev[auto][PA] {1};
+  #var magev[auto][MI] {0};
+  #var magev[auto][I] {0};
+  #var magev[auto][MS] {1};
+  #var magev[auto][PS] {0};
+  #var magev[auto][M] {0};
+  #var magev[auto][L] {0};
+  #var magev[auto][<P>] {0};
+  #var magev[auto][min_mc] {85};
+  #var magev[auto][min_sp] {3000};
+  #var magev[auto][max_sat] {95};   
+  #var magev[auto][mystic_immersion_at] {4000};
+  #var magev[auto][explosive_release_at] {80};
+  #var magev[auto][spell_tap] {0};
 
-#var magev[setting][MaxSatToSpellTapAt] {85};
+#nop How much more SP after 90 rounds of MI than before;
+  #var magev[setting][SPDeltaPerMI] {6000};
 
-#class mage_vars read {.tt/3k/vars/mage.var};
-#class {mage_vars} {close}
+#nop How much SP spend per rnd avg. Doesn't have to be very accurate, it will even out towards the end of the MI cycle anyway.;
+  #var magev[setting][SPSpentPerRnd] {30};
+
+  #var magev[setting][MaxSatToSpellTapAt] {85};
+
+  #class mage_vars write {.tt/3k/vars/mage.var};
+  #class {mage_vars} {close};
+} 
+{
+  #class mage_vars read {.tt/3k/vars/mage.var};
+}
 
 #class {mage} {open}
 
-#var guild mage
+#var guild mage;
 #var mage[affect][S] {shield};
 #var mage[affect][A] {armor};
 #var mage[affect][PE] {protection from evil};
