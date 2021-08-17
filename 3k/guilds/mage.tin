@@ -146,7 +146,7 @@
 #nop Mystic Immersion;
 #nop If it's not running, and there are more available and (sp is lower than the setup threshold OR it's at 98% or higher to reset) -> cast it.;
 #nop Also setup vars if it was cast so spell tap automation knows the correct values.;
-        #if {$my[immersion][rounds]==0 && $my[immersion][count]>0 && (($my[sp][current]<$magev[auto][mystic_immersion_at]) || $my[golem][reset]>97)} 
+        #if {!$my[immersion][rounds] && $my[immersion][count]>0 && (($my[sp][current]<$magev[auto][mystic_immersion_at]) || $my[golem][reset]>97)} 
         {
                 #math {my[immersion][count]} {$my[immersion][count]-1};
                 #var my[immersion][rounds] {90};
@@ -173,7 +173,7 @@
             {
                 pause_bot;
                 #var mage[downtime][mental_cognition] 1;
-                #show !!!!!LOW MC BOT PAUSED!!!!!;
+                update_chat <138>!!!!!LOW MC BOT PAUSED!!!!!<099>;
             };
 
 #nop Spell Points;
@@ -181,7 +181,7 @@
             {
                 pause_bot;
                 #var mage[downtime][spell_points] 1;
-                #show !!!!!LOW SP BOT PAUSED!!!!!;
+                update_chat <138>!!!!!LOW SP BOT PAUSED!!!!!<099>;
             };
 
 #nop Saturation;
@@ -189,7 +189,7 @@
             {
                 pause_bot;
                 #var mage[downtime][saturation] 1;
-                #show !!!!!HIGH SAT BOT PAUSED!!!!!;
+                update_chat <138>!!!!!HIGH SAT BOT PAUSED!!!!!<099>;
             };
 
         };
