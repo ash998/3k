@@ -89,7 +89,7 @@
 };
 
 
-#nop #act {{^ HP: (\d+)/(\d+) SP: (\d+)/(\d+)}} {;
+
 
 #act {^ HP: {\d+}/{\d+} SP: {\d+}/{\d+}{S|}/{\d+}%/{\d+}% Sat: {\d+} Cnc: {\d+} G/MI: {\d+}/{\d+}/{\d+}% ER: {\d+}/{\d+}% G2N: {\d+}%} {
 	#var my[hp][current]	{%1};
@@ -207,7 +207,11 @@
 
 #act {Having absorbed all you can, you carefully close your spellbook.} 
 {
-        #if {$bot && $halt && $mage[downtime][mental_cognition]} {#var mage[downtime][mental_cognition] 0;unpause_bot}
+        #if {$bot && $halt && $mage[downtime][mental_cognition]} 
+        {
+                #var mage[downtime][mental_cognition] 0;
+                unpause_bot
+        }
 };
 
 #alias {update_status} {
@@ -297,10 +301,13 @@
     #if {"$_value"!="_noval"} {#var magev[auto][$_setting] {$_value};#showme $_setting is now set to $_value};
     #if {"$_value"=="_noval"} {
       #if {$magev[auto][$_setting]} {
-        #var magev[auto][$_setting] {0};#showme $_setting is now toggled off.
+        #var magev[auto][$_setting] {0};
+        #showme $_setting is now toggled off.;
       } 
       {
-        #var magev[auto][$_setting] {1};#showme $_setting is now toggled on.}
+        #var magev[auto][$_setting] {1};
+        #showme $_setting is now toggled on.;
+      }
     }
   }
 }
