@@ -58,8 +58,11 @@
 	#list {botcycle} {get} {$cycle} {currentarea};
        
         #if {$dungeon[scaler][$currentarea][$world][$guild]} {scaler $dungeon[scaler][$currentarea][$world][$guild]};
-	
-	go $currentarea;
+
+        #var roomnote {};
+        #read .tt/3k/bots/$currentarea.tin;
+	#if {"$roomnote"!=""} {go $roomnote} {go $currentarea};
+
 	#delay {1} {- $currentarea};
 	#delay {4} {..}
 };
@@ -73,8 +76,11 @@
 	#list {botcycle} {get} {$cycle} {currentarea};
 	
 	#if {$dungeon[scaler][$currentarea][$world][$guild]} {scaler $dungeon[scaler][$currentarea][$world][$guild]};
-	
-	go $currentarea;
+
+        #var roomnote {};
+        #read .tt/3k/bots/$currentarea.tin;
+        #if {"$roomnote"!=""} {go $roomnote} {go $currentarea};
+
 	#delay {1} {- $currentarea};
 	#delay {4} {..}
 };

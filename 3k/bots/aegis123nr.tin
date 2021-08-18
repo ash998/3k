@@ -1,9 +1,10 @@
 #class {bot} {open}
 
-#var {no_loop} {0}
+#var {no_loop} {1}
 #var {no_home} {0}
 #var {hardmode} {0}
 #var {vacuum} {1}
+#var {roomnote} {aegis1}
 
 #var {botpath} {e;e;s;e;e;s;w;s;w;n;w;s;e;s;e;s;e;n;e;s;e;n;e;s;w;w;n;n;e;e;n;w;n;w;n;e;e;d;w;n;e;w;w;s;w;w;n;s;w;w;n;w;e;s;s;w;s;e;e;e;e;e;e;e;n;e;s;w;w;s;w;w;e;s;e;e;w;w;w;w;w;w;e;e;e;d;w;s;n;w;n;n;w;s;w;e;n;w;e;n;w;e;e;n;w;e;n;w;e;e;w;s;e;w;s;e;s;n;e;s;n;e;s;n;e;s;n;e;e;w;s;e;w;s;e;w;s;e;w;s;n;w;e;n;n;n;w;n;w;e;n;s;e;e}
 
