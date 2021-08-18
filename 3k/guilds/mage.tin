@@ -4,6 +4,8 @@
 #nop No mage.var file, load some defaults and make it.;
   #class {mage_vars} {open};
 
+
+#nop Defensive spells:;
   #var magev[auto][S] {0};
   #var magev[auto][A] {1};
   #var magev[auto][PE] {0};
@@ -30,6 +32,13 @@
   #var magev[auto][explosive_release_at] {80};
   #var magev[auto][spell_tap] {0};
 
+  #var magev[auto][sl] {0};
+  #var magev[auto][fm] {0};
+  #var magev[auto][pk] {0};
+  #var magev[auto][ma] {0};
+  #var magev[auto][ed] {0};
+
+
 #nop How much more SP after 90 rounds of MI than before;
   #var magev[setting][SPDeltaPerMI] {6000};
 
@@ -40,6 +49,7 @@
 
   #class mage_vars write {.tt/3k/vars/mage.var};
   #class {mage_vars} {close};
+
 } 
 {
   #class mage_vars read {.tt/3k/vars/mage.var};
@@ -76,6 +86,15 @@
 #var mage[downtime][saturation] {0};
 #var mage[info][SPDeficit] {0};
 #var mage[info][incombat] {0};
+
+#var mage[O][cast_buffer] {0};
+
+#var mage[debuff][sl] {0};
+#var mage[debuff][fm] {0};
+#var mage[debuff][pk] {0};
+#var mage[debuff][ma] {0};
+#var mage[debuff][ed] {0};
+
 
 #alias {spell_tap_automation} {
 
@@ -146,7 +165,7 @@
 #nop Mystic Immersion;
 #nop If it's not running, and there are more available and (sp is lower than the setup threshold OR it's at 98% or higher to reset) -> cast it.;
 #nop Also setup vars if it was cast so spell tap automation knows the correct values.;
-        #if {!$my[immersion][rounds] && $my[immersion][count]>0 && (($my[sp][current]<$magev[auto][mystic_immersion_at]) || $my[golem][reset]>97)} 
+        #if {$mage[info][incombat] && !$my[immersion][rounds] && $my[immersion][count]>0 && (($my[sp][current]<$magev[auto][mystic_immersion_at]) || $my[golem][reset]>97)} 
         {
                 #math {my[immersion][count]} {$my[immersion][count]-1};
                 #var my[immersion][rounds] {90};
@@ -155,17 +174,20 @@
                 #send !cast giant strength at $world;
         }; 
 
-        spell_tap_automation;
+        #if {$mage[info][incombat]} {spell_tap_automation};
 
 #nop Explosive Release;
-        #if {!$mage[buffer_explosive_release] && $my[super][current] && (($my[gp1][current]>$magev[auto][explosive_release_at]) || ($my[gp1][current]>5 && $my[super][reset]>95))}
+        #if {$mage[info][incombat] && !$mage[buffer_explosive_release] && $my[super][current] && (($my[gp1][current]>$magev[auto][explosive_release_at]) || ($my[gp1][current]>5 && $my[super][reset]>95))}
         {
            #var mage[buffer_explosive_release] {1};
-           cast explosive release
+           #var mage[O][cast_buffer] {1};
+           #send !cast explosive release;
         };
 
+        #if {$mage[info][incombat]} {mage_debuff_automation};
+
 #nop If botting, add downtime based on various parameters;
-        #if {$bot} {
+        #if {$mage[info][incombat] && $bot} {
 
 #nop NOTE: $my[mental_cognition] is zero when at 100%;
 #nop Mental Cognition;
@@ -291,7 +313,13 @@
 }
 
 #alias {corpsetrig} {
-  study spellbook
+  #send !study spellbook;
+
+  #var mage[debuff][sl] {0};
+  #var mage[debuff][fm] {0};
+  #var mage[debuff][pk] {0};
+  #var mage[debuff][ma] {0};
+  #var mage[debuff][ed] {0};
 }
 
 #alias {save_guild_vars} {#class mage_vars write {.tt/3k/vars/mage.var}}
@@ -371,6 +399,77 @@
 
 #act {A Strong Fortress of Protection} {
     #send !study spellbook;
+};
+
+#act {{is already slowed.$|^You raise your arms and suddenly}} {
+    #var mage[O][cast_buffer] {0};
+    #var mage[debuff][sl] {1};
+};
+
+#act {seems to speed up...$} {
+    #var mage[debuff][sl] {0};
+};
+
+#act {{^You focus your destructive energy upon the mind of|^This spell cannot affect such a creature.$}} {
+    #var mage[O][cast_buffer] {0};
+    #var mage[debuff][fm] {1};
+};
+
+#act {{^You wave your hands and *POOF*,}} {
+    #var mage[O][cast_buffer] {0};
+    #var mage[debuff][pk] {1};
+};
+
+#act {{resists the effects!$}} {
+    #var mage[O][cast_buffer] {0};
+};
+
+#act {{^You begin speaking in soft low tones, slowly uttering forth the syllables$}} {
+    #var mage[O][cast_buffer] {0};
+    #var mage[debuff][ma] {1};
+};
+
+#act {{^Your hand begins to pulsate with black light.$}} {
+    #var mage[O][cast_buffer] {0};
+    #math {mage[debuff][ed]} {$mage[debuff][ed]+1};
+};
+
+#act {{^You cannot drain that creature again.$|^This spell doesn't work on the undead.$}} {
+    #var mage[O][cast_buffer] {0};
+    #var mage[debuff][ed] {2};
+};
+
+#act {{^You raise your hands and focus your mind on the residual magical energy$}} {
+    #var mage[O][cast_buffer] {0};
+};
+
+#alias {mage_debuff_automation} {
+  #if {!$mage[O][cast_buffer]} {
+    #if {$magev[auto][sl] && !$mage[debuff][sl]} {
+      #send !cast slow;
+      #var mage[O][cast_buffer] {1};
+    } {
+      #if {$magev[auto][fm] && !$mage[debuff][fm]} {
+        #send !cast feeblemind;
+        #var mage[O][cast_buffer] {1};
+      } {
+        #if {$magev[auto][pk] && !$mage[debuff][pk]} {
+          #send !cast phantasmal killer;
+          #var mage[O][cast_buffer] {1};
+        } {
+          #if {$magev[auto][ma] && !$mage[debuff][ma]} {
+            #send !cast mystic atrophy;
+            #var mage[O][cast_buffer] {1};
+          } {
+            #if {$magev[auto][ed] && !$mage[debuff][ed]} {
+              #send !cast energy drain;
+              #var mage[O][cast_buffer] {1};
+            }
+          }
+        }
+      }
+    }
+  };
 };
 
 #class {mage} {close}
