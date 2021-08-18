@@ -89,6 +89,7 @@ prompt >$nl$
 	#if {!$foundmob || $foundplayer} {
 	        #var stepping 1;
 	        #path walk;
+                #path save position bots[position];
 	} {
 	        #var stepping 0;
 	        #if {"$mobname" != ""} {
@@ -225,6 +226,7 @@ prompt >$nl$
 	} {
 		#unact {^>$};
 		#path load botpath;
+                #path save length bots[length];
 		#var foundmob 0;
 		.bot
 	}
@@ -247,7 +249,8 @@ prompt >$nl$
 }
 
 
-#path load botpath
-#var halt 2
+#path load botpath;
+#path save length bots[length];
+#var halt 2;
 
 #class {bot} {close}
