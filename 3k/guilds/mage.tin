@@ -164,6 +164,7 @@
 
 #nop Mystic Immersion;
 #nop If it's not running, and there are more available and (sp is lower than the setup threshold OR it's at 98% or higher to reset) -> cast it.;
+#nop If there is more than one MI available, spend one if at 81% or higher towards reset;
 #nop Also setup vars if it was cast so spell tap automation knows the correct values.;
         #if {$mage[info][incombat]
              && !$my[immersion][rounds]
@@ -340,10 +341,10 @@
           #if {$mage[downtime][spell_points]} {#var mage[downtimereason] {<118>SP }};
           #if {$mage[downtime][saturation]} {#var mage[downtimereason] {$mage[downtimereason]<118>SAT }};
           #if {$mage[downtime][mental_cognition]} {#var mage[downtimereason] {$mage[downtimereason]<118>MC }};
-          #if {"$mage[downtimereason]"!=""} {#var mage[downtimereason] {#var mage[downtimereason] {<128>Pause: $mage[downtimereason]<099>}}};
+          #if {"$mage[downtimereason]"!=""} {#var mage[downtimereason] {<128>Pause: $mage[downtimereason]<099>}};
         };
 
-        #showme {<088>HP:$hp/$hp_max  SP:$sp/$sp_max Sat:$gp1\%    E:$ehealth\%    IC:<130>${corpses[inventory]}<088> ${sb1_cooler} Cnc: $gp2\%    Gxp: $my[g2n]\%    } {-4};
+        #showme {<088>HP:$hp/$hp_max  SP:$sp/$sp_max Sat:$gp1\%    E:$ehealth\%    IC:<130> ${corpses[inventory]}<088> ${sb1_cooler}Cnc: $gp2\%    Gxp: $my[g2n]\%    } {-4};
         #showme {HP:${my[hp][graph]}   SP:${my[sp][graph]}  Sat:${my[gp1][graph]} E:${enemy[graph]} CF:<130>${corpses[coffin]}<088>${sb2_freezer} <128>Deficit: <088>$mage[info][SPDeficit] $mage[downtimereason]} {-3};
 	#showme {$mip[gline][1]  $mip[gline][2] <128>R:<088>$mip[round]} {-6}
 }
