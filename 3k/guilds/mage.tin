@@ -462,7 +462,7 @@
             #send !cast mystic atrophy;
             #var mage[O][cast_buffer] {1};
           } {
-            #if {$magev[auto][ed] && !$mage[debuff][ed]} {
+            #if {$magev[auto][ed] > $mage[debuff][ed]} {
               #send !cast energy drain;
               #var mage[O][cast_buffer] {1};
             }
