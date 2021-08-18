@@ -266,6 +266,7 @@
 
 #act {{^You raise your hands and focus your mind on the residual magical energy$}} {
   #var mage[buffer_explosive_release] {0};
+  #var mage[O][cast_buffer] {0};
 };
 
 
@@ -475,10 +476,6 @@
 #act {{^You cannot drain that creature again.$|^This spell doesn't work on the undead.$}} {
     #var mage[O][cast_buffer] {0};
     #var mage[debuff][ed] {2};
-};
-
-#act {{^You raise your hands and focus your mind on the residual magical energy$}} {
-    #var mage[O][cast_buffer] {0};
 };
 
 #alias {mage_debuff_automation} {
