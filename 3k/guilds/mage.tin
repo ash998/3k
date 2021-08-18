@@ -320,6 +320,7 @@
   #var mage[debuff][pk] {0};
   #var mage[debuff][ma] {0};
   #var mage[debuff][ed] {0};
+  #var mage[O][cast_buffer] {0};
 }
 
 #alias {save_guild_vars} {#class mage_vars write {.tt/3k/vars/mage.var}}
