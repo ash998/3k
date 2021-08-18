@@ -100,12 +100,12 @@ prompt >$nl$
 }
 
 #alias {_check_mob} {
-        #var foundmob {1+$foundmob};
+        #math foundmob {1+$foundmob};
 }
 
 #alias {..} {
         #act {{^=S=}} {_room_short} {1};
-	#alias {_check_mob} {#var foundmob {1+$foundmob};};
+	#alias {_check_mob} {#math foundmob {1+$foundmob};};
 	#var halt 0;
 	#var bot 1;
 	#var stepping 1;
