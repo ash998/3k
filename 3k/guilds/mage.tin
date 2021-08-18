@@ -276,9 +276,23 @@
     };
 };
 
+#act {^Xoox the fuzzy hedgehog says: I did not have enough coins.$} {
+    #if {"$world"=="orthas"} {
+        #var mage[gem_fetching] {0};
+        update_chat <138>!!!!!NEED MONEY FOR GEMS!!!!!<099>;
+    };
+};
+
 #act {A dark siamese cat hands something to Killergate.} {
     #if {"$world"=="killergate"} {
         #var mage[gem_fetching] {0};
+    };
+};
+
+#act {^A dark siamese cat says: I did not have enough coins.$} {
+    #if {"$world"=="killergate"} {
+        #var mage[gem_fetching] {0};
+        update_chat <138>!!!!!NEED MONEY FOR GEMS!!!!!<099>;
     };
 };
 
