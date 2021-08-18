@@ -90,6 +90,7 @@ prompt >$nl$
 	        #var stepping 1;
 	        #path walk;
                 #path save position bots[position];
+                #if {&{botcycle[]}} {botdraw};
 	} {
 	        #var stepping 0;
 	        #if {"$mobname" != ""} {
