@@ -111,7 +111,7 @@
     #math {SPToTapAt} {$my[sp][max]-500};
     #if {!$my[immersion][rounds] && $my[gp1][current]<$magev[setting][MaxSatToSpellTapAt] && $mage[info][SPDeficit]>0 && $my[sp][current]<$SPToTapAt}
     {
-      cast spell tap
+      #send !cast spell tap
     };
   };
 };
@@ -138,26 +138,26 @@
 
 
 #nop Auto cast protection spells. Put them in priority order. Spamming in case there is lag.;
-        #if {!$my[prots][SS] && $magev[auto][SS]} {cast $mage[affect][SS]};
-        #if {!$my[prots][MG] && $magev[auto][MG]} {cast $mage[affect][MG]};
-	#if {!$my[prots][PS] && $magev[auto][PS]} {cast $mage[affect][PS]};
-	#if {!$my[prots][M] && $magev[auto][M]} {cast $mage[affect][M]};
-	#if {!$my[prots][mg] && $magev[auto][mg]} {cast $mage[affect][mg]};
-	#if {!$my[prots][B] && $magev[auto][B]} {cast $mage[affect][B]};
-	#if {!$my[prots][MS] && $magev[auto][MS]} {cast $mage[affect][MS]};
-	#if {!$my[prots][S] && $magev[auto][S]} {cast $mage[affect][S]};
-	#if {!$my[prots][A] && $magev[auto][A]} {cast $mage[affect][A]};
-	#if {!$my[prots][b] && $magev[auto][b]} {cast $mage[affect][b]};
-	#if {!$my[prots][PG] && $magev[auto][PG]} {cast $mage[affect][PG]};
-	#if {!$my[prots][PE] && $magev[auto][PE]} {cast $mage[affect][PE]};
-	#if {!$my[prots][MI] && $magev[auto][MI]} {cast $mage[affect][MI]};
-	#if {!$my[prots][I] && $magev[auto][I]} {cast $mage[affect][I]};
-	#if {!$my[prots][PS] && $magev[auto][PS]} {cast $mage[affect][PS]};
-	#if {!$my[prots][M] && $magev[auto][M]} {cast $mage[affect][M]};
-	#if {!$my[prots][PA] && $magev[auto][PA]} {cast $mage[affect][PA]};
-	#if {!$my[prots][MB] && $magev[auto][MB]} {cast $mage[affect][MB]};
-	#if {!$my[prots][DS] && $magev[auto][DS]} {cast $mage[affect][DS]};
-	#if {!$my[prots][L] && $magev[auto][L]} {cast $mage[affect][L]};
+        #if {!$my[prots][SS] && $magev[auto][SS]} {#send !cast $mage[affect][SS]};
+        #if {!$my[prots][MG] && $magev[auto][MG]} {#send !cast $mage[affect][MG]};
+	#if {!$my[prots][PS] && $magev[auto][PS]} {#send !cast $mage[affect][PS]};
+	#if {!$my[prots][M]  && $magev[auto][M]}  {#send !cast $mage[affect][M]};
+	#if {!$my[prots][mg] && $magev[auto][mg]} {#send !cast $mage[affect][mg]};
+	#if {!$my[prots][B]  && $magev[auto][B]}  {#send !cast $mage[affect][B]};
+	#if {!$my[prots][MS] && $magev[auto][MS]} {#send !cast $mage[affect][MS]};
+	#if {!$my[prots][S]  && $magev[auto][S]}  {#send !cast $mage[affect][S]};
+	#if {!$my[prots][A]  && $magev[auto][A]}  {#send !cast $mage[affect][A]};
+	#if {!$my[prots][b]  && $magev[auto][b]}  {#send !cast $mage[affect][b]};
+	#if {!$my[prots][PG] && $magev[auto][PG]} {#send !cast $mage[affect][PG]};
+	#if {!$my[prots][PE] && $magev[auto][PE]} {#send !cast $mage[affect][PE]};
+	#if {!$my[prots][MI] && $magev[auto][MI]} {#send !cast $mage[affect][MI]};
+	#if {!$my[prots][I]  && $magev[auto][I]}  {#send !cast $mage[affect][I]};
+	#if {!$my[prots][PS] && $magev[auto][PS]} {#send !cast $mage[affect][PS]};
+	#if {!$my[prots][M]  && $magev[auto][M]}  {#send !cast $mage[affect][M]};
+	#if {!$my[prots][PA] && $magev[auto][PA]} {#send !cast $mage[affect][PA]};
+	#if {!$my[prots][MB] && $magev[auto][MB]} {#send !cast $mage[affect][MB]};
+	#if {!$my[prots][DS] && $magev[auto][DS]} {#send !cast $mage[affect][DS]};
+	#if {!$my[prots][L]  && $magev[auto][L]}  {#send !cast $mage[affect][L]};
 	
 	#if {$my[gem]<80 && !$mage[gem_fetching]} {ffetch gem;#var mage[gem_fetching] {1};};
 
@@ -165,7 +165,15 @@
 #nop Mystic Immersion;
 #nop If it's not running, and there are more available and (sp is lower than the setup threshold OR it's at 98% or higher to reset) -> cast it.;
 #nop Also setup vars if it was cast so spell tap automation knows the correct values.;
-        #if {$mage[info][incombat] && !$my[immersion][rounds] && $my[immersion][count]>0 && (($my[sp][current]<$magev[auto][mystic_immersion_at]) || $my[golem][reset]>97)} 
+        #if {$mage[info][incombat]
+             && !$my[immersion][rounds]
+             && $my[immersion][count]
+             && (
+                  ($my[sp][current]<$magev[auto][mystic_immersion_at])
+                  || ($my[golem][reset]>97)
+                  || ($my[golem][reset]>80 && $my[immersion][count]>1)
+                )
+            } 
         {
                 #math {my[immersion][count]} {$my[immersion][count]-1};
                 #var my[immersion][rounds] {90};
@@ -177,7 +185,28 @@
         #if {$mage[info][incombat]} {spell_tap_automation};
 
 #nop Explosive Release;
-        #if {$mage[info][incombat] && !$mage[buffer_explosive_release] && $my[super][current] && (($my[gp1][current]>$magev[auto][explosive_release_at]) || ($my[gp1][current]>5 && $my[super][reset]>95))}
+        #if {$mage[info][incombat] 
+             && !$mage[buffer_explosive_release] 
+             && $my[super][current] 
+             && (
+                  (
+                    $my[gp1][current]>$magev[auto][explosive_release_at]
+                  )
+                  ||
+                  (
+                    (
+                      $my[gp1][current]>5 
+                      && $my[super][reset]>95
+                    )
+                    ||
+                    (
+                      $my[super][current]>1
+                      $my[gp1][current]>5
+                      && $my[super][reset]>80                      
+                    )
+                  )
+                )
+            }
         {
            #var mage[buffer_explosive_release] {1};
            #var mage[O][cast_buffer] {1};
@@ -274,8 +303,6 @@
                 #foreach {*mage[downtime][]} {item} {#if {$mage[downtime][$item]} {#var stay_paused 1}};
                 #if {!$stay_paused} {#var halt {0}};
             };
-
-
         };
         #if {"$cooler" == "on" || $corpses[cooler] > 0} {
                 #format {sb1_cooler} {%+2s} {$corpses[cooler]};
@@ -313,7 +340,7 @@
           #if {$mage[downtime][spell_points]} {#var mage[downtimereason] {<118>SP }};
           #if {$mage[downtime][saturation]} {#var mage[downtimereason] {$mage[downtimereason]<118>SAT }};
           #if {$mage[downtime][mental_cognition]} {#var mage[downtimereason] {$mage[downtimereason]<118>MC }};
-          #if {$mage[downtimereason]!={}} {#var mage[downtimereason] {#var mage[downtimereason] {<128>Pause: $mage[downtimereason]<099>}}};
+          #if {"$mage[downtimereason]"!=""} {#var mage[downtimereason] {#var mage[downtimereason] {<128>Pause: $mage[downtimereason]<099>}}};
         };
 
         #showme {<088>HP:$hp/$hp_max  SP:$sp/$sp_max Sat:$gp1\%    E:$ehealth\%    IC:<130>${corpses[inventory]}<088> ${sb1_cooler} Cnc: $gp2\%    Gxp: $my[g2n]\%    } {-4};
