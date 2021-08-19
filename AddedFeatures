@@ -113,6 +113,9 @@ utility.tin
 ********
 **Mage**
 ********
+
+*Scope
+
 New guild supported! Currently only supports O mages, as S
 mage is not viable at the moment.
 
@@ -141,14 +144,17 @@ Here is an example of ktrig:
 !IMPORTANT! In order to get Saturation as GP1 you need to:
 "set show_gp_as 2".
 
+
+*Setup
 Use the "mauto" command to setup most of the features. Typing
 it with no arguments will show the syntax and your current
 settings. Note that - eventually - you can setup all defense
 spells via greater contingency, but until then, this can 
-keep them up.
+keep them up. 
 
-*Client side defense spell automation abbreviations:
+The settings are case sensitive.
 
+*Client side defense spell automation abbreviations
 S  - Shield spell               A  - Armor
 PE - Protection from Evil       PG - Protection from Good
 mg - Minor Globe of Invuln.     MG - Major Globe
@@ -165,15 +171,19 @@ Example1: mauto S
 Example2: mauto S 1
           Will make it so you will autocast shield.
 
-*Client side debuff spell automation abbreviations:
+*Client side debuff spell automation abbreviations
 sl - Slow
 fm - Feeblemind
 pk - Phantasmal Killer
 ma - Mystic Atrophy
 ed - Energy Drain
 
+These settings are also toggleable, however if you want to
+use Energy Drain twice per mob use "mauto ed 2".
 
-*Other settings:
+
+
+*Other settings
 explosive_release_at - How high to allow Saturation to be
                        without casting explosive release.
 mystic_immersion_at  - How low to allow Spell Points to be
@@ -189,7 +199,7 @@ min_mc  - How low to allow Mental Cognition to go without
 min_sp  - How low to allow Spell Points to go without making
           the bot pause to regen it.
 
-*Exceptions:
+*Exceptions
 If the number of Explosive Releases available are greater
 than one, and Saturation is over 5% and Explosive Release
 resets within 190 rounds, then it will expend an Explosive
