@@ -107,6 +107,7 @@ utility.tin
   *Bot path zelligars improved
 
 3k/guilds/mage.tin
+  *Mage (surprise!)
   *Temp pause/unpause bot (dependency)
 
 ********
@@ -241,9 +242,3 @@ NOTE! You need to setup 2 #act's for this to work example:
   #act {^Xoox the fuzzy hedgehog says: I did not have enough coins.$}
 
 TODO: make it possible to setup familiar name.
-
-
-
-
-
-
