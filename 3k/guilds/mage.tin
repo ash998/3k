@@ -47,6 +47,8 @@
 
   #var magev[setting][MaxSatToSpellTapAt] {85};
 
+  #var magev[setting][familiar_name] {Xoox the fuzzy hedgehog};
+
   #class mage_vars write {.tt/3k/vars/mage.var};
   #class {mage_vars} {close};
 
@@ -270,30 +272,13 @@
 };
 
 
-#act {Xoox the fuzzy hedgehog hands something to Orthas.} {
-    #if {"$world"=="orthas"} {
-	#var mage[gem_fetching] {0};
-    };
+#act {^$magev[setting][familiar_name] hands something to $world_cap.$} {
+    #var mage[gem_fetching] {0};
 };
 
-#act {^Xoox the fuzzy hedgehog says: I did not have enough coins.$} {
-    #if {"$world"=="orthas"} {
-        #var mage[gem_fetching] {0};
-        update_chat <138>!!!!!NEED MONEY FOR GEMS!!!!!<099>;
-    };
-};
-
-#act {A dark siamese cat hands something to Killergate.} {
-    #if {"$world"=="killergate"} {
-        #var mage[gem_fetching] {0};
-    };
-};
-
-#act {^A dark siamese cat says: I did not have enough coins.$} {
-    #if {"$world"=="killergate"} {
-        #var mage[gem_fetching] {0};
-        update_chat <138>!!!!!NEED MONEY FOR GEMS!!!!!<099>;
-    };
+#act {^$magev[setting][familiar_name] says: I did not have enough coins.$} {
+    #var mage[gem_fetching] {0};
+    update_chat <138>!!!!!NEED MONEY FOR GEMS!!!!!<099>;
 };
 
 

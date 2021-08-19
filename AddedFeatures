@@ -231,24 +231,30 @@ in order to not waste it due to not being able to heal
 overmax.
 
 These variables are used by the Spell Tap automation:
- #var MaxSatToSpellTapAt {85} - Don't tap if Saturation is
-                                higher than this.
- #var SPDeltaPerMI {6000}     - How many net SP you gain per
-                                time you use MI.
- #var SPSpentPerRnd {35}      - Approximately how many SP
-                                you lose each round while MI
-                                is not running. It is better
-                                to keep this number a bit
-                                lower than what you lose, in
-                                order to not partially waste
-                                MIs.
+ #var magev[setting][MaxSatToSpellTapAt] {85} 
+                               - Don't tap if Saturation is
+                                 higher than this.
+ #var magev[setting][SPDeltaPerMI] {6000}     
+                               - How many net SP you gain per
+                                 time you use MI.
+ #var magev[setting][SPSpentPerRnd] {35}      
+                               - Approximately how many SP
+                                 you lose each round while MI
+                                 is not running. It is better
+                                 to keep this number a bit
+                                 lower than what you lose, in
+                                 order to not partially waste
+                                 MIs.
+
 
 *Automatic gem buying
 When your gem % is lower than 80, the client will "ffetch
 gem".
 
-NOTE! You need to setup 2 #act's for this to work example:
-  #act {^Xoox the fuzzy hedgehog hands something to Orthas.$}
-  #act {^Xoox the fuzzy hedgehog says: I did not have enough coins.$}
+NOTE! You need to setup your familiar name for this to work.
+Example:
+  #var magev[setting][familiar_name] {Bob the fuzzy hedgehog}
 
-TODO: make it possible to setup familiar name.
+The string you enter for the familiar name should be like it
+appears in the room if you type "look", without a period in
+the end.
