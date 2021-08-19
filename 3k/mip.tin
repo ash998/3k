@@ -95,7 +95,7 @@
 		#CASE {"AAH"} {#NOP Download Media};
 		#CASE {"BAA"} {#NOP Special Textstring;#showme {%2} {2}};
 		#CASE {"BAB"} {#NOP 2 Way Communications;.mipProcessBABgag {%2}};
-		#CASE {"BAC"} {#NOP Special Textstring2};
+		#CASE {"BAC"} {#NOP Special Textstring2;#showme {%2}};
 		#CASE {"BAD"} {#NOP Room Description};
 		#CASE {"BAE"} {#NOP Mud Lag;#VAR {session[lag]} {%2};update_caption};
 		#CASE {"BAF"} {#NOP Send Edit};
