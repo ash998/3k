@@ -306,6 +306,10 @@
                 #if {!$stay_paused} {#var halt {0}};
             };
         };
+
+        #nop Failsafe for gems if the var is stuck somehow;
+        #if {$mage[gem_fetching] && $my[gem]<50} {#var mage[gem_fetching] {0}};
+
         #if {"$cooler" == "on" || $corpses[cooler] > 0} {
                 #format {sb1_cooler} {%+2s} {$corpses[cooler]};
                 #var {sb1_cooler} { CL:<130>$sb1_cooler<088>}
