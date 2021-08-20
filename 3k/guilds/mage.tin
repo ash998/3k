@@ -266,10 +266,11 @@
 	#if {!$stay_paused} {.tmp_unpause}
 };
 
-#act {{^You raise your hands and focus your mind on the residual magical energy$}} {
+#act {{^You raise your hands and focus your mind on the residual magical energy$|^You can't fight inanimate objects!$}} {
   #var mage[buffer_explosive_release] {0};
   #var mage[O][cast_buffer] {0};
 };
+
 
 
 #act {^$magev[setting][familiar_name] hands something to $world_cap.$} {
