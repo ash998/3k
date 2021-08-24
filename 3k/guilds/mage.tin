@@ -273,7 +273,7 @@
 
 
 
-#act {^$magev[setting][familiar_name] hands something to $world_cap.$} {
+#act {^$magev[setting][familiar_name] hands something to @trim{$world_cap}.$} {
     #var mage[gem_fetching] {0};
 };
 

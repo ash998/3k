@@ -5,4 +5,10 @@
         #return $_exists[1];
 };
 
+#function {trim} {
+  #var _returnval {%0};
+  #replace {_returnval} { } {};
+  #return $_returnval;
+};
+
 #class {utility} {close};
