@@ -6,7 +6,7 @@
     {
         {<P>} {0}
         {A} {1}
-        {B} {1}
+        {B} {0}
         {DS} {0}
         {I} {0}
         {L} {0}
@@ -18,23 +18,51 @@
         {PA} {0}
         {PE} {0}
         {PG} {1}
-        {PS} {0}
+        {PS} {1}
         {S} {0}
         {SS} {1}
         {b} {0}
+        {ed} {0}
         {explosive_release_at} {80}
+        {fm} {0}
+        {ma} {0}
         {max_sat} {95}
         {mg} {0}
         {min_mc} {85}
-        {min_sp} {3000}
-        {mystic_immersion_at} {4000}
+        {min_sp} {2000}
+        {mystic_immersion_at} {3000}
+        {pk} {0}
+        {sl} {1}
         {spell_tap} {1}
     }
     {setting} 
     {
-        {MaxSatToSpellTapAt} {85}
-        {SPDeltaPerMI} {6000}
-        {SPSpentPerRnd} {30}
+        {MaxSatToSpellTapAt} {88}
+        {SPDeltaPerMI} {8000}
+        {SPSpentPerRnd} {35}
+        {familiar_name} {Xoox the fuzzy hedgehog}
+    }
+    {spellup}
+    {
+	{1} {study spellbook}
+	{2} {cast find familiar}
+	{3} {mkt1}
+        {4} {cast monitor}
+	{5} {cast magnificent shield}
+	{6} {cast greater contingency as shield#cast magnificent shield}
+	{7} {cast armor}
+	{8} {cast greater contingency as armor#cast armor}
+	{9} {cast stoneskin}
+        {10} {cast greater contingency as stoneskin#cast stoneskin}
+        {11} {cast major globe}
+        {12} {cast greater contingency as major_globe#cast major globe}
+        {13} {cast prismatic sphere}
+        {14} {cast greater contingency as prismatic sphere#400#cast prismatic sphere}
+        {15} {cast mantle}
+        {16} {cast greater contingency as mantle#1#cast mantle}
+        {17} {cast perform as 1000/cast incinerate}
+        {18} {cast activate combat}
+        {19} {cast mindblank}
     }
 }
 
