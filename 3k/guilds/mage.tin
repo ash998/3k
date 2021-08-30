@@ -26,11 +26,12 @@
   #var magev[auto][L] {0};
   #var magev[auto][<P>] {0};
   #var magev[auto][min_mc] {85};
-  #var magev[auto][min_sp] {3000};
+  #var magev[auto][min_sp] {2000};
   #var magev[auto][max_sat] {95};   
-  #var magev[auto][mystic_immersion_at] {4000};
+  #var magev[auto][mystic_immersion_at] {3000};
   #var magev[auto][explosive_release_at] {80};
   #var magev[auto][spell_tap] {0};
+  #var magev[spellup][01] {};
 
   #var magev[auto][sl] {0};
   #var magev[auto][fm] {0};
@@ -40,7 +41,7 @@
 
 
 #nop How much more SP after 90 rounds of MI than before;
-  #var magev[setting][SPDeltaPerMI] {6000};
+  #var magev[setting][SPDeltaPerMI] {8000};
 
 #nop How much SP spend per rnd avg. Doesn't have to be very accurate, it will even out towards the end of the MI cycle anyway.;
   #var magev[setting][SPSpentPerRnd] {30};
@@ -48,6 +49,27 @@
   #var magev[setting][MaxSatToSpellTapAt] {85};
 
   #var magev[setting][familiar_name] {Xoox the fuzzy hedgehog};
+
+  #var magev[spellup][1] {study spellbook};
+  #var magev[spellup][2] {cast find familiar};
+  #var magev[spellup][3] {mkt1};
+  #var magev[spellup][4] {cast monitor};
+  #var magev[spellup][5] {cast magnificent shield};
+  #var magev[spellup][6] {cast greater contingency as shield#cast magnificent shield};
+  #var magev[spellup][7] {cast armor};
+  #var magev[spellup][8] {cast greater contingency as armor#cast armor};
+  #var magev[spellup][9] {cast stoneskin};
+  #var magev[spellup][10] {cast greater contingency as stoneskin#cast stoneskin};
+  #var magev[spellup][11] {cast major globe};
+  #var magev[spellup][12] {cast greater contingency as major_globe#cast major globe};
+  #var magev[spellup][13] {cast prismatic sphere};
+  #var magev[spellup][14] {cast greater contingency as prismatic sphere#400#cast prismatic sphere};
+  #var magev[spellup][15] {cast mantle};
+  #var magev[spellup][16] {cast greater contingency as mantle#1#cast mantle};
+  #var magev[spellup][17] {cast perform as 1000/cast incinerate};
+  #var magev[spellup][18] {cast activate combat};
+  #var magev[spellup][19] {cast mindblank};
+
 
   #class mage_vars write {.tt/3k/vars/mage.var};
   #class {mage_vars} {close};
@@ -119,7 +141,11 @@
 };
 
 
+#nop Replace all instances of @green with another colour if you want the main colour of the hpbar in another colour (don't copy the trailing semi colon).;
+#nop confhp  @green:HP:@ #$CCH#@green:/#$MHP# SP:@ #$CCS#@green:/#$MSP#/#$CPC#/#$GEM# Sat:@ #$CSAT# @green:Cnc:@ #$CCNC# @green:G/MI:@@white: #$NGM#@@green:/@@white:#$NMI#@@green:/#$GPC# ER: @@white:#$NSM#@@green:/#$SPC# G2N: @@white:#$G2N#@#$NWL#@green: PROT: [#$PRO#] COF:#$COF#@ #$ST#;
 
+#nop Trigger text for protection line:;
+#nop ^ PROT: \[( \*I(\d+)\*|)( A|)( MS|)( RS| SS|)( M|)( PS!?|)( PA|)( B|)( mg| MG|)( PG| PE|)( MB|)( DS|)( L|)( <P>|)( ST|)\] COF:(\d+)\/(\d+) (.*?)(( Mon\(.*?\):(\d+)%$)|$);
 
 #act {^ HP: {\d+}/{\d+} SP: {\d+}/{\d+}{S|}/{\d+}%/{\d+}% Sat: {\d+} Cnc: {\d+} G/MI: {\d+}/{\d+}/{\d+}% ER: {\d+}/{\d+}% G2N: {\d+}%} {
 	#var my[hp][current]	{%1};
@@ -160,7 +186,7 @@
 	#if {!$my[prots][MB] && $magev[auto][MB]} {#send !cast $mage[affect][MB]};
 	#if {!$my[prots][DS] && $magev[auto][DS]} {#send !cast $mage[affect][DS]};
 	#if {!$my[prots][L]  && $magev[auto][L]}  {#send !cast $mage[affect][L]};
-	
+
 	#if {$my[gem]<80 && !$mage[gem_fetching]} {ffetch gem;#var mage[gem_fetching] {1};};
 
 
@@ -366,6 +392,21 @@
 }
 
 #alias {save_guild_vars} {#class mage_vars write {.tt/3k/vars/mage.var}}
+
+#alias {spellup} {
+  #if {"%1"==""} {
+    #showme ---->Spellup started<----;
+    spellup 1;
+  } {
+    #if {"$magev[spellup][%1]"!=""} {
+      #send !$magev[spellup][%1];
+      #delay {2.5} {spellup @math{%1+1}};
+    } {
+      #showme ---->Spellup completed<----;
+    }
+  }
+};
+
 
 #alias {mauto} {
 
