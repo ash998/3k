@@ -308,6 +308,11 @@
     update_chat <138>!!!!!NEED MONEY FOR GEMS!!!!!<099>;
 };
 
+#act {^There is no reason to 'ffetch' here.$} {
+    #send !cast find familiar;
+    #var mage[gem_fetching] {0};
+};
+
 
 #act {Having absorbed all you can, you carefully close your spellbook.} 
 {
