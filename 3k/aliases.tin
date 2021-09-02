@@ -128,5 +128,23 @@
         n
 }
 
+#alias {phone} {
+	#if {"$draw[canvas]"=="on"} {
+		#var draw[canvas] {off};
+                #var draw[map] {off};
+                #var draw[gline] {off};
+                #var draw[caption] {off};
+                #var draw[hpbar] {off};
+	} {
+                #var draw[canvas] {on};
+                #var draw[map] {on};
+                #var draw[gline] {on};
+                #var draw[caption] {on};
+                #var draw[hpbar] {on};
+	};
+	redraw;
+}
+
+
 
 #class {aliases} {close}
