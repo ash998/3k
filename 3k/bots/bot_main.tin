@@ -183,8 +183,14 @@ prompt >$nl$
 }
 
 #alias {.bot} {
-	#if {$halt == 0} {
-		#delay {0} {..}
+	#nop If the function guild_cycletype is undefined or it returns the same as cycletype, then just run as normal;
+	#if {"@guild_cycletype{}"=="\@guild_cycletype\{\}" || "@guild_cycletype{}"=="@cycletype{}"} {
+		#if {$halt == 0} {
+			#delay {0} {..};
+		}
+	} {
+		#nop If they differ, then load the cycletype that the guild calls for;
+		cycleload @guild_cycletype{};
 	}
 }
 

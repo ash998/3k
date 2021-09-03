@@ -70,6 +70,14 @@
   #var magev[spellup][18] {cast activate combat};
   #var magev[spellup][19] {cast mindblank};
 
+#nop Set magev[cycle][type] to gather or spend depending on your current type gathers or spends;
+  #var magev[cycle][type] {default};
+
+#nop When down to this many corpses, switch to gather cycle type;
+  #var magev[cycle][min_corpses] {5};
+
+#nop When up to this many corpses, switch to spend cycle type, set to 0 to use coffin max;
+  #var magev[cycle][max_corpses] {0};
 
   #class mage_vars write {.tt/3k/vars/mage.var};
   #class {mage_vars} {close};
@@ -119,6 +127,7 @@
 #var mage[debuff][ma] {0};
 #var mage[debuff][ed] {0};
 
+#var mage[current_cycletype] {$magev[cycle][type]};
 
 #alias {spell_tap_automation} {
 
@@ -145,7 +154,42 @@
 #nop confhp  @green:HP:@ #$CCH#@green:/#$MHP# SP:@ #$CCS#@green:/#$MSP#/#$CPC#/#$GEM# Sat:@ #$CSAT# @green:Cnc:@ #$CCNC# @green:G/MI:@@white: #$NGM#@@green:/@@white:#$NMI#@@green:/#$GPC# ER: @@white:#$NSM#@@green:/#$SPC# G2N: @@white:#$G2N#@#$NWL#@green: PROT: [#$PRO#] COF:#$COF#@ #$ST#;
 
 #nop Trigger text for protection line:;
-#nop ^ PROT: \[( \*I(\d+)\*|)( A|)( MS|)( RS| SS|)( M|)( PS!?|)( PA|)( B|)( mg| MG|)( PG| PE|)( MB|)( DS|)( L|)( <P>|)( ST|)\] COF:(\d+)\/(\d+) (.*?)(( Mon\(.*?\):(\d+)%$)|$);
+#act {{^ PROT: \[( \*I(\d+)\*|)( A|)( MS|)( RS| SS|)( M|)( PS!?|)( PA|)( B|)( mg| MG|)( PG| PE|)( MB|)( DS|)( L|)( <P>|)( ST|)\] COF:(\d+)\/(\d+) (.*?)(( Mon\(.*?\):(\d+)%$)|$)}} {
+	#var mage[coffin][current] {%18};
+	#var mage[coffin][max] {%19};
+};
+
+#function {guild_cycletype} {
+	#return $mage[current_cycletype];
+};
+
+#alias {cycleset} {
+	#if {"%1"!="default" && "%1"!="gather" && "%1"!="spend"} {
+		#showme Usage: cycleset [default|gather|spend];
+		#showme        If using "default", it will stay in default untill you set it to something else.;
+		#showme        If using "gather" or "spend", it will toggle between the two based on the values;
+		#showme        in magev[cycle][min_corpses] and magev[cycle][max_corpses].;
+		#showme        Your current cycle is: $mage[current_cycletype];
+	} {
+		#var mage[current_cycletype] {%1};
+	}
+};
+
+#alias {cyclecheck} {
+	#nop If we're in default, stay in default. Only swap between gather and spend.;
+	#if {"$mage[current_cycletype]"!="default"} {
+
+		#if {"$mage[current_cycletype]"=="gather"} {
+			#if {!magev[cycle][max_corpses]} {#var _max_corpses {$mage[coffin][max]}} {$magev[cycle][max_corpses]};
+			#if {$mage[coffin][current] >= $_max_corpses} {#var mage[current_cycletype] {spend}};
+			update_chat <138>Auto switching to spend cycle.<099>;
+		} {
+			#if {$mage[coffin][current] < $magev[cycle][min_corpses]} {#var mage[current_cycletype] {gather}};
+			update_chat <138>Auto switching to gather cycle.<099>;
+		};
+	};
+};
+
 
 #act {^ HP: {\d+}/{\d+} SP: {\d+}/{\d+}{S|}/{\d+}%/{\d+}% Sat: {\d+} Cnc: {\d+} G/MI: {\d+}/{\d+}/{\d+}% ER: {\d+}/{\d+}% G2N: {\d+}%} {
 	#var my[hp][current]	{%1};

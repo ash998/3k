@@ -11,7 +11,7 @@
 	#var hardmode 0;
 	#var vacuum 1;
 	#var bots[stepper] %1;
-        #if {$dungeon[scaler][%1][$world][$guild]} {scaler $dungeon[scaler][%1][$world][$guild]};
+        #if {$dungeon[scaler][%1][$world][$guild]} {#send !scaler $dungeon[scaler][%1][$world][$guild]};
 	#read .tt/3k/bots/%1.tin;
 	#read .tt/3k/bots/bot_main.tin
 }
