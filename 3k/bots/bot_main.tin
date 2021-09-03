@@ -90,7 +90,7 @@ prompt >$nl$
 	        #var stepping 1;
 	        #path walk;
                 #path save position bots[position];
-                #if {&{botcycle[]}} {botdraw};
+                botdraw;
 	} {
 	        #var stepping 0;
 	        #if {"$mobname" != ""} {
@@ -183,8 +183,8 @@ prompt >$nl$
 }
 
 #alias {.bot} {
-	#nop If the function guild_cycletype is undefined or it returns the same as cycletype, then just run as normal;
-	#if {"@guild_cycletype{}"=="\@guild_cycletype\{\}" || "@guild_cycletype{}"=="@cycletype{}"} {
+	#nop If the function guild_cycletype or cycletype is undefined or they both return the same, then just run as normal;
+	#if {"@guild_cycletype{}"=="\@guild_cycletype\{\}" || "@cycletype{}"=="\@cycletype\{\}" || "@guild_cycletype{}"=="@cycletype{}"} {
 		#if {$halt == 0} {
 			#delay {0} {..};
 		}
