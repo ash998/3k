@@ -62,6 +62,52 @@ Bot core change
   commands from within bot paths, without risking skipping
   mobs unintentionally afterwards.
 
+Multicycle
+  Cycle can now handle several cycle types. It's backwards
+  compatible from a user perspective, using the "default"
+  type if nothing else is specified.
+  Use: ba <path> [type]
+       br <cyclenumber> [type]
+       bc [type]
+       setcycletype <type>
+       cycleload <type>
+  The point of this addition is to enable guild scripts to
+  dynamically change the type, for example between corpse
+  gathering and corpse spending. If cycle is used, then
+  bot_main.tin (the .bot alias) will check if the guild is
+  requesting a different cycle type than what is currently
+  running. If so, it will save the bot_main state of the
+  current type and load the requested cycle type and, if
+  there is a saved state for that cycle type, load that
+  into the bot and .resume.
+
+Multicycle for mages
+  The mage script can handle 3 different cycle types,
+  default, gather, and spend.
+  There is a mcycleset <type> alias available to manually
+  set the type. If the type is set to "default", it will
+  use the "default" cycle type, and not make any automatic
+  switches.
+  If the type is set to "gather" or "spend", it will cycle
+  between the two types depending on the values in the
+  magev[cycle][min_corpses] and magev[cycle][max_corpses]
+  variables. For example min_corpses 5 and max_corpses 20
+  will make it switch to gather if it goes below 5 corpses
+  and to spend if it goes equal to or higher than 20.
+  Setting max_corpses to 0 will make it use the current
+  coffin max. These variables save.
+  Example of use:
+    #var magev[cycle][min_corpses] 5
+    #var magev[cycle][max_corpses] 0
+    ba sectionz spend
+    ba chess gather
+    setcycletype gather
+    mcycleset gather
+    thisarea
+  This example will make you run the chess.tin bot until
+  you have maxed your coffin, then it will run the
+  sectionz.tin bot till you're below 5 corpses.
+
 *********
 **Files**
 *********
