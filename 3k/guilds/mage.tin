@@ -157,35 +157,43 @@
 #act {{^ PROT: \[( \*I(\d+)\*|)( A|)( MS|)( RS| SS|)( M|)( PS!?|)( PA|)( B|)( mg| MG|)( PG| PE|)( MB|)( DS|)( L|)( <P>|)( ST|)\] COF:(\d+)\/(\d+) (.*?)(( Mon\(.*?\):(\d+)%$)|$)}} {
 	#var mage[coffin][current] {%18};
 	#var mage[coffin][max] {%19};
+
+#nop TODO: capture defenses and move defense automation to here;
+
+	mcyclecheck;
 };
 
 #function {guild_cycletype} {
 	#return $mage[current_cycletype];
 };
 
-#alias {cycleset} {
+#alias {mcycleset} {
 	#if {"%1"!="default" && "%1"!="gather" && "%1"!="spend"} {
 		#showme Usage: cycleset [default|gather|spend];
 		#showme        If using "default", it will stay in default untill you set it to something else.;
 		#showme        If using "gather" or "spend", it will toggle between the two based on the values;
 		#showme        in magev[cycle][min_corpses] and magev[cycle][max_corpses].;
-		#showme        Your current cycle is: $mage[current_cycletype];
+		#showme        Your current cycle is: @guild_cycletype{};
 	} {
 		#var mage[current_cycletype] {%1};
 	}
 };
 
-#alias {cyclecheck} {
+#alias {mcyclecheck} {
 	#nop If we're in default, stay in default. Only swap between gather and spend.;
 	#if {"$mage[current_cycletype]"!="default"} {
 
 		#if {"$mage[current_cycletype]"=="gather"} {
-			#if {!magev[cycle][max_corpses]} {#var _max_corpses {$mage[coffin][max]}} {$magev[cycle][max_corpses]};
-			#if {$mage[coffin][current] >= $_max_corpses} {#var mage[current_cycletype] {spend}};
-			update_chat <138>Auto switching to spend cycle.<099>;
+			#if {!$magev[cycle][max_corpses]} {#var _max_corpses {$mage[coffin][max]}} {#var _max_corpses {$magev[cycle][max_corpses]}};
+			#if {$mage[coffin][current] >= $_max_corpses} {
+				#var mage[current_cycletype] {spend};
+				update_chat <138>Auto switching to spend cycle.<099>;
+			};
 		} {
-			#if {$mage[coffin][current] < $magev[cycle][min_corpses]} {#var mage[current_cycletype] {gather}};
-			update_chat <138>Auto switching to gather cycle.<099>;
+			#if {$mage[coffin][current] < $magev[cycle][min_corpses]} {
+				#var mage[current_cycletype] {gather};
+				update_chat <138>Auto switching to gather cycle.<099>;
+			};
 		};
 	};
 };
@@ -599,6 +607,12 @@
       }
     }
   };
+};
+
+#act {The Golem calls for help!} {
+	#if {$magev[auto][sl]} {
+		#send !cast slow at golem;
+	};
 };
 
 #class {mage} {close}

@@ -67,6 +67,11 @@
 
 	#list {multicycle[type][$cycletype][botcycle]} {del} {$cyclenum};
 
+	#if {$cyclenum == $multicycle[type][$cycletype][cycle]} {
+		#nop If we're deleting the saved cycle, zero out the saved cycle;
+		#unvar multicycle[type][@cycletype{}][savedbotstate];
+	};
+
 	#if {$cyclenum < $multicycle[type][$cycletype][cycle]} {
 		#math {multicycle[type][$cycletype][cycle]} {$multicycle[type][$cycletype][cycle] - 1};
 	};
@@ -74,9 +79,10 @@
 };
 
 #alias {botclear} {
-	#foreach {*multicycle[type][]} {item} {
-		#var multicycle[type][$item][cycle] {0};
-		#var multicycle[type][$item][botcycle] {};
+	#foreach {*multicycle[type][]} {cycletype} {
+		#var multicycle[type][$cycletype][cycle] {0};
+		#var multicycle[type][$cycletype][botcycle] {};
+		#unvar multicycle[type][$cycletype][savedbotstate];
 	};
 };
 
@@ -127,12 +133,17 @@
 	#var cycletype {%1};
 	#var multicycle[current] {$cycletype};
 
-        #var bots[type][length] {$multicycle[@cycletype{}][savedbotstate][length]};
-        #var bots[type][path] {$multicycle[@cycletype{}][savedbotstate][path]};
-        #var bots[type][position] {$multicycle[@cycletype{}][savedbotstate][position]};
-        #var bots[type][stepper] {$multicycle[@cycletype{}][savedbotstate][stepper]};
-	#var bots[type][vnum] {$multicycle[@cycletype{}][savedbotstate][vnum]};
-	.resume;
+	#if {$multicycle[type][@cycletype{}][savedbotstate][position]} {
+	        #var bots[type][length] {$multicycle[type][@cycletype{}][savedbotstate][length]};
+	        #var bots[type][path] {$multicycle[type][@cycletype{}][savedbotstate][path]};
+	        #var bots[type][position] {$multicycle[type][@cycletype{}][savedbotstate][position]};
+	        #var bots[type][stepper] {$multicycle[type][@cycletype{}][savedbotstate][stepper]};
+		#var bots[type][vnum] {$multicycle[type][@cycletype{}][savedbotstate][vnum]};
+		.resume;
+	} {
+		cycle 1;
+		thisarea;
+	};
 };
 
 #alias {bc} {
@@ -181,7 +192,7 @@
         #screen clear square $chat[height]+$caption[height]+1 -$canvas[width]+1 -$status[height]-2 -1;
 
         #if {!$_numbotareas} {
-		#format {area_display} {-17s} {No areas in: $cty};
+		#format {area_display} {%-17s} {No areas in: $cty};
                 #var botareas {
                         <178>$area_display<088>
                 };
@@ -206,7 +217,7 @@
                                 };
                         }
                 };
-		#format {area_display} {-17s} {Areas in: $cty};
+		#format {area_display} {%-17s} {Areas in: $cty};
                 #draw green rounded box $chat[height]+$caption[height]+2 -$canvas[width]+2 $chat[height]+$caption[height]+4 -3 {
                         <138>$area_display<088>
                 };
@@ -224,6 +235,9 @@
         #var multicycle[type][@cycletype{}][cycle] {%1};
 };
 
+#alias {setcycletype} {
+        #var multicycle[current] {%1};
+};
 
 #alias {ba_old} {
         #if {!$cycle} {#var cycle 1};
@@ -344,7 +358,7 @@
 	#var cycle %1
 };
 
-#event {VARIABLE UPDATE multicycle[type]} {
+#event {VARIABLE UPDATE multicycle} {
 	#delay 0 botdraw;
 };
 
