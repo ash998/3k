@@ -134,11 +134,12 @@
 	#var multicycle[current] {$cycletype};
 
 	#if {$multicycle[type][@cycletype{}][savedbotstate][position]} {
-	        #var bots[type][length] {$multicycle[type][@cycletype{}][savedbotstate][length]};
-	        #var bots[type][path] {$multicycle[type][@cycletype{}][savedbotstate][path]};
-	        #var bots[type][position] {$multicycle[type][@cycletype{}][savedbotstate][position]};
-	        #var bots[type][stepper] {$multicycle[type][@cycletype{}][savedbotstate][stepper]};
-		#var bots[type][vnum] {$multicycle[type][@cycletype{}][savedbotstate][vnum]};
+		- $multicycle[type][@cycletype{}][savedbotstate][stepper];
+	        #var bots[length] {$multicycle[type][@cycletype{}][savedbotstate][length]};
+	        #var bots[path] {$multicycle[type][@cycletype{}][savedbotstate][path]};
+	        #var bots[position] {$multicycle[type][@cycletype{}][savedbotstate][position]};
+	        #var bots[stepper] {$multicycle[type][@cycletype{}][savedbotstate][stepper]};
+		#var bots[vnum] {$multicycle[type][@cycletype{}][savedbotstate][vnum]};
 		.resume;
 	} {
 		cycle 1;
