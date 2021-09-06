@@ -103,6 +103,7 @@ Multicycle for mages
     ba chess gather
     setcycletype gather
     mcycleset gather
+    cycle 1
     thisarea
   This example will make you run the chess.tin bot until
   you have maxed your coffin, then it will run the
