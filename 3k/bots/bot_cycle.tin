@@ -179,55 +179,79 @@
         }
 };
 
-#alias {botdraw} {
-        #if {"%1"==""} {
+#function {_botdraw} {
+
+	#regex {%0} {{^(.+) (.+)$}}
+	{
+		#var cty {&2};
+		#var drawoffset {&3};
+	};
+
+        #if {"$cty"==""} {
                 #var cty {@cycletype{}};
-        } {
-                #var cty {%1};
         };
 
+	#if {"$drawoffset"==""} {
+		#var drawoffset {0};
+	};
+
+	#var botheight {0};
 	#var _numbotareas {&{multicycle[type][$cty][botcycle][]}};
 
         #if {"$draw[canvas]" == "on"} {
-        #NOP Clear previous drawing;
-        #screen clear square $chat[height]+$caption[height]+1 -$canvas[width]+1 -$status[height]-2 -1;
+	        #NOP Clear previous drawing;
+		#if {!$drawoffset} {
+		        #screen clear square $chat[height]+$caption[height]+1 -$canvas[width]+1 -$status[height]-2 -1;
+		};
 
-        #if {!$_numbotareas} {
-		#format {area_display} {%-17s} {No areas in: $cty};
-                #var botareas {
-                        <178>$area_display<088>
-                };
-                #var botheight 1;
-        } {
-                        #var botheight {$_numbotareas};
-                        #var botareas {};
-                        #var cnt 0;
-                        #while {$cnt < $_numbotareas} {
-                                #math {cnt} {$cnt + 1};
-                                #if {$cnt == $multicycle[type][$cty][cycle]} {
-                                        #format {cntnum} {%+4s} {<128>$cnt.<088>};
-                                        #format {area_display} {%-12s} {<128>$multicycle[type][$cty][botcycle][$cnt] ($bots[position]/$bots[length])<088>};
-                                } {
-                                        #format {cntnum} {%+4s} {<178>$cnt.<088>};
-                                        #format {area_display} {%-12s} {<148>$multicycle[type][$cty][botcycle][$cnt]<088>};
-                                };
-                                #if {$cnt == 1} {
-                                        #var botareas {$cntnum $area_display};
-                                } {
-                                        #var botareas {$botareas\n$cntnum $area_display};
-                                };
-                        }
-                };
+	        #if {!$_numbotareas} {
+			#format {area_display} {%-17s} {No areas in: $cty};
+                	#var botareas {
+	                        <178>$area_display<088>
+		        };
+	                #var botheight 1;
+	        } {
+	                #var botheight {$_numbotareas};
+	                #var botareas {};
+	                #var cnt 0;
+	                #while {$cnt < $_numbotareas} {
+	                        #math {cnt} {$cnt + 1};
+	                        #if {$cnt == $multicycle[type][$cty][cycle]} {
+	                                #format {cntnum} {%+4s} {<128>$cnt.<088>};
+	                                #format {area_display} {%-12s} {<128>$multicycle[type][$cty][botcycle][$cnt] ($bots[position]/$bots[length])<088>};
+	                        } {
+	                                #format {cntnum} {%+4s} {<178>$cnt.<088>};
+	                                #format {area_display} {%-12s} {<148>$multicycle[type][$cty][botcycle][$cnt]<088>};
+		                };
+	                        #if {$cnt == 1} {
+	                                #var botareas {$cntnum $area_display};
+	                        } {
+	                                #var botareas {$botareas\n$cntnum $area_display};
+	                        };
+	                };
+	        };
 		#format {area_display} {%-17s} {Areas in: $cty};
-                #draw green rounded box $chat[height]+$caption[height]+2 -$canvas[width]+2 $chat[height]+$caption[height]+4 -3 {
-                        <138>$area_display<088>
-                };
-                #draw green rounded box $chat[height]+$caption[height]+4 -$canvas[width]+2 $chat[height]+$caption[height]+5+$botheight -3 {
-                        $botareas
-                };
-                #showme {<228>\u251C} $chat[height]+$caption[height]+4 -$canvas[width]+2;
-                #showme {<228>\u2524} $chat[height]+$caption[height]+4 -3
-        }
+	        #draw green rounded box $chat[height]+$caption[height]+2+$drawoffset -$canvas[width]+2 $chat[height]+$caption[height]+4+$drawoffset -3 {
+	                <138>$area_display<088>
+	        };
+	        #draw green rounded box $chat[height]+$caption[height]+4+$drawoffset -$canvas[width]+2 $chat[height]+$caption[height]+5+$botheight+$drawoffset -3 {
+	                $botareas
+	        };
+	        #showme {<228>\u251C} $chat[height]+$caption[height]+4+$drawoffset -$canvas[width]+2;
+	        #showme {<228>\u2524} $chat[height]+$caption[height]+4+$drawoffset -3;
+        };
+	#return @math{$drawoffset+$botheight+4};
+};
+
+#alias {botdraw} {
+	#var _drawoffset {@_botdraw{@cycletype{} 0}};
+
+        #foreach {*multicycle[type][]} {cycletype} {
+		#if {"@cycletype{}"!="$cycletype"} {
+			#var _drawoffset @_botdraw{$cycletype $_drawoffset};
+		}
+        };
+
 };
 
 
