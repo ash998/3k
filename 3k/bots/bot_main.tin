@@ -184,7 +184,7 @@ prompt >$nl$
 
 #alias {.bot} {
 	#nop If the function guild_cycletype or cycletype is undefined or they both return the same, then just run as normal;
-	#if {"@guild_cycletype{}"=="\@guild_cycletype\{\}" || "@cycletype{}"=="\@cycletype\{\}" || "@guild_cycletype{}"=="@cycletype{}"} {
+	#if {"@guild_cycletype{}"=="\@guild_cycletype\{\}" || "@cycletype{}"=="\@cycletype\{\}" || "@guild_cycletype{}"=="@cycletype{}" || !&{multicycle[type][@guild_cycletype{}][botcycle][]}} {
 		#if {$halt == 0} {
 			#delay {0} {..};
 		}
