@@ -38,6 +38,21 @@
 };
 
 #alias {_initialize_multicycle} {
+	#if {$multicycle[$world][$guild][type]} {
+		#var _savedbotstatedetected {0};
+	        #foreach {*multicycle[$world][$guild][type][]} {cycletype} {
+			#if {$multicycle[$world][$guild][type][$cycletype][savedbotstate]} {
+				#var _savedbotstatedetected {1};
+			};
+		};
+		#if {$_savedbotstatedetected} {
+			#showme NOTE: saved bot states exist!;
+			#showme To continue with the saved bot states use "gogo continue".;
+			#showme To start the cycle from scratch (starting with the @cycletype{} cycle) use "gogo clean".;
+			#showme To start over, use "botclear" and make your setup from scratch, then start it with "gogo clean".;
+		};
+	};
+
         #if {"@guild_cycletype{}"!="\@guild_cycletype\{\}" && "@guild_cycletype{}"!="$multicycle[$world][$guild][current]"} {
 		#class {botcycle_vars} {open};
                 #var multicycle[$world][$guild][current] {@guild_cycletype{}};
@@ -89,20 +104,7 @@
 };
 
 
-#if {$multicycle[$world][$guild][type]} {
-	#var _savedbotstatedetected {0};
-        #foreach {*multicycle[$world][$guild][type][]} {cycletype} {
-		#if {$multicycle[$world][$guild][type][$cycletype][savedbotstate]} {
-			#var _savedbotstatedetected {1};
-		};
-	};
-	#if {$_savedbotstatedetected} {
-		#showme NOTE: saved bot states exist!;
-		#showme To continue with the saved bot states use "gogo continue".;
-		#showme To start the cycle from scratch (starting with the @cycletype{} cycle) use "gogo clean".;
-		#showme To start over, use "botclear" and make your setup from scratch, then start it with "gogo clean".;
-	};
-}
+
 
 #function {cycletype} {
 	#return $multicycle[$world][$guild][current];
