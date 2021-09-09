@@ -3,8 +3,12 @@
 #var dungeon[scaler][zelligars][orthas][mage] {150};
 #var dungeon[scaler][chess][orthas][mage] {150};
 #var dungeon[scaler][mahjongg][orthas][mage] {99};
+#var multicycle {};
 
+#nop class <classname> read implicitely closes the class;
 #class botcycle_vars read {.tt/3k/vars/botcycle.var};
+
+#class {botcycle_vars} {open};
 
 #alias {dscaler} {
 
@@ -33,18 +37,29 @@
   };
 };
 
+#alias {_initialize_multicycle} {
+        #if {"@guild_cycletype{}"!="\@guild_cycletype\{\}" && "@guild_cycletype{}"!="$multicycle[$world][$guild][current]"} {
+		#class {botcycle_vars} {open};
+                #var multicycle[$world][$guild][current] {@guild_cycletype{}};
+		#class botcycle_vars write {.tt/3k/vars/botcycle.var};
+        };
+};
 
 #class {botcycle_vars} {close};
 
 
+#nop This file loads before $guild is set, so wait a second before setting up.
+#delay {1} {_initialize_multicycle};
 
 #class {botcycle} {open};
 #NOP REQUIRED:  draw.tin  //canvas dimensions;
+#nop		bot_main.tin;
+#nop		The $world and $guild vars must be set;
 
 #alias {gogo} {
-	#if {"@guild_cycletype{}"!="\@guild_cycletype\{\}" && "@guild_cycletype{}"!="$multicycle[$world][$guild][current]"} {
-	        #var multicycle[$world][$guild][current] {@guild_cycletype{}};
-	};
+        #if {"@guild_cycletype{}"!="\@guild_cycletype\{\}" && "@guild_cycletype{}"!="$multicycle[$world][$guild][current]"} {
+                #var multicycle[$world][$guild][current] {@guild_cycletype{}};
+        };
 
 	#if {"%1"!="clean" && "%1"!="continue"} {
 		#show Use gogo clean to clear saved states and start from scratch.;
