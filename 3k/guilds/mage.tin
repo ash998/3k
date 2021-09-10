@@ -116,6 +116,8 @@
 #var mage[downtime][mental_cognition] {0};
 #var mage[downtime][spell_points] {0};
 #var mage[downtime][saturation] {0};
+#var mage[downtime][halt] {0};
+
 #var mage[info][SPDeficit] {0};
 #var mage[info][incombat] {0};
 
@@ -126,6 +128,7 @@
 #var mage[debuff][pk] {0};
 #var mage[debuff][ma] {0};
 #var mage[debuff][ed] {0};
+
 
 #var mage[current_cycletype] {$magev[cycle][type]};
 
@@ -163,6 +166,10 @@
 	mcyclecheck;
 };
 
+#function {guild_halt} {
+	#return  $mage[downtime][halt];
+};
+
 #function {guild_cycletype} {
 	#return $mage[current_cycletype];
 };
@@ -176,6 +183,7 @@
 		#showme        Your current cycle is: @guild_cycletype{};
 	} {
 		#var mage[current_cycletype] {%1};
+		#var magev[cycle][type] {%1};
 	}
 };
 
@@ -216,6 +224,8 @@
         #var my[super][reset]   {%14};
         #var my[g2n]            {%15};
 
+	#math {my[sp][delta]} {$my[sp][current]-$my[sp][old]};
+	#var my[sp][old] {$my[sp][current]};
 
 #nop Auto cast protection spells. Put them in priority order. Spamming in case there is lag.;
         #if {!$my[prots][SS] && $magev[auto][SS]} {#send !cast $mage[affect][SS]};
@@ -328,20 +338,23 @@
 };
 
 #alias {pause_bot} {
-        #if {!$halt} {.tmp_pause}
+	#var mage[downtime][halt] {1};
 };
 
 
 #alias {unpause_bot} { 
-        #if {!$halt} {#return};
+        #if {!$mage[downtime][halt]} {#return};
 
         #var stay_paused 0;
 
         #nop Only unpause if all the things we're pausing for are fixed;
         
-	#foreach {*mage[downtime][]} {item} {#if {$mage[downtime][$item]} {#var stay_paused 1}};
+	#foreach {*mage[downtime][]} {item} {#if {$mage[downtime][$item] && "$item"!="halt"} {#var stay_paused 1}};
 	
-	#if {!$stay_paused} {.tmp_unpause}
+	#if {!$stay_paused} {
+		#var mage[downtime][halt] {0};
+		.bot;
+	};
 };
 
 #act {{^You raise your hands and focus your mind on the residual magical energy$|^You can't fight inanimate objects!$}} {
@@ -368,7 +381,7 @@
 
 #act {Having absorbed all you can, you carefully close your spellbook.} 
 {
-        #if {$bot && $halt && $mage[downtime][mental_cognition]} 
+        #if {$bot && $mage[downtime][halt] && $mage[downtime][mental_cognition]} 
         {
                 #var mage[downtime][mental_cognition] 0;
                 unpause_bot
@@ -382,11 +395,14 @@
 	    #if {$mage[downtime][spell_points] && $my[sp][current]==$my[sp][max]} {#var mage[downtime][spell_points] 0;unpause_bot};
             #if {$mage[downtime][saturation] && $my[gp1][current]==0} {#var mage[downtime][saturation] 0;unpause_bot};
 
-            #if {$halt} {
+            #if {$mage[downtime][halt]} {
                 #var stay_paused 0;
                 #nop Added this check because MI firing might have unpaused us;
                 #foreach {*mage[downtime][]} {item} {#if {$mage[downtime][$item]} {#var stay_paused 1}};
-                #if {!$stay_paused} {#var halt {0}};
+                #if {!$stay_paused} {
+			#var mage[downtime][halt] {0};
+			.bot;
+		};
             };
         };
 
@@ -419,21 +435,22 @@
         #format {gp1_max}	{%+4s} {<128>$my[gp1][max]<088>};
         #format {gp2}           {%+3s} {@colscale{$my[gp2][current];$my[gp2][max]}};
         #format {ehealth}       {%+6s} {@colscale{$enemy[hp];100}};
+	#format {sp_delta}      {%+4s} {@colscale{$my[sp][delta];50}};
 #nop        #format {gxp_col}       {%+7s} {@colscale{$gxp;100}};
 #nop        #format {corpses[inventory]}     {%+2s} {$corpses[inventory]};
         #format {corpses[coffin]}  {%+2s} {$corpses[coffin]};
         #format {corpses[freezer]} {%+2s} {$corpses[freezer]};
 
         #var mage[downtimereason] {};
-        #if {$halt && $stay_paused} {
+        #if {$mage[downtime][halt] && $stay_paused} {
           #if {$mage[downtime][spell_points]} {#var mage[downtimereason] {<118>SP }};
           #if {$mage[downtime][saturation]} {#var mage[downtimereason] {$mage[downtimereason]<118>SAT }};
           #if {$mage[downtime][mental_cognition]} {#var mage[downtimereason] {$mage[downtimereason]<118>MC }};
           #if {"$mage[downtimereason]"!=""} {#var mage[downtimereason] {<128>Pause: $mage[downtimereason]<099>}};
         };
 
-        #showme {<088>HP:$hp/$hp_max  SP:$sp/$sp_max Sat:$gp1\%    E:$ehealth\%    IC:<130> ${corpses[inventory]}<088> ${sb1_cooler}Cnc: $gp2\%    Gxp: $my[g2n]\%    } {-4};
-        #showme {HP:${my[hp][graph]}   SP:${my[sp][graph]}  Sat:${my[gp1][graph]} E:${enemy[graph]} CF:<130>${corpses[coffin]}<088>${sb2_freezer} <128>Deficit: <088>$mage[info][SPDeficit] $mage[downtimereason]} {-3};
+        #showme {<088>HP:$hp/$hp_max  SP:$sp/$sp_max Delta SP:$sp_delta  Cycle:<130>@guild_cycletype{}<088>  Cnc: $gp2\%   G2N: $my[g2n]    } {-4};
+        #showme {HP:${my[hp][graph]}   SP:${my[sp][graph]}  Sat:${my[gp1][graph]} E:${enemy[graph]} CF:<130>${corpses[coffin]}<088>${sb2_freezer} <128>IC:<130> ${corpses[inventory]}<088> ${sb1_cooler}Deficit: <088>$mage[info][SPDeficit] $mage[downtimereason]} {-3};
 	#showme {$mip[gline][1]  $mip[gline][2] <128>R:<088>$mip[round]} {-6}
 }
 

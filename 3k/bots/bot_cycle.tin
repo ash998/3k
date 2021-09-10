@@ -1,14 +1,18 @@
 #class {botcycle_vars} {open};
 
-#var dungeon[scaler][zelligars][orthas][mage] {150};
-#var dungeon[scaler][chess][orthas][mage] {150};
-#var dungeon[scaler][mahjongg][orthas][mage] {99};
-#var multicycle {};
-
 #nop class <classname> read implicitely closes the class;
 #class botcycle_vars read {.tt/3k/vars/botcycle.var};
 
 #class {botcycle_vars} {open};
+
+#if {!&multicycle} {
+        #var multicycle {};
+        #class botcycle_vars write {.tt/3k/vars/botcycle.var};
+};
+
+#if {!&multicycle} {
+	#var multicycle {};
+};
 
 #alias {dscaler} {
 
@@ -38,10 +42,17 @@
 };
 
 #alias {_initialize_multicycle} {
+        #if {"@guild_cycletype{}"!="\@guild_cycletype\{\}" && "@guild_cycletype{}"!="$multicycle[$world][$guild][current]"} {
+		#class {botcycle_vars} {open};
+                #var multicycle[$world][$guild][current] {@guild_cycletype{}};
+		#class botcycle_vars write {.tt/3k/vars/botcycle.var};
+		#class {botcycle_vars} {close};
+        };
+
 	#if {$multicycle[$world][$guild][type]} {
 		#var _savedbotstatedetected {0};
 	        #foreach {*multicycle[$world][$guild][type][]} {cycletype} {
-			#if {$multicycle[$world][$guild][type][$cycletype][savedbotstate]} {
+			#if {$multicycle[$world][$guild][type][$cycletype][savedbotstate][position]} {
 				#var _savedbotstatedetected {1};
 			};
 		};
@@ -52,21 +63,12 @@
 			#showme To start over, use "botclear" and make your setup from scratch, then start it with "gogo clean".;
 		};
 	};
-
-        #if {"@guild_cycletype{}"!="\@guild_cycletype\{\}" && "@guild_cycletype{}"!="$multicycle[$world][$guild][current]"} {
-		#class {botcycle_vars} {open};
-                #var multicycle[$world][$guild][current] {@guild_cycletype{}};
-		#class botcycle_vars write {.tt/3k/vars/botcycle.var};
-		#class {botcycle_vars} {close};
-        };
 };
 
 #event {VARIABLE UPDATE multicycle} {
-	#class {botcycle_vars} {open};
-	#delay 0 botdraw;
-	#class botcycle_vars write {.tt/3k/vars/botcycle.var};
-	#showme Data saved to .tt/3k/vars/botcycle.var;
-	#class {botcycle_vars} {close};
+#nop	#delay 0 botdraw;
+#nop	#class botcycle_vars write {.tt/3k/vars/botcycle.var};
+#nop	#showme Data saved to .tt/3k/vars/botcycle.var;
 };
 
 
@@ -186,7 +188,10 @@
 
 #nop Save the state of the current bot, so we can get back to it easily;
 #alias {cyclesave} {
-	.stop;
+        #map get {roomvnum} {multicycle[$world][$guild][type][@cycletype{}][savedbotstate][vnum]};
+        #path save forward bots[path];
+        #path save position bots[position];
+ 
 	#var multicycle[$world][$guild][type][@cycletype{}][savedbotstate][length] {$bots[length]};
         #var multicycle[$world][$guild][type][@cycletype{}][savedbotstate][path] {$bots[path]};
         #var multicycle[$world][$guild][type][@cycletype{}][savedbotstate][position] {$bots[position]};
@@ -340,8 +345,6 @@
 
 };
 
-
-
 #alias {cycle} {
         #var multicycle[$world][$guild][type][@cycletype{}][cycle] {%1};
 };
@@ -350,133 +353,6 @@
         #var multicycle[$world][$guild][current] {%1};
 };
 
-#alias {ba_old} {
-        #if {!$cycle} {#var cycle 1};
-	#list {botcycle} {add} {%1};
-	botdraw
-};
-
-#alias {br_old} {
-	#list {botcycle} {del} {%1};
-	#if {%1 < $cycle} {
-		#math {cycle} {$cycle - 1}
-	};
-	botdraw
-};
-
-#alias {thisarea_old} {
-	#list {botcycle} {get} {$cycle} {currentarea};
-       
-        #if {$dungeon[scaler][$currentarea][$world][$guild]} {scaler $dungeon[scaler][$currentarea][$world][$guild]};
-
-        #var roomnote {};
-        #read .tt/3k/bots/$currentarea.tin;
-	#if {"$roomnote"!=""} {go $roomnote} {go $currentarea};
-
-	#delay {1} {- $currentarea};
-	#delay {4} {..}
-};
-
-#alias {nextarea_old} {
-	#if {$cycle < &{botcycle[]}} {
-		#math cycle {$cycle+1}
-	} {
-		#var cycle 1
-	};
-	#list {botcycle} {get} {$cycle} {currentarea};
-	
-	#if {$dungeon[scaler][$currentarea][$world][$guild]} {scaler $dungeon[scaler][$currentarea][$world][$guild]};
-
-        #var roomnote {};
-        #read .tt/3k/bots/$currentarea.tin;
-        #if {"$roomnote"!=""} {go $roomnote} {go $currentarea};
-
-	#delay {1} {- $currentarea};
-	#delay {4} {..}
-};
-
-#alias {botclear_old} {
-	#var botcycle {};
-	#var cycle 0
-};
-
-#alias {bc_old} {
-	#echo {<228>+-------------------+}<088>;
-	#echo {<228>|<138>    Area Cycler    <228>|<088>};
-	#echo {<228>+-------------------+}<088>;
-	#if {&{botcycle[]} == 0} {
-		#echo {<228> |<178>  No areas loaded  <228>|<088>};
-		#echo {<228> +-------------------+}<088>
-	} {
-		#var cnt 0;
-		#while {$cnt < &{botcycle[]}} {
-			#math {cnt} {$cnt + 1};
-			#if {$cnt == $cycle} {
-				#format {cntnum} {%+4s} {<128>$cnt\.<088>};
-				#format {area_display} {%-12s} {<128>$botcycle[$cnt]<088>}
-			} {
-				#format {cntnum} {%+4s} {<178>$cnt\.<088>};
-				#format {area_display} {%-12s} {<148>$botcycle[$cnt]<088>}
-			};
-			#echo { <228>| $cntnum $area_display <228>|<088>};
-		};
-		#echo { <228>+-------------------+}<088>
-	}
-};
-
-#alias {botdraw_old} {
-	#if {"$draw[canvas]" == "on"} {
-	#NOP Clear previous drawing;
-	#screen clear square $chat[height]+$caption[height]+1 -$canvas[width]+1 -$status[height]-2 -1;
-
-	#if {&{botcycle[]} == 0} {
-		#var botareas {
-			<178>            No areas loaded<088>
-		};
-		#var botheight 1;
-	} {
-			#var botheight &{botcycle[]};
-			#var botareas {};
-			#var cnt 0;
-			#while {$cnt < &{botcycle[]}} {
-				#math {cnt} {$cnt + 1};
-				#if {$cnt == $cycle} {
-					#format {cntnum} {%+4s} {<128>$cnt.<088>};
-					#format {area_display} {%-12s} {<128>$botcycle[$cnt] ($bots[position]/$bots[length])<088>}
-				} {
-					#format {cntnum} {%+4s} {<178>$cnt.<088>};
-					#format {area_display} {%-12s} {<148>$botcycle[$cnt]<088>}
-				};
-				#if {$cnt == 1} {
-					#var botareas {$cntnum $area_display}
-				} {
-					#var botareas {$botareas\n$cntnum $area_display}
-				}
-			}
-		};
-		#draw green rounded box $chat[height]+$caption[height]+2 -$canvas[width]+2 $chat[height]+$caption[height]+4 -3 {
-			<138>              Area Cycler    <088>
-		};
-		#draw green rounded box $chat[height]+$caption[height]+4 -$canvas[width]+2 $chat[height]+$caption[height]+5+$botheight -3 {
-			$botareas
-		};
-		#showme {<228>\u251C} $chat[height]+$caption[height]+4 -$canvas[width]+2;
-		#showme {<228>\u2524} $chat[height]+$caption[height]+4 -3
-	}
-};
-
-#alias {cycle_old} {
-	#var cycle %1
-};
-
-#event {VARIABLE UPDATE cycle} {
-	#delay 0 botdraw;
-};
-
-
-#event {VARIABLE UPDATE botcycle} {
-	#delay 0 botdraw;
-};
 
 #alias {bas}		{ba {rim2;android;dundee8;dundee7;dundee6;dundee5}};
 #NOP #alias {bas2}	{ba {whorehouse;puppy;mahjongg;rim2;whorehouse;puppy;mahjongg;android;whorehouse;puppy;mahjongg;rim2;whorehouse;puppy;mahjongg;dundee8;whorehouse;puppy;mahjongg;rim2;whorehouse;puppy;mahjongg;dundee7;whorehouse;puppy;mahjongg;rim2;whorehouse;puppy;mahjongg;dundee6}};

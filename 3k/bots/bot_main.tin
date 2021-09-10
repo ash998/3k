@@ -69,7 +69,7 @@ prompt >$nl$
 	#var itemfound 0;
 	#var foundmob 0;
 
-        #if {!$halt && $bot} {
+        #if {!$halt && $bot && ("@guild_halt{}"=="\@guild_halt\{\}" || @guild_halt{}==0)} {
                 #act {^>$} {
 	                #unact {^>$};
 	                _eval_room;
@@ -90,6 +90,11 @@ prompt >$nl$
 	        #var stepping 1;
 	        #path walk;
                 #path save position bots[position];
+		#var multicycle[$world][$guild][type][@cycletype{}][savedbotstate][position] {$bots[position]};
+ 		#map get {roomvnum} {multicycle[$world][$guild][type][@cycletype{}][savedbotstate][vnum]};
+		#path save forward multicycle[$world][$guild][type][@cycletype{}][savedbotstate][path];
+		#var multicycle[$world][$guild][type][@cycletype{}][savedbotstate][length] {$bots[length]};
+		#var multicycle[$world][$guild][type][@cycletype{}][savedbotstate][stepper] {$bots[stepper]};
                 botdraw;
 	} {
 	        #var stepping 0;
@@ -185,7 +190,7 @@ prompt >$nl$
 #alias {.bot} {
 	#nop If the function guild_cycletype or cycletype is undefined or they both return the same, then just run as normal;
 	#if {"@guild_cycletype{}"=="\@guild_cycletype\{\}" || "@cycletype{}"=="\@cycletype\{\}" || "@guild_cycletype{}"=="@cycletype{}" || !&{multicycle[$world][$guild][type][@guild_cycletype{}][botcycle][]}} {
-		#if {$halt == 0} {
+		#if {$halt == 0 && ("@guild_halt{}"=="\@guild_halt\{\}" || @guild_halt{}==0)} {
 			#delay {0} {..};
 		}
 	} {
