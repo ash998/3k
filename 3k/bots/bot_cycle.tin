@@ -63,6 +63,7 @@
 			#showme To start over, use "botclear" and make your setup from scratch, then start it with "gogo clean".;
 		};
 	};
+	botdraw;
 };
 
 #event {VARIABLE UPDATE multicycle} {
@@ -152,6 +153,7 @@
 		#unvar multicycle[$world][$guild][type][$cycletype][savedbotstate];
 	};
 	#class botcycle_vars write {.tt/3k/vars/botcycle.var};
+	botdraw;
 };
 
 #alias {thisarea} {
@@ -285,6 +287,13 @@
 		#var drawoffset {0};
 	};
 
+	#if {"$multicycle[$world][$guild][type][$cty][savedbotstate][position]"!=""} {
+		#var progress {$multicycle[$world][$guild][type][$cty][savedbotstate][position]/$multicycle[$world][$guild][type][$cty][savedbotstate][length]};
+	} {
+		#var progress {};
+	};
+
+
 	#var botheight {0};
 	#var _numbotareas {&{multicycle[$world][$guild][type][$cty][botcycle][]}};
 
@@ -308,8 +317,7 @@
 	                        #math {cnt} {$cnt + 1};
 	                        #if {$cnt == $multicycle[$world][$guild][type][$cty][cycle]} {
 	                                #format {cntnum} {%+4s} {<128>$cnt.<088>};
-					#if {"@cycletype{}"=="$cty"}	{#format {area_display} {%-12s} {<128>$multicycle[$world][$guild][type][$cty][botcycle][$cnt] ($bots[position]/$bots[length])<088>};}
-									{#format {area_display} {%-12s} {<128>$multicycle[$world][$guild][type][$cty][botcycle][$cnt]<088>};};
+					#format {area_display} {%-12s} {<128>$multicycle[$world][$guild][type][$cty][botcycle][$cnt] ($progress)<088>};
 	                        } {
 	                                #format {cntnum} {%+4s} {<178>$cnt.<088>};
 	                                #format {area_display} {%-12s} {<148>$multicycle[$world][$guild][type][$cty][botcycle][$cnt]<088>};
