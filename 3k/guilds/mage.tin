@@ -160,6 +160,7 @@
 #act {{^ PROT: \[( \*I(\d+)\*|)( A|)( MS|)( RS| SS|)( M|)( PS!?|)( PA|)( B|)( mg| MG|)( PG| PE|)( MB|)( DS|)( L|)( <P>|)( ST|)\] COF:(\d+)\/(\d+) (.*?)(( Mon\(.*?\):(\d+)%$)|$)}} {
 	#var mage[coffin][current] {%18};
 	#var mage[coffin][max] {%19};
+	#var corpses[coffin] {$mage[coffin][current]};
 
 #nop TODO: capture defenses and move defense automation to here;
 
