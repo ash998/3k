@@ -19,7 +19,7 @@
 	#regexp {%1} {{[sS]hield}} {#var worldDropName {shield}};
 	#regexp {%1} {{[fF]lask}} {#var worldDropName {flask}};
 	#regexp {%1} {{[bB]lde}} {#var worldDropName {blade}};
-
+	#regexp {%1} {{[dD]evice}} {#var worldDropName {device}};
 
 	#if {!$found_player} {get $worldDropName};
 	#unvar {worldDropName}
