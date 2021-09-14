@@ -42,7 +42,7 @@
 };
 
 #alias {_initialize_multicycle} {
-        #if {"@guild_cycletype{}"!="\@guild_cycletype\{\}" && "@guild_cycletype{}"!="$multicycle[$world][$guild][current]"} {
+        #if {"@guild_cycletype{}"!="\@guild_cycletype\{\}" && "@guild_cycletype{}"!=="$multicycle[$world][$guild][current]"} {
 		#class {botcycle_vars} {open};
                 #var multicycle[$world][$guild][current] {@guild_cycletype{}};
 		#class botcycle_vars write {.tt/3k/vars/botcycle.var};
@@ -204,7 +204,7 @@
 };
 
 #alias {_cycleload} {
-	#if {""!="$multicycle[$world][$guild][type][%1][savedbotstate][position]"} {
+	#if {""!=="$multicycle[$world][$guild][type][%1][savedbotstate][position]"} {
                 - $multicycle[$world][$guild][type][%1][savedbotstate][stepper];
                 #var bots[length] $multicycle[$world][$guild][type][%1][savedbotstate][length];
                 #var bots[path] $multicycle[$world][$guild][type][%1][savedbotstate][path];
