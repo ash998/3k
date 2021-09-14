@@ -195,22 +195,22 @@
         #path save position bots[position];
 
 
-	#var multicycle[$world][$guild][type][$multicycle[$world][$guild][current]][savedbotstate][length] {$bots[length]};
-        #var multicycle[$world][$guild][type][$multicycle[$world][$guild][current]][savedbotstate][path] {$bots[path]};
-        #var multicycle[$world][$guild][type][$multicycle[$world][$guild][current]][savedbotstate][position] {$bots[position]};
-        #var multicycle[$world][$guild][type][$multicycle[$world][$guild][current]][savedbotstate][stepper] {$bots[stepper]};
-        #var multicycle[$world][$guild][type][$multicycle[$world][$guild][current]][savedbotstate][vnum] {$bots[vnum]};
+	#var multicycle[$world][$guild][type][$multicycle[$world][$guild][current]][savedbotstate][length] $bots[length];
+        #var multicycle[$world][$guild][type][$multicycle[$world][$guild][current]][savedbotstate][path] $bots[path];
+        #var multicycle[$world][$guild][type][$multicycle[$world][$guild][current]][savedbotstate][position] $bots[position];
+        #var multicycle[$world][$guild][type][$multicycle[$world][$guild][current]][savedbotstate][stepper] $bots[stepper];
+        #var multicycle[$world][$guild][type][$multicycle[$world][$guild][current]][savedbotstate][vnum] $bots[vnum];
         #class botcycle_vars write {.tt/3k/vars/botcycle.var};
 };
 
 #alias {_cycleload} {
 	#if {""!="$multicycle[$world][$guild][type][%1][savedbotstate][position]"} {
                 - $multicycle[$world][$guild][type][%1][savedbotstate][stepper];
-                #var bots[length] {$multicycle[$world][$guild][type][%1][savedbotstate][length]};
-                #var bots[path] {$multicycle[$world][$guild][type][%1][savedbotstate][path]};
-                #var bots[position] {$multicycle[$world][$guild][type][%1][savedbotstate][position]};
-                #var bots[stepper] {$multicycle[$world][$guild][type][%1][savedbotstate][stepper]};
-                #var bots[vnum] {$multicycle[$world][$guild][type][%1][savedbotstate][vnum]};
+                #var bots[length] $multicycle[$world][$guild][type][%1][savedbotstate][length];
+                #var bots[path] $multicycle[$world][$guild][type][%1][savedbotstate][path];
+                #var bots[position] $multicycle[$world][$guild][type][%1][savedbotstate][position];
+                #var bots[stepper] $multicycle[$world][$guild][type][%1][savedbotstate][stepper];
+                #var bots[vnum] $multicycle[$world][$guild][type][%1][savedbotstate][vnum];
                 .resume;
         } {
                 cycle 1;
