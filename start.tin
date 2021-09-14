@@ -40,6 +40,8 @@
 	#read .tt/3k/trigs.tin;
         #showme Loading: .tt/3k/draw.tin;
 	#read .tt/3k/draw.tin;
+	#showme Loading: .tt/3k/world_drops.tin;
+        #read .tt/3k/world_drops.tin;
 }
 #if {"$world" != ""} {
 	#regex {$world} {AW} {
