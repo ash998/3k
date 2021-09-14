@@ -190,9 +190,10 @@
 
 #nop Save the state of the current bot, so we can get back to it easily;
 #alias {cyclesave} {
-        #map get {roomvnum} {multicycle[$world][$guild][type][@cycletype{}][savedbotstate][vnum]};
+        #map get {roomvnum} {bots[vnum]};
         #path save forward bots[path];
         #path save position bots[position];
+
  
 	#var multicycle[$world][$guild][type][@cycletype{}][savedbotstate][length] {$bots[length]};
         #var multicycle[$world][$guild][type][@cycletype{}][savedbotstate][path] {$bots[path]};
