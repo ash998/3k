@@ -6,22 +6,39 @@
 #NOP #read .tt/numpad.tin
 
 #alias {load3k} {
+	#showme Loading: .tt/ticklist.tin;
 	#read .tt/ticklist.tin;
+        #showme Loading: .tt/utility.tin;
         #read .tt/utility.tin;
+        #showme Loading: .tt/3k/vars.tin;
 	#read .tt/3k/vars.tin;
+        #showme Loading: .tt/3k/aliases.tin;
 	#read .tt/3k/aliases.tin;
+        #showme Loading: .tt/3k/ansi.tin;
 	#read .tt/3k/ansi.tin;
+        #showme Loading: .tt/3k/assemble.tin;
 	#read .tt/3k/assemble.tin;
+        #showme Loading: .tt/3k/bots/bot_cycle.tin;
 	#read .tt/3k/bots/bot_cycle.tin;
+        #showme Loading: .tt/3k/bots/bot_load.tin;
 	#read .tt/3k/bots/bot_load.tin;
+        #showme Loading: .tt/3k/chat_monitors.tin;
 	#read .tt/3k/chat_monitors.tin;
+        #showme Loading: .tt/3k/corpses.tin;
 	#read .tt/3k/corpses.tin;
+        #showme Loading: .tt/3k/dog.tin;
 	#read .tt/3k/dog.tin;
+        #showme Loading: .tt/3k/gag.tin;
 	#read .tt/3k/gag.tin;
+        #showme Loading: .tt/3k/mapper.tin;
 	#read .tt/3k/mapper.tin;
+        #showme Loading: .tt/3k/mip.tin;
 	#read .tt/3k/mip.tin;
+        #showme Loading: .tt/3k/miphp.tin;
 	#read .tt/3k/miphp.tin;
+        #showme Loading: .tt/3k/trigs.tin;
 	#read .tt/3k/trigs.tin;
+        #showme Loading: .tt/3k/draw.tin;
 	#read .tt/3k/draw.tin;
 }
 #if {"$world" != ""} {
