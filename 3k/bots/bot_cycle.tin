@@ -101,7 +101,7 @@
 			thisarea;
 		};
 		#if {"%1"=="continue"} {
-			_cycleload;
+			_cycleload @cycletype{};
 		};
         };
 };
