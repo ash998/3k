@@ -367,10 +367,14 @@
 
 
         #var multicycle[$world][$guild][type][$cycletype][cycle] {%1};
+	botdraw;
+	save_botcycle;
 };
 
 #alias {setcycletype} {
         #var multicycle[$world][$guild][current] {%1};
+	botdraw;
+	save_botcycle;
 };
 
 
