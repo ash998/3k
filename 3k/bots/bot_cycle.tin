@@ -14,6 +14,8 @@
 	#var multicycle {};
 };
 
+
+tthelp_add dscaler Usage: dscaler <dungeon> <scaler>;
 #alias {dscaler} {
 
   #var _dungeon {_noval};
@@ -84,6 +86,7 @@
 #nop		bot_main.tin;
 #nop		The $world and $guild vars must be set;
 
+tthelp_add gogo Usage: gogo clean to run everything from scratch, gogo continue to run from where you were at.;
 #alias {gogo} {
         #if {"@guild_cycletype{}"!="\@guild_cycletype\{\}" && "@guild_cycletype{}"!="$multicycle[$world][$guild][current]"} {
                 #var multicycle[$world][$guild][current] {@guild_cycletype{}};
@@ -114,11 +117,12 @@
 	#class botcycle_vars write {.tt/3k/vars/botcycle.var};
 };
 
+
 #function {cycletype} {
 	#return $multicycle[$world][$guild][current];
 };
 
-
+tthelp_add ba Usage: ba <stepper path> [cycle type];
 #alias {ba} {
 	#if {"%2"==""}	{#var cycletype {default}}
 			{#var cycletype {%2}};
@@ -131,6 +135,7 @@
         botdraw;
 };
 
+tthelp_add br Usage: br <cycle number> [cycle type];
 #alias {br} {
         #if {"%2"==""}	{#var cycletype {default}}
 			{#var cycletype {%2}};
@@ -151,6 +156,7 @@
 	botdraw;
 };
 
+tthelp_add botclear Usage: botclear. Will clear everything from the cycler so you can start from scratch.;
 #alias {botclear} {
 	#foreach {*multicycle[$world][$guild][type][]} {cycletype} {
 		#var multicycle[$world][$guild][type][$cycletype][cycle] {0};
@@ -161,6 +167,7 @@
 	botdraw;
 };
 
+tthelp_add thisarea Usage: thisarea. Will load the current area from the current cycle and start running the bot in it.;
 #alias {thisarea} {
         #list {multicycle[$world][$guild][type][@cycletype{}][botcycle]} {get} {$multicycle[$world][$guild][type][@cycletype{}][cycle]} {multicycle[$world][$guild][type][@cycletype{}][currentarea]};
 
@@ -174,6 +181,7 @@
         #delay {4} {..}
 };
 
+tthelp_add nextarea Usage: nextarea. Will load the next area from the current cycle and start running the bot in it.;
 #alias {nextarea} {
         #if {$multicycle[$world][$guild][type][@cycletype{}][cycle] < &{multicycle[$world][$guild][type][@cycletype{}][botcycle][]}} {
                 #math multicycle[$world][$guild][type][@cycletype{}][cycle] {$multicycle[$world][$guild][type][@cycletype{}][cycle]+1}
@@ -195,6 +203,7 @@
 	save_botcycle;
 };
 
+tthelp_add cyclesave Usage: don't use this, it's an internal alias.;
 #nop Save the state of the current bot, so we can get back to it easily;
 #alias {cyclesave} {
         #map get {roomvnum} {bots[vnum]};
@@ -210,6 +219,7 @@
         #class botcycle_vars write {.tt/3k/vars/botcycle.var};
 };
 
+tthelp_add _cycleload Usage: don't use this, it's an internal alias.;
 #alias {_cycleload} {
 	#if {""!=="$multicycle[$world][$guild][type][%1][savedbotstate][position]"} {
                 - $multicycle[$world][$guild][type][%1][savedbotstate][stepper];
@@ -226,6 +236,7 @@
 	botdraw;
 };
 
+tthelp_add cycleload Usage: don't use this, it's an internal alias.;
 #nop Save the state of the current bot and load the state of the specified bot;
 #alias {cycleload} {
 	#if {@numbotareas{%1}} {
@@ -239,6 +250,7 @@
         #class botcycle_vars write {.tt/3k/vars/botcycle.var};
 };
 
+tthelp_add bc Usage: bc [cycle type]. Shows the paths loaded into the cycle type or the current cycle type if no type is given.;
 #alias {bc} {
 	#if {"%1"==""} {
 		#var cty {@cycletype{}};
@@ -350,6 +362,7 @@
 	#return @math{$drawoffset+$botheight+4};
 };
 
+tthelp_add botdraw Usage: botdraw. Will update the info on the lower right pane.
 #alias {botdraw} {
 	#var _drawoffset {@_botdraw{@cycletype{} 0}};
 
@@ -360,7 +373,7 @@
         };
 
 };
-
+tthelp_add cycle Usage: cycle <cycle number> [cycle type]. Will set the cycle in the cycle type (or current if omitted) to the cycle number.;
 #alias {cycle} {
         #if {"%2"===""}  {#var cycletype {@cycletype{}}}
                          {#var cycletype {%2}};
@@ -370,7 +383,7 @@
 	botdraw;
 	save_botcycle;
 };
-
+tthelp_add setcycletype Usage: internal alias, don't use it.;
 #alias {setcycletype} {
         #var multicycle[$world][$guild][current] {%1};
 	botdraw;

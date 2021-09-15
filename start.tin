@@ -6,6 +6,8 @@
 #NOP #read .tt/numpad.tin
 
 #alias {load3k} {
+	#showme Loading: .tt/help.tin;
+	#read .tt/help.tin;
 	#showme Loading: .tt/ticklist.tin;
 	#read .tt/ticklist.tin;
         #showme Loading: .tt/utility.tin;

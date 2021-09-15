@@ -1,0 +1,22 @@
+#class {help} {open};
+
+#var _help_topics {};
+
+#alias {tthelp_add} {
+	#var _help_topics[topic][%1] {%0};
+};
+
+#alias {tthelp} {
+	#if {"%1"===""} {
+		#showme Usage: tthelp <topic>;
+		#showme Current topics:;
+		#foreach {*_help_topics[topic][]} {topic} {
+			#showme --$topic;
+		};
+	} {
+		#showme $_help_topics[topic][%1];
+	};
+};
+
+
+#class {help} {clos};
