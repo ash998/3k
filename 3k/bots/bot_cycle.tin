@@ -96,6 +96,7 @@
 		#if {"%1"=="clean"} {
 		        #foreach {*multicycle[$world][$guild][type][]} {cycletype} {
 		                #unvar multicycle[$world][$guild][type][$cycletype][savedbotstate];
+				#var multicycle[$world][$guild][type][$cycletype][cycle] 1;
 			};
 			cycle 1;
 			thisarea;
@@ -104,10 +105,14 @@
 			_cycleload @cycletype{};
 		};
         };
+	botdraw;
+	save_botcycle;
 };
 
 
-
+#alias {save_botcycle} {
+	#class botcycle_vars write {.tt/3k/vars/botcycle.var};
+};
 
 #function {cycletype} {
 	#return $multicycle[$world][$guild][current];
@@ -122,7 +127,7 @@
 
         #if {!$multicycle[$world][$guild][type][$cycletype][cycle]} {#var multicycle[$world][$guild][type][$cycletype][cycle] 1};
         #list {multicycle[$world][$guild][type][$cycletype][botcycle]} {add} {%1};
-	#class botcycle_vars write {.tt/3k/vars/botcycle.var};
+	save_botcycle;
         botdraw;
 };
 
@@ -142,7 +147,7 @@
 	#if {$cyclenum < $multicycle[$world][$guild][type][$cycletype][cycle]} {
 		#math {multicycle[$world][$guild][type][$cycletype][cycle]} {$multicycle[$world][$guild][type][$cycletype][cycle] - 1};
 	};
-	#class botcycle_vars write {.tt/3k/vars/botcycle.var};
+	save_botcycle;
 	botdraw;
 };
 
@@ -152,7 +157,7 @@
 		#var multicycle[$world][$guild][type][$cycletype][botcycle] {};
 		#unvar multicycle[$world][$guild][type][$cycletype][savedbotstate];
 	};
-	#class botcycle_vars write {.tt/3k/vars/botcycle.var};
+	save_botcycle;
 	botdraw;
 };
 
@@ -186,6 +191,8 @@
 
         #delay {1} {- $multicycle[$world][$guild][$multicycle[type][@cycletype{}][currentarea]};
         #delay {4} {..}
+	botdraw;
+	save_botcycle;
 };
 
 #nop Save the state of the current bot, so we can get back to it easily;
