@@ -362,7 +362,11 @@
 };
 
 #alias {cycle} {
-        #var multicycle[$world][$guild][type][@cycletype{}][cycle] {%1};
+        #if {"%2"===""}  {#var cycletype {@cycletype{}}}
+                         {#var cycletype {%2}};
+
+
+        #var multicycle[$world][$guild][type][$cycletype][cycle] {%1};
 };
 
 #alias {setcycletype} {
