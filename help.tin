@@ -3,17 +3,24 @@
 #var _help_topics {};
 
 #alias {tthelp_add} {
-	#var _help_topics[topic][%1] {%0};
+	#regex {%0} {{^(.+?) (.+)$}}
+	{
+		#var _topic {&2};
+		#var _helptext {&3};
+	};
+
+	#var _help_topics[topic][$_topic] {$_helptext};
 };
 
 #alias {tthelp} {
 	#if {"%1"===""} {
 		#showme Usage: tthelp <topic>;
 		#showme Current topics:;
-		#foreach {*_help_topics[topic][]} {topic} {
-			#showme --$topic;
+		#foreach {*_help_topics[topic][]} {_thistopic} {
+			#showme --$_thistopic;
 		};
 	} {
+		#showme ..ooOO** Help for %1 **OOoo..;
 		#showme $_help_topics[topic][%1];
 	};
 };
