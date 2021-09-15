@@ -244,7 +244,7 @@
 	#if {"$cty"!=""} {#format {header_display} {%-17s} {$cty}} {#format {header_display} {%-17s} {Area Cycler}};
         #echo {<228>|<138> $header_display <228>|<088>};
         #echo {<228>+-------------------+}<088>;
-        #if {&{multicycle[type][$cty][botcycle][]} == 0} {
+        #if {&{multicycle[$world][$guild][type][$cty][botcycle][]} == 0} {
                 #echo {<228> |<178>  No areas loaded  <228>|<088>};
                 #echo {<228> +-------------------+}<088>
         } {
