@@ -1,0 +1,50 @@
+#class {dungeonmaster_vars} {open};
+
+#nop If the var doesn't exist, make it, to make sure it is in this class;
+#if {"$dungeonmaster"=="\$dungeonmaster"} {
+        #var dungeonmaster {};
+        #class dungeonmaster_vars write {.tt/3k/vars/dungeonmaster.var};
+};
+
+#if {"$dungeon_countdown_interval"=="\$dungeon_countdown_interval"} {
+	#var dungeon_countdown_interval 1;
+};
+
+#class {dungeonmaster_vars} {close};
+
+#class {dungeonmaster} {open};
+
+#act {{^- Dungeon                   \: Boot# Can Reset   ID/With$}} {
+	#nop Reset the timers, in case there are dungeons with timers that are no longer on CD;
+	#foreach {*dungeonmaster[]} {_dungeon} {#var dungeonmaster[$_dungeon][timer] 0};
+	#act {{^-\s+(.*?)\s+(\d+|-)\s+:\s+(\d+)(\s+(\d+)H)?(\s+(\d+)M)?(\s+(\d+)S)?\s+\[\d+\]$}} {
+		#if {"%%2"!==""} {
+			#if {"%%6"===""} {#var _dungeon_hours {0}} {#var _dungeon_hours {%%6}};
+			#if {"%%8"===""} {#var _dungeon_minutes {0}} {#var _dungeon_minutes {%%8}};
+			#if {"%%10"===""} {#var _dungeon_seconds {0}} {#var _dungeon_seconds {%%10}};
+			#var dungeonmaster[%%2][timer] {@math{3600*$_dungeon_hours + 60*$_dungeon_minutes + $_dungeon_seconds}};
+		}
+	} {1};
+	#act {{^=========================================================================$}} {
+		#unact {{^-\s+(.*?)\s+(\d+|-)\s+:\s+(\d+)(\s+(\d+)H)?(\s+(\d+)M)?(\s+(\d+)S)?\s+\[\d+\]$}};
+		#unact {{^=========================================================================$}};
+	} {1};
+
+}
+
+
+
+#ticker {dungeon_countdown} {
+	#foreach {*dungeonmaster[]} {_dungeon} {
+		#if {$dungeonmaster[$_dungeon][timer] && $dungeonmaster[$_dungeon][timer]<=$dungeon_countdown_interval} {
+			#var $dungeonmaster[$_dungeon][timer] 0;
+			update_chat <138>Dungeon reset: $_dungeon<099>;
+		} {
+			#if {$dungeonmaster[$_dungeon][timer]} {
+				#var dungeonmaster[$_dungeon][timer] @math{$dungeonmaster[$_dungeon][timer]-$dungeon_countdown_interval};
+			};
+		}
+	};
+} {$dungeon_countdown_interval};
+
+#class {dungeonmaster} {close};
