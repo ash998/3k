@@ -14,6 +14,147 @@
 
 #class {dungeonmaster} {open};
 
+#alias {dungeonmaster_metadata_setup} {
+#nop All the data in dungeonmaster[meta] is set from this alias. If it;
+#nop is set from somewhere else, it will be cleared;
+
+	#unvar dungeonmaster[meta];
+
+#nop Note that the dungeon names here must match the dungeon names as;
+#nop they appear in the "dungeons" command;
+
+#nop resettime is how long a full reset time is in the dungeon in seconds;
+#nop respawn   0 means the dungeon does not respawn beyond dungeon resets;
+#nop priority  if a lower priority dungeon resets in the same cycle type,;
+#nop           then the bot will switch to that;
+#nop path      the main path for the dungeon, note that this is used to;
+#nop           populate the dungeonmaster[path] section;
+
+        #var dungeonmaster[meta][Aegis Global][resettime] {14400};
+        #var dungeonmaster[meta][Aegis Global][respawn] {0};
+        #var dungeonmaster[meta][Aegis Global][priority] {10};
+        #var dungeonmaster[meta][Aegis Global][path] {aegis123nr};
+	#var dungeonmaster[meta][Aegis Global][entrancevnum] {};
+
+        #var dungeonmaster[meta][Alphabet Land][resettime] {21600};
+        #var dungeonmaster[meta][Alphabet Land][respawn] {0};
+        #var dungeonmaster[meta][Alphabet Land][priority] {10};
+        #var dungeonmaster[meta][Alphabet Land][path] {alphabet};
+        #var dungeonmaster[meta][Alphabet Land][entrancevnum] {};
+
+        #var dungeonmaster[meta][Android Showroom][resettime] {21600};
+        #var dungeonmaster[meta][Android Showroom][respawn] {1};
+        #var dungeonmaster[meta][Android Showroom][priority] {10};
+        #var dungeonmaster[meta][Android Showroom][path] {android};
+        #var dungeonmaster[meta][Android Showroom][entrancevnum] {};
+
+        #var dungeonmaster[meta][Banshee's Lair][resettime] {10800};
+        #var dungeonmaster[meta][Banshee's Lair][respawn] {0};
+        #var dungeonmaster[meta][Banshee's Lair][priority] {10};
+        #var dungeonmaster[meta][Banshee's Lair][path] {};
+        #var dungeonmaster[meta][Banshee's Lair][entrancevnum] {};
+
+        #var dungeonmaster[meta][Carnegie Hall 2.0][resettime] {21600};
+        #var dungeonmaster[meta][Carnegie Hall 2.0][respawn] {0};
+        #var dungeonmaster[meta][Carnegie Hall 2.0][priority] {10};
+        #var dungeonmaster[meta][Carnegie Hall 2.0][path] {carnegie};
+        #var dungeonmaster[meta][Carnegie Hall 2.0][entrancevnum] {};
+
+        #var dungeonmaster[meta][Chess Board][resettime] {7200};
+        #var dungeonmaster[meta][Chess Board][respawn] {1};
+        #var dungeonmaster[meta][Chess Board][priority] {10};
+        #var dungeonmaster[meta][Chess Board][path] {chess};
+        #var dungeonmaster[meta][Chess Board][entrancevnum] {};
+
+        #var dungeonmaster[meta][Death Taco][resettime] {28800};
+        #var dungeonmaster[meta][Death Taco][respawn] {0};
+        #var dungeonmaster[meta][Death Taco][priority] {10};
+        #var dungeonmaster[meta][Death Taco][path] {dtaco};
+        #var dungeonmaster[meta][Death Taco][entrancevnum] {};
+
+        #var dungeonmaster[meta][Halo][resettime] {7200};
+        #var dungeonmaster[meta][Halo][respawn] {1};
+        #var dungeonmaster[meta][Halo][priority] {10};
+        #var dungeonmaster[meta][Halo][path] {};
+        #var dungeonmaster[meta][Halo][entrancevnum] {};
+
+        #var dungeonmaster[meta][Hotel Transylvania][resettime] {14400};
+        #var dungeonmaster[meta][Hotel Transylvania][respawn] {0};
+        #var dungeonmaster[meta][Hotel Transylvania][priority] {10};
+        #var dungeonmaster[meta][Hotel Transylvania][path] {trans};
+        #var dungeonmaster[meta][Hotel Transylvania][entrancevnum] {};
+
+        #var dungeonmaster[meta][Knight Training Arena][resettime] {7200};
+        #var dungeonmaster[meta][Knight Training Arena][respawn] {0};
+        #var dungeonmaster[meta][Knight Training Arena][priority] {10};
+        #var dungeonmaster[meta][Knight Training Arena][path] {};
+        #var dungeonmaster[meta][Knight Training Arena][entrancevnum] {};
+
+        #var dungeonmaster[meta][Mahjongg][resettime] {10800};
+        #var dungeonmaster[meta][Mahjongg][respawn] {0};
+        #var dungeonmaster[meta][Mahjongg][priority] {10};
+        #var dungeonmaster[meta][Mahjongg][path] {mahjongg};
+        #var dungeonmaster[meta][Mahjongg][entrancevnum] {};
+
+        #var dungeonmaster[meta][Puppy Mill][resettime] {9999999};
+        #var dungeonmaster[meta][Puppy Mill][respawn] {1};
+        #var dungeonmaster[meta][Puppy Mill][priority] {10};
+        #var dungeonmaster[meta][Puppy Mill][path] {puppy};
+        #var dungeonmaster[meta][Puppy Mill][entrancevnum] {};
+
+        #var dungeonmaster[meta][Rimalkins Cave 2.0][resettime] {7200};
+        #var dungeonmaster[meta][Rimalkins Cave 2.0][respawn] {0};
+        #var dungeonmaster[meta][Rimalkins Cave 2.0][priority] {10};
+        #var dungeonmaster[meta][Rimalkins Cave 2.0][path] {rim2};
+        #var dungeonmaster[meta][Rimalkins Cave 2.0][entrancevnum] {};
+
+	#var dungeonmaster[meta][Section Z][resettime] {28800};
+	#var dungeonmaster[meta][Section Z][respawn] {0};
+        #var dungeonmaster[meta][Section Z][priority] {10};
+        #var dungeonmaster[meta][Section Z][path] {sectionz};	
+        #var dungeonmaster[meta][Section Z][entrancevnum] {};
+
+        #var dungeonmaster[meta][Smurfland][resettime] {43200};
+        #var dungeonmaster[meta][Smurfland][respawn] {1};
+        #var dungeonmaster[meta][Smurfland][priority] {10};
+        #var dungeonmaster[meta][Smurfland][path] {smurf};
+        #var dungeonmaster[meta][Smurfland][entrancevnum] {};
+
+        #var dungeonmaster[meta][Terra's Terrific Treehouse][resettime] {7200};
+        #var dungeonmaster[meta][Terra's Terrific Treehouse][respawn] {0};
+        #var dungeonmaster[meta][Terra's Terrific Treehouse][priority] {10};
+        #var dungeonmaster[meta][Terra's Terrific Treehouse][path] {treehouse};
+        #var dungeonmaster[meta][Terra's Terrific Treehouse][entrancevnum] {};
+
+        #var dungeonmaster[meta][Tree of Life 2.0][resettime] {28800};
+        #var dungeonmaster[meta][Tree of Life 2.0][respawn] {0};
+        #var dungeonmaster[meta][Tree of Life 2.0][priority] {10};
+        #var dungeonmaster[meta][Tree of Life 2.0][path] {tol2};
+        #var dungeonmaster[meta][Tree of Life 2.0][entrancevnum] {};
+
+        #var dungeonmaster[meta][Zelligar's Castle][resettime] {7200};
+        #var dungeonmaster[meta][Zelligar's Castle][respawn] {0};
+        #var dungeonmaster[meta][Zelligar's Castle][priority] {10};
+        #var dungeonmaster[meta][Zelligar's Castle][path] {zelligars};
+        #var dungeonmaster[meta][Zelligar's Castle][entrancevnum] {};
+
+	#nop Add the links from the default path to the dungeon;
+	#foreach {*dungeonmaster[meta][]} {_dungeon} {
+		#if {"$dungeonmaster[meta][$_dungeon][path]"!==""} {
+			#var dungeonmaster[meta][path][$dungeonmaster[meta][$_dungeon][path]] $_dungeon;
+		};
+	};
+
+	#nop Add links for non default paths manually here;
+
+        #var dungeonmaster[meta][path][sectionz20] {Section Z};
+        #var dungeonmaster[meta][path][sectionz20_short] {Section Z};
+        #var dungeonmaster[meta][path][sectionz40] {Section Z};
+        #var dungeonmaster[meta][path][sectionz40_short] {Section Z};
+
+};
+
+
 #act {{^- Dungeon                   \: Boot# Can Reset   ID/With$}} {
 	#nop Reset the timers, in case there are dungeons with timers that are no longer on CD;
 	#foreach {*dungeonmaster[]} {_dungeon} {#var dungeonmaster[$_dungeon][timer] 0};
@@ -36,14 +177,18 @@
 
 #ticker {dungeon_countdown} {
 	#foreach {*dungeonmaster[]} {_dungeon} {
-		#if {$dungeonmaster[$_dungeon][timer] && $dungeonmaster[$_dungeon][timer]<=$dungeon_countdown_interval} {
-			#var $dungeonmaster[$_dungeon][timer] 0;
-			update_chat <138>Dungeon reset: $_dungeon<099>;
+		#if {"$dungeonmaster[meta][path][$bots[stepper]]"==="$_dungeon"} {
+			#var dungeonmaster[$_dungeon][timer] $dungeonmaster[meta][$_dungeon][resettime];
 		} {
-			#if {$dungeonmaster[$_dungeon][timer]} {
-				#var dungeonmaster[$_dungeon][timer] @math{$dungeonmaster[$_dungeon][timer]-$dungeon_countdown_interval};
+			#if {$dungeonmaster[$_dungeon][timer] && $dungeonmaster[$_dungeon][timer]<=$dungeon_countdown_interval} {
+				#var $dungeonmaster[$_dungeon][timer] 0;
+				update_chat <138>Dungeon reset: $_dungeon<099>;
+			} {
+				#if {$dungeonmaster[$_dungeon][timer]} {
+					#var dungeonmaster[$_dungeon][timer] @math{$dungeonmaster[$_dungeon][timer]-$dungeon_countdown_interval};
+				};
 			};
-		}
+		};
 	};
 } {$dungeon_countdown_interval};
 
