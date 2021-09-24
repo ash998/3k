@@ -352,7 +352,7 @@
 	
 	#if {!$stay_paused} {
 		#var mage[downtime][halt] {0};
-		.bot;
+		#if {$bot} {.bot};
 	};
 };
 
@@ -390,20 +390,19 @@
 #alias {update_status} {
         #if {"$enemy[hp]" == ""} {#var mage[info][incombat] {0}} {#var mage[info][incombat] {1}};
 
-        #if {$bot} {
-	    #if {$mage[downtime][spell_points] && $my[sp][current]==$my[sp][max]} {#var mage[downtime][spell_points] 0;unpause_bot};
-            #if {$mage[downtime][saturation] && $my[gp1][current]==0} {#var mage[downtime][saturation] 0;unpause_bot};
+    #if {$mage[downtime][spell_points] && $my[sp][current]==$my[sp][max]} {#var mage[downtime][spell_points] 0;unpause_bot};
+    #if {$mage[downtime][saturation] && $my[gp1][current]==0} {#var mage[downtime][saturation] 0;unpause_bot};
 
-            #if {$mage[downtime][halt]} {
-                #var stay_paused 0;
-                #nop Added this check because MI firing might have unpaused us;
-                #foreach {*mage[downtime][]} {item} {#if {$mage[downtime][$item]} {#var stay_paused 1}};
-                #if {!$stay_paused} {
-			#var mage[downtime][halt] {0};
-			.bot;
-		};
-            };
-        };
+    #if {$mage[downtime][halt]} {
+        #var stay_paused 0;
+        #nop Added this check because MI firing might have unpaused us;
+        #foreach {*mage[downtime][]} {item} {#if {$mage[downtime][$item]} {#var stay_paused 1}};
+        #if {!$stay_paused} {
+		#var mage[downtime][halt] {0};
+		#if {$bot} {.bot};
+	};
+    };
+
 
         #nop Failsafe for gems if the var is stuck somehow;
         #if {$mage[gem_fetching] && $my[gem]<50} {#var mage[gem_fetching] {0}};
