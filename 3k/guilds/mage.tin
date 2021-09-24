@@ -4,7 +4,6 @@
 #nop No mage.var file, load some defaults and make it.;
   #class {mage_vars} {open};
 
-
 #nop Defensive spells:;
   #var magev[auto][S] {0};
   #var magev[auto][A] {1};
@@ -38,7 +37,6 @@
   #var magev[auto][pk] {0};
   #var magev[auto][ma] {0};
   #var magev[auto][ed] {0};
-
 
 #nop How much more SP after 90 rounds of MI than before;
   #var magev[setting][SPDeltaPerMI] {8000};

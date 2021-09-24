@@ -1,5 +1,7 @@
 #class {dungeonmaster_vars} {open};
 
+
+
 #nop If the var doesn't exist, make it, to make sure it is in this class;
 #if {"$dungeonmaster"=="\$dungeonmaster"} {
         #var dungeonmaster {};
@@ -78,7 +80,7 @@
         #var dungeonmaster[meta][Halo][path] {};
         #var dungeonmaster[meta][Halo][entrancevnum] {};
 
-        #var dungeonmaster[meta][Hotel Transylvania][resettime] {14400};
+        #var dungeonmaster[meta][Hotel Transylvania][resettime] {10800};
         #var dungeonmaster[meta][Hotel Transylvania][respawn] {0};
         #var dungeonmaster[meta][Hotel Transylvania][priority] {10};
         #var dungeonmaster[meta][Hotel Transylvania][path] {trans};
@@ -152,18 +154,19 @@
         #var dungeonmaster[meta][path][sectionz40] {Section Z};
         #var dungeonmaster[meta][path][sectionz40_short] {Section Z};
 
+	#class dungeonmaster_vars write {.tt/3k/vars/dungeonmaster.var};
 };
 
 
 #act {{^- Dungeon                   \: Boot# Can Reset   ID/With$}} {
 	#nop Reset the timers, in case there are dungeons with timers that are no longer on CD;
-	#foreach {*dungeonmaster[]} {_dungeon} {#var dungeonmaster[$_dungeon][timer] 0};
+	#foreach {*dungeonmaster[runtime][]} {_dungeon} {#var dungeonmaster[runtime][$_dungeon][timer] 0};
 	#act {{^-\s+(.*?)\s+(\d+|-)\s+:\s+(\d+)(\s+(\d+)H)?(\s+(\d+)M)?(\s+(\d+)S)?\s+\[\d+\]$}} {
 		#if {"%%2"!==""} {
 			#if {"%%6"===""} {#var _dungeon_hours {0}} {#var _dungeon_hours {%%6}};
 			#if {"%%8"===""} {#var _dungeon_minutes {0}} {#var _dungeon_minutes {%%8}};
 			#if {"%%10"===""} {#var _dungeon_seconds {0}} {#var _dungeon_seconds {%%10}};
-			#var dungeonmaster[%%2][timer] {@math{3600*$_dungeon_hours + 60*$_dungeon_minutes + $_dungeon_seconds}};
+			#var dungeonmaster[runtime][%%2][timer] {@math{3600*$_dungeon_hours + 60*$_dungeon_minutes + $_dungeon_seconds}};
 		}
 	} {1};
 	#act {{^=========================================================================$}} {
@@ -176,16 +179,16 @@
 
 
 #ticker {dungeon_countdown} {
-	#foreach {*dungeonmaster[]} {_dungeon} {
+	#foreach {*dungeonmaster[runtime][]} {_dungeon} {
 		#if {"$dungeonmaster[meta][path][$bots[stepper]]"==="$_dungeon"} {
-			#var dungeonmaster[$_dungeon][timer] $dungeonmaster[meta][$_dungeon][resettime];
+			#var dungeonmaster[runtime][$_dungeon][timer] $dungeonmaster[meta][$_dungeon][resettime];
 		} {
-			#if {$dungeonmaster[$_dungeon][timer] && $dungeonmaster[$_dungeon][timer]<=$dungeon_countdown_interval} {
-				#var $dungeonmaster[$_dungeon][timer] 0;
+			#if {$dungeonmaster[runtime][$_dungeon][timer] && $dungeonmaster[runtime][$_dungeon][timer]<=$dungeon_countdown_interval} {
+				#var $dungeonmaster[runtime][$_dungeon][timer] 0;
 				update_chat <138>Dungeon reset: $_dungeon<099>;
 			} {
-				#if {$dungeonmaster[$_dungeon][timer]} {
-					#var dungeonmaster[$_dungeon][timer] @math{$dungeonmaster[$_dungeon][timer]-$dungeon_countdown_interval};
+				#if {$dungeonmaster[runtime][$_dungeon][timer]} {
+					#var dungeonmaster[runtime][$_dungeon][timer] @math{$dungeonmaster[runtime][$_dungeon][timer]-$dungeon_countdown_interval};
 				};
 			};
 		};

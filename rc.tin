@@ -6,7 +6,7 @@
 #CONFIG           {COMMAND COLOR}	{<078>}
 #CONFIG           {COMMAND ECHO}	{OFF}
 #CONFIG           {CONNECT RETRY}	{15}
-#CONFIG           {HISTORY SIZE}	{1000}
+#CONFIG           {HISTORY SIZE}	{9000}
 #CONFIG           {LOG MODE}		{RAW}
 #CONFIG           {MOUSE}		{ON}
 #CONFIG           {PACKET PATCH}	{0.80}
@@ -77,4 +77,34 @@
         };
         $ses_name;
         #textin .tt/.pass
+}
+
+#alias {offline} {
+        #alias {save_guild_vars} {#nop};
+        #regex {%0} {3s} {
+                #format {ses_len} {%L} {%0};
+                #math {ses_len} {$ses_len-2};
+                #format {ses_name} {%.${ses_len}s} {%0};
+                #var {mud} {3s}
+        } {
+                #regex {%0} {AW} {
+                        #format {ses_len} {%L} {%0};
+                        #math {ses_len} {$ses_len-2};
+                        #format {ses_name} {%.${ses_len}s} {%0};
+                        #var {mud} {AW}
+                } {
+			#var {ses_name} {%0};
+			#var {mud} {3k}
+		}
+        };
+		#var world {%0};
+		#format logfile {.tt/logs/%0_%t.log} {%Y%m%d};
+		#LOG {APPEND} {$logfile};
+		#delay 0 #read .tt/start.tin;
+		#delay 0 #read .tt/char/%0.tin;
+        #hist read .tt/logs/history.log;
+        #showme ******************************************************;
+        #showme Loaded $ses_name in offline mode;
+        #showme Not everything will work in offline mode;
+        #showme ******************************************************;
 }

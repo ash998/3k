@@ -102,6 +102,7 @@ tthelp_add gogo Usage: gogo clean to run everything from scratch, gogo continue 
 				#var multicycle[$world][$guild][type][$cycletype][cycle] 1;
 			};
 			cycle 1;
+			save_botcycle;
 			thisarea;
 		};
 		#if {"%1"=="continue"} {
@@ -177,8 +178,8 @@ tthelp_add thisarea Usage: thisarea. Will load the current area from the current
         #read .tt/3k/bots/$multicycle[$world][$guild][type][@cycletype{}][currentarea].tin;
         #if {"$roomnote"!=""} {go $roomnote} {go $multicycle[$world][$guild][type][@cycletype{}][currentarea]};
 
-        #delay {1} {- $multicycle[$world][$guild][type][@cycletype{}][currentarea]};
-        #delay {4} {..}
+        #delay {1} {- $multicycle[$world][$guild][type][@cycletype{}][currentarea];..};
+#nop        #delay {4} {..}
 };
 
 tthelp_add nextarea Usage: nextarea. Will load the next area from the current cycle and start running the bot in it.;
@@ -197,8 +198,12 @@ tthelp_add nextarea Usage: nextarea. Will load the next area from the current cy
         #read .tt/3k/bots/$multicycle[$world][$guild][type][@cycletype{}][currentarea].tin;
         #if {"$roomnote"!=""} {go $roomnote} {go $multicycle[$world][$guild][type][@cycletype{}][currentarea]};
 
-        #delay {1} {- $multicycle[$world][$guild][$multicycle[type][@cycletype{}][currentarea]};
-        #delay {4} {..}
+
+
+	#unvar multicycle[$world][$guild][type][@cycletype{}][savedbotstate];
+
+        #delay {1} {- $multicycle[$world][$guild][type][@cycletype{}][currentarea];..};
+#nop        #delay {4} {..};
 	botdraw;
 	save_botcycle;
 };
@@ -320,7 +325,7 @@ tthelp_add bc Usage: bc [cycle type]. Shows the paths loaded into the cycle type
         #if {"$draw[canvas]" == "on"} {
 	        #NOP Clear previous drawing;
 		#if {!$drawoffset} {
-		        #screen clear square $chat[height]+$caption[height]+1 -$canvas[width]+1 -$status[height]-2 -1;
+		        #screen clear square $map[height]+$caption[height]+1 -$canvas[width]+1 -$status[height]-2 -1;
 		};
 
 	        #if {!$_numbotareas} {
@@ -350,14 +355,14 @@ tthelp_add bc Usage: bc [cycle type]. Shows the paths loaded into the cycle type
 	                };
 	        };
 		#format {area_display} {%-17s} {Areas in: $cty};
-	        #draw green rounded box $chat[height]+$caption[height]+2+$drawoffset -$canvas[width]+2 $chat[height]+$caption[height]+4+$drawoffset -3 {
+	        #draw green rounded box $map[height]+$caption[height]+2+$drawoffset -$canvas[width]+2 $map[height]+$caption[height]+4+$drawoffset -3 {
 	                <138>$area_display<088>
 	        };
-	        #draw green rounded box $chat[height]+$caption[height]+4+$drawoffset -$canvas[width]+2 $chat[height]+$caption[height]+5+$botheight+$drawoffset -3 {
+	        #draw green rounded box $map[height]+$caption[height]+4+$drawoffset -$canvas[width]+2 $map[height]+$caption[height]+5+$botheight+$drawoffset -3 {
 	                $botareas
 	        };
-	        #showme {<228>\u251C} $chat[height]+$caption[height]+4+$drawoffset -$canvas[width]+2;
-	        #showme {<228>\u2524} $chat[height]+$caption[height]+4+$drawoffset -3;
+	        #showme {<228>\u251C} $map[height]+$caption[height]+4+$drawoffset -$canvas[width]+2;
+	        #showme {<228>\u2524} $map[height]+$caption[height]+4+$drawoffset -3;
         };
 	#return @math{$drawoffset+$botheight+4};
 };

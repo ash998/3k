@@ -16,7 +16,6 @@ prompt >$nl$
 #var singlestep 0
 #var stepping 0
 
-
 #nop some guilds need to pause temporarily
 #alias {.tmp_pause} {
         #var stepping 0;
@@ -69,7 +68,7 @@ prompt >$nl$
 	#var itemfound 0;
 	#var foundmob 0;
 
-        #if {!$halt && $bot && ("@guild_halt{}"=="\@guild_halt\{\}" || @guild_halt{}==0)} {
+        #if {!$halt && $bot && ("@guild_halt{}"=="\@guild_halt\{\}" || "@guild_halt{}"=="0")} {
                 #act {^>$} {
 	                #unact {^>$};
 	                _eval_room;
@@ -189,14 +188,21 @@ prompt >$nl$
 
 #alias {.bot} {
 	#nop If the function guild_cycletype or cycletype is undefined or they both return the same, then just run as normal;
-	#if {"@guild_cycletype{}"=="\@guild_cycletype\{\}" || "@cycletype{}"=="\@cycletype\{\}" || "@guild_cycletype{}"=="@cycletype{}" || !&{multicycle[$world][$guild][type][@guild_cycletype{}][botcycle][]}} {
-		#if {$halt == 0 && ("@guild_halt{}"=="\@guild_halt\{\}" || @guild_halt{}==0)} {
+
+	#nop Need to check for defined like this because the #if parser is acting weird;
+	#if {"@guild_cycletype{}"=="\@guild_cycletype\{\}"} {#var guild_cycletype_is_defined 0} {#var guild_cycletype_is_defined 1};
+	#if {"@cycletype{}"=="\@cycletype\{\}"} {#var cycletype_is_defined 0} {#var cycletype_is_defined 1};
+	#if {"@guild_halt{}"=="\@guild_halt\{\}"} {#var guild_halt_is_defined 0} {#var guild_halt_is_defined 1};
+
+
+	#if {!$guild_cycletype_is_defined || !$cycletype_is_defined || "@guild_cycletype{}"=="@cycletype{}" || !&{multicycle[$world][$guild][type][@guild_cycletype{}][botcycle][]}} {
+		#if {!$halt && (!$guild_halt_is_defined || "@guild_halt{}"==="0")} {
 			#delay {0} {..};
 		}
 	} {
 		#nop If they differ, then load the cycletype that the guild calls for;
 		cycleload @guild_cycletype{};
-	}
+	};
 }
 
 #alias {dogtank} {#alias {kill} {#delay {2} {dog sicem %%0}}}
@@ -243,7 +249,6 @@ prompt >$nl$
 		.bot
 	}
 }
-
 
 /* Coffin Auto-Donate */
 #var {coffinbot} {off}
