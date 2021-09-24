@@ -170,6 +170,7 @@ tthelp_add botclear Usage: botclear. Will clear everything from the cycler so yo
 
 tthelp_add thisarea Usage: thisarea. Will load the current area from the current cycle and start running the bot in it.;
 #alias {thisarea} {
+#show CALLED: thisarea;
         #list {multicycle[$world][$guild][type][@cycletype{}][botcycle]} {get} {$multicycle[$world][$guild][type][@cycletype{}][cycle]} {multicycle[$world][$guild][type][@cycletype{}][currentarea]};
 
         #if {$dungeon[scaler][$multicycle[$world][$guild][type][@cycletype{}][currentarea]][$world][$guild]} {scaler $dungeon[scaler][$multicycle[$world][$guild][type][@cycletype{}][currentarea]][$world][$guild]};
@@ -184,6 +185,7 @@ tthelp_add thisarea Usage: thisarea. Will load the current area from the current
 
 tthelp_add nextarea Usage: nextarea. Will load the next area from the current cycle and start running the bot in it.;
 #alias {nextarea} {
+#show CALLED: nextarea;
         #if {$multicycle[$world][$guild][type][@cycletype{}][cycle] < &{multicycle[$world][$guild][type][@cycletype{}][botcycle][]}} {
                 #math multicycle[$world][$guild][type][@cycletype{}][cycle] {$multicycle[$world][$guild][type][@cycletype{}][cycle]+1}
         } {
@@ -211,6 +213,7 @@ tthelp_add nextarea Usage: nextarea. Will load the next area from the current cy
 tthelp_add cyclesave Usage: don't use this, it's an internal alias.;
 #nop Save the state of the current bot, so we can get back to it easily;
 #alias {cyclesave} {
+#show CALLED: cyclesave;
         #map get {roomvnum} {bots[vnum]};
         #path save forward bots[path];
         #path save position bots[position];
@@ -226,7 +229,9 @@ tthelp_add cyclesave Usage: don't use this, it's an internal alias.;
 
 tthelp_add _cycleload Usage: don't use this, it's an internal alias.;
 #alias {_cycleload} {
+#show CALLED: _cycleload, PARAMETER: %1;
 	#if {""!=="$multicycle[$world][$guild][type][%1][savedbotstate][position]"} {
+#show DEBUG: _cycleload #IF statment is true. Position: $multicycle[$world][$guild][type][%1][savedbotstate][position];
                 - $multicycle[$world][$guild][type][%1][savedbotstate][stepper];
                 #var bots[length] $multicycle[$world][$guild][type][%1][savedbotstate][length];
                 #var bots[path] $multicycle[$world][$guild][type][%1][savedbotstate][path];
@@ -235,6 +240,7 @@ tthelp_add _cycleload Usage: don't use this, it's an internal alias.;
                 #var bots[vnum] $multicycle[$world][$guild][type][%1][savedbotstate][vnum];
                 .resume;
         } {
+#show DEBUG: _cycleload #IF statment is false;
                 cycle 1;
                 thisarea;
         };
@@ -244,6 +250,7 @@ tthelp_add _cycleload Usage: don't use this, it's an internal alias.;
 tthelp_add cycleload Usage: don't use this, it's an internal alias.;
 #nop Save the state of the current bot and load the state of the specified bot;
 #alias {cycleload} {
+#show CALLED: cycleload, PARAMETER: %1;
 	#if {@numbotareas{%1}} {
 		cyclesave;
 		#var multicycle[$world][$guild][current] {%1};
@@ -382,7 +389,6 @@ tthelp_add cycle Usage: cycle <cycle number> [cycle type]. Will set the cycle in
 #alias {cycle} {
         #if {"%2"===""}  {#var cycletype {@cycletype{}}}
                          {#var cycletype {%2}};
-
 
         #var multicycle[$world][$guild][type][$cycletype][cycle] {%1};
 	#unvar multicycle[$world][$guild][type][$cycletype][savedbotstate];
