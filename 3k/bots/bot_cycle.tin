@@ -385,6 +385,7 @@ tthelp_add cycle Usage: cycle <cycle number> [cycle type]. Will set the cycle in
 
 
         #var multicycle[$world][$guild][type][$cycletype][cycle] {%1};
+	#unvar multicycle[$world][$guild][type][$cycletype][savedbotstate];
 	botdraw;
 	save_botcycle;
 };
