@@ -77,30 +77,32 @@ prompt >$nl$
 }
 
 #alias {_eval_room} {
-        #if {$itemfound && !$foundplayer && $vacuum} {
-	        #send !get all
-	};
-	
-	#if {$goldfound && !$foundplayer} {
-	        #send !divvy gold
-	};
-	
-	#if {!$foundmob || $foundplayer} {
-	        #var stepping 1;
-	        #path walk;
-                #path save position bots[position];
-		#var multicycle[$world][$guild][type][@cycletype{}][savedbotstate][position] {$bots[position]};
- 		#map get {roomvnum} {multicycle[$world][$guild][type][@cycletype{}][savedbotstate][vnum]};
-		#path save forward multicycle[$world][$guild][type][@cycletype{}][savedbotstate][path];
-		#var multicycle[$world][$guild][type][@cycletype{}][savedbotstate][length] {$bots[length]};
-		#var multicycle[$world][$guild][type][@cycletype{}][savedbotstate][stepper] {$bots[stepper]};
-                botdraw;
-	} {
-	        #var stepping 0;
-	        #if {"$mobname" != ""} {
-		        kill $mobname
+	#if {!$halt && $bot} {
+	        #if {$itemfound && !$foundplayer && $vacuum} {
+		        #send !get all
 		};
-	}
+		
+		#if {$goldfound && !$foundplayer} {
+		        #send !divvy gold
+		};
+		
+		#if {!$foundmob || $foundplayer} {
+		        #var stepping 1;
+		        #path walk;
+	                #path save position bots[position];
+			#var multicycle[$world][$guild][type][@cycletype{}][savedbotstate][position] {$bots[position]};
+	 		#map get {roomvnum} {multicycle[$world][$guild][type][@cycletype{}][savedbotstate][vnum]};
+			#path save forward multicycle[$world][$guild][type][@cycletype{}][savedbotstate][path];
+			#var multicycle[$world][$guild][type][@cycletype{}][savedbotstate][length] {$bots[length]};
+			#var multicycle[$world][$guild][type][@cycletype{}][savedbotstate][stepper] {$bots[stepper]};
+	                botdraw;
+		} {
+		        #var stepping 0;
+		        #if {"$mobname" != ""} {
+			        kill $mobname
+			};
+		};
+	};
 }
 
 #alias {_check_mob} {
