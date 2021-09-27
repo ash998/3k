@@ -179,8 +179,8 @@ tthelp_add thisarea Usage: thisarea. Will load the current area from the current
         #read .tt/3k/bots/$multicycle[$world][$guild][type][@cycletype{}][currentarea].tin;
         #if {"$roomnote"!=""} {go $roomnote} {go $multicycle[$world][$guild][type][@cycletype{}][currentarea]};
 
-        #delay {4} {- $multicycle[$world][$guild][type][@cycletype{}][currentarea];..};
-#nop        #delay {4} {..}
+        #delay {3} {- $multicycle[$world][$guild][type][@cycletype{}][currentarea];#delay {1} {..}};
+#nop        #delay {4} {..};
 };
 
 tthelp_add nextarea Usage: nextarea. Will load the next area from the current cycle and start running the bot in it.;
@@ -204,7 +204,7 @@ tthelp_add nextarea Usage: nextarea. Will load the next area from the current cy
 
 	#unvar multicycle[$world][$guild][type][@cycletype{}][savedbotstate];
 
-        #delay {4} {- $multicycle[$world][$guild][type][@cycletype{}][currentarea];..};
+        #delay {3} {- $multicycle[$world][$guild][type][@cycletype{}][currentarea];#delay {1} {..}};
 #nop        #delay {4} {..};
 	botdraw;
 	save_botcycle;

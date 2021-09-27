@@ -201,6 +201,7 @@ prompt >$nl$
 		}
 	} {
 		#nop If they differ, then load the cycletype that the guild calls for;
+		.stop;
 		cycleload @guild_cycletype{};
 	};
 }
