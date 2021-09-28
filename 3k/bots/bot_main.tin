@@ -236,7 +236,7 @@ prompt >$nl$
 
 #alias {v %1} {#if {"%1" == "on"} {#var vacuum 1} {#var vacuum 0}}
 
-#act {#PATH WALK: #END OF PATH} {
+#act {^#PATH WALK: #END OF PATH} {
 	#if {$no_loop || !$foundmob} {
 		killbot;
 		#if {&{multicycle[$world][$guild][type][@cycletype{}][botcycle][]} > 1} {
