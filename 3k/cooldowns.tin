@@ -1,0 +1,107 @@
+#class {cooldowns} {open};
+
+#nop *****General*****;
+
+#var ticker_seconds 60;
+#var cooldown {};
+
+#ticker {cooldown_ticker} {
+	#foreach {*cooldown[]} {_cooldown} {
+		#if {$cooldown[$_cooldown] > 0} {
+			#if {$cooldown[$_cooldown] <= $ticker_seconds} {
+				#showme Cooldown reset: $_cooldown;
+				update_chat <138>Cooldown reset: $_cooldown<099>;
+				#var cooldown[$_cooldown] 0;
+			} {
+				#math {cooldown[$_cooldown]} {$cooldown[$_cooldown] - $ticker_seconds};
+			};
+		};
+	};
+} {$ticker_seconds};
+
+#alias {set_cooldown} {
+	#var cooldown[%1] %2;
+}
+
+
+#nop *****HMHeal*****;
+
+#act {{^                     High Mortal Check$}} {
+	#act {{(^     Heal        You must wait (\d+) min\(s\) to heal yourself.$)|(^     Heal        You may heal yourself at this time.$)}} {
+		#if {"%%2"==="     Heal        You may heal yourself at this time."} {
+			set_cooldown hmheal 0;
+		} {
+			#nop +59 seconds because the timer only shows whole minutes;
+			set_cooldown hmheal @math{%%3*60 + 59};
+		};
+		#unact {{^     Heal        You must wait (\d+) min\(s\) to heal yourself.$}};
+	};
+};
+
+#act {You call forth high mortal energies to heal yourself!} {
+	set_cooldown hmheal 3600;
+};
+
+#act {You need rest to use that power again.} {
+	#send !hmcheck;
+};
+
+#nop *****Eternal Heal*****;
+
+#act {{^Syntax: \(heal \[target\]}} {
+#showme eternal heal;
+
+	#act {{(^You must wait( (\d+) minutes)?( (\d+) seconds)? to use this power again\.$)|(^You are able to use this power now\.$)}} {
+                #if {"%%2"==="You are able to use this power now."} {
+			set_cooldown eternalheal 0;
+		} {
+			#if {"%%4"===""} {
+				#local minutes 0;
+			} {
+				#local minutes %%4;
+			};
+
+                        #if {"%%6"===""} {
+                                #local seconds 0;
+                        } {
+                                #local seconds %%6;
+                        };
+
+			set_cooldown eternalheal @math{$minutes*60 + $seconds};
+		};
+		#unact {{(^You must wait( (\d+) minutes)?( (\d+) seconds)? to use this power again\.$)|(^You are able to use this power now\.$)}};
+	};
+
+#nop #showme You must wait 4 minutes 13 seconds to use this power again.;
+#nop #showme You are able to use this power now.
+
+};
+
+#act {{You must wait( (\d+) minutes)?( (\d+) seconds)? to use that ability.}} {
+        #if {"%3"===""} {
+                #local minutes 0;
+        } {
+                #local minutes %3;
+        };
+
+        #if {"%5"===""} {
+                #local seconds 0;
+        } {
+                #local seconds %5;
+        };
+
+        set_cooldown eternalheal @math{$minutes*60 + $seconds};
+};
+
+
+#act {You bathe @trim{$world_cap} in the healing powers of the outer planes.} {
+	#send !eternal info heal;
+};
+
+
+#delay {2} {
+	#send !hmcheck;
+	#send !eternal info heal;
+};
+
+#class {cooldowns} {close};
