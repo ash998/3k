@@ -23,6 +23,19 @@
 	#var cooldown[%1] %2;
 }
 
+#alias {cooldowns_check} {
+	#send !hmcheck;
+	#send !eternal info heal;
+};
+
+#act {{^3Kingdoms welcomes you back from linkdeath\.$}} {
+	cooldowns_check;
+};
+
+
+#delay {2} {
+	cooldowns_check;
+};
 
 #nop *****HMHeal*****;
 
@@ -98,10 +111,5 @@
 	#send !eternal info heal;
 };
 
-
-#delay {2} {
-	#send !hmcheck;
-	#send !eternal info heal;
-};
 
 #class {cooldowns} {close};
