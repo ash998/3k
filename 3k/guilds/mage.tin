@@ -308,9 +308,8 @@
 #nop If botting, add downtime based on various parameters;
         #if {$mage[info][incombat] && $bot} {
 
-#nop NOTE: $my[mental_cognition] is zero when at 100%;
 #nop Mental Cognition;
-            #if {$my[mental_cognition] && $my[mental_cognition]<$magev[auto][min_mc] && !$mage[downtime][mental_cognition]} 
+            #if {$my[mental_cognition]<$magev[auto][min_mc] && !$mage[downtime][mental_cognition]} 
             {
                 pause_bot;
                 #var mage[downtime][mental_cognition] 1;
@@ -392,9 +391,7 @@
 
 	#if {$mage[downtime][spell_points] && $my[sp][current]==$my[sp][max]} {#var mage[downtime][spell_points] 0;unpause_bot};
 	#if {$mage[downtime][saturation] && $my[gp1][current]==0} {#var mage[downtime][saturation] 0;unpause_bot};
-
-	#nop Note: my[mental_cognition] is 0 when it's 100%.;
-	#if {$mage[downtime][mental_cognition] && !$my[mental_cognition]} {#var mage[downtime][mental_cognition] 0;unpause_bot};
+	#if {$mage[downtime][mental_cognition] && $my[mental_cognition]==100} {#var mage[downtime][mental_cognition] 0;unpause_bot};
 
 	#if {$mage[downtime][halt]} {
 		#var stay_paused 0;
