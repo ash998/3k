@@ -314,7 +314,7 @@
             {
                 pause_bot;
                 #var mage[downtime][mental_cognition] 1;
-                update_chat <138>!!!!!LOW MC BOT PAUSED!!!!!<099>;
+                update_chat <138>Low MC, bot paused.<099>;
             };
 
 #nop Spell Points;
@@ -322,7 +322,7 @@
             {
                 pause_bot;
                 #var mage[downtime][spell_points] 1;
-                update_chat <138>!!!!!LOW SP BOT PAUSED!!!!!<099>;
+                update_chat <138>Low SP, bot paused.<099>;
             };
 
 #nop Saturation;
@@ -390,18 +390,21 @@
 #alias {update_status} {
         #if {"$enemy[hp]" == ""} {#var mage[info][incombat] {0}} {#var mage[info][incombat] {1}};
 
-    #if {$mage[downtime][spell_points] && $my[sp][current]==$my[sp][max]} {#var mage[downtime][spell_points] 0;unpause_bot};
-    #if {$mage[downtime][saturation] && $my[gp1][current]==0} {#var mage[downtime][saturation] 0;unpause_bot};
+	#if {$mage[downtime][spell_points] && $my[sp][current]==$my[sp][max]} {#var mage[downtime][spell_points] 0;unpause_bot};
+	#if {$mage[downtime][saturation] && $my[gp1][current]==0} {#var mage[downtime][saturation] 0;unpause_bot};
 
-    #if {$mage[downtime][halt]} {
-        #var stay_paused 0;
-        #nop Added this check because MI firing might have unpaused us;
-        #foreach {*mage[downtime][]} {item} {#if {$mage[downtime][$item]} {#var stay_paused 1}};
-        #if {!$stay_paused} {
-		#var mage[downtime][halt] {0};
-		#if {$bot} {.bot};
+	#nop Note: my[mental_cognition] is 0 when it's 100%.;
+	#if {$mage[downtime][mental_cognition] && !$my[mental_cognition]} {#var mage[downtime][mental_cognition] 0;unpause_bot};
+
+	#if {$mage[downtime][halt]} {
+		#var stay_paused 0;
+		#nop Added this check because MI firing might have unpaused us;
+		#foreach {*mage[downtime][]} {item} {#if {$mage[downtime][$item]} {#var stay_paused 1}};
+		#if {!$stay_paused} {
+			#var mage[downtime][halt] {0};
+			#if {$bot} {.bot};
+		};
 	};
-    };
 
 
         #nop Failsafe for gems if the var is stuck somehow;
