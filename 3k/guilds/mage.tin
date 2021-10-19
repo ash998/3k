@@ -38,6 +38,9 @@
   #var magev[auto][ma] {0};
   #var magev[auto][ed] {0};
 
+  #var magev[auto][hmheal] {0};
+  #var magev[auto][eternalheal] {0};
+
 #nop How much more SP after 90 rounds of MI than before;
   #var magev[setting][SPDeltaPerMI] {8000};
 
@@ -138,16 +141,29 @@
 #nop How much SP we need to cover with tap to stay at 90% SP;
     #math {mage[info][SPDeficit]} {(($MIFreeRounds * $magev[setting][SPSpentPerRnd]) - ($my[immersion][count] * $magev[setting][SPDeltaPerMI]) + (($my[sp][max] * 9 / 10)-$my[sp][current]) - (($magev[setting][SPDeltaPerMI]*$my[immersion][rounds])/90))};
 
-#nop    #show Deficit: $mage[info][SPDeficit] No MI rnds: $MIFreeRounds;
+#nop #show Deficit: $mage[info][SPDeficit] No MI rnds: $MIFreeRounds;
 
-  #if {$magev[auto][spell_tap]}
-  { 
-    #math {SPToTapAt} {$my[sp][max]-500};
-    #if {!$my[immersion][rounds] && $my[gp1][current]<$magev[setting][MaxSatToSpellTapAt] && $mage[info][SPDeficit]>0 && $my[sp][current]<$SPToTapAt}
-    {
-      #send !cast spell tap
-    };
-  };
+	#if {$magev[auto][hmheal] && !$cooldown[hmheal]} {
+		#math {mage[info][SPDeficit]} {$mage[info][SPDeficit] - ($my[sp][max] - $magev[auto][mystic_immersion_at])};
+	};
+
+	#if {$magev[auto][eternalheal] && !$cooldown[eternalheal]} {
+		#math {mage[info][SPDeficit]} {$mage[info][SPDeficit] - ($my[sp][max] - $magev[auto][mystic_immersion_at])};
+	};
+
+
+#nop #show Deficit: $mage[info][SPDeficit] No MI rnds: $MIFreeRounds;
+
+
+
+	#if {$magev[auto][spell_tap]}
+	{ 
+		#math {SPToTapAt} {$my[sp][max]-500};
+		#if {!$my[immersion][rounds] && $my[gp1][current]<$magev[setting][MaxSatToSpellTapAt] && $mage[info][SPDeficit]>0 && $my[sp][current]<$SPToTapAt}
+		{
+			#send !cast spell tap
+		};
+	};
 };
 
 
@@ -205,6 +221,14 @@
 	};
 };
 
+#alias {_do_mystic_immersion} {
+	#math {my[immersion][count]} {$my[immersion][count]-1};
+	#var my[immersion][rounds] {90};
+	#var mage[downtime][spell_points] {0};
+	#send !cast mystic immersion;
+	#send !cast giant strength at $world;
+};
+
 
 #act {^ HP: {\d+}/{\d+} SP: {\d+}/{\d+}{S|}/{\d+}%/{\d+}% Sat: {\d+} Cnc: {\d+} G/MI: {\d+}/{\d+}/{\d+}% ER: {\d+}/{\d+}% G2N: {\d+}%} {
 	#var my[hp][current]	{%1};
@@ -257,7 +281,6 @@
 #nop Also setup vars if it was cast so spell tap automation knows the correct values.;
         #if {$mage[info][incombat]
              && !$my[immersion][rounds]
-             && $my[immersion][count]
              && (
                   ($my[sp][current]<$magev[auto][mystic_immersion_at])
                   || ($my[golem][reset]>97)
@@ -265,11 +288,21 @@
                 )
             } 
         {
-                #math {my[immersion][count]} {$my[immersion][count]-1};
-                #var my[immersion][rounds] {90};
-                #var mage[downtime][spell_points] {0};
-                #send !cast mystic immersion;
-                #send !cast giant strength at $world;
+#nop We want to use MI or use an SP heal;
+			#if {	($my[golem][reset]>97 && $my[immersion][count])
+					|| ($my[golem][reset]>80 && $my[immersion][count]>1)} {
+#nop If we have MI's left and we're close to reset, spend those first.;
+				_do_mystic_immersion;
+			};
+			#elseif {$magev[auto][eternalheal] && !$cooldown[eternalheal]} {
+				#send !eternal heal $world;
+			};
+			#elseif {$magev[auto][hmheal] && !$cooldown[hmheal]} {
+				#send !hmheal;
+			};
+			#elseif {$my[immersion][count]} {
+				_do_mystic_immersion;
+			};
         }; 
 
         #if {$mage[info][incombat]} {spell_tap_automation};
@@ -450,7 +483,7 @@
         #showme {<088>HP:$hp/$hp_max  SP:$sp/$sp_max Delta SP:$sp_delta  Cycle:<130>@guild_cycletype{}<088>  Cnc: $gp2\%   G2N: $my[g2n]    } {-4};
         #showme {HP:${my[hp][graph]}   SP:${my[sp][graph]}  Sat:${my[gp1][graph]} E:${enemy[graph]} CF:<130>${corpses[coffin]}<088>${sb2_freezer} <128>IC:<130> ${corpses[inventory]}<088> ${sb1_cooler}Deficit: <088>$mage[info][SPDeficit] $mage[downtimereason]} {-3};
 	#showme {$mip[gline][1]  $mip[gline][2] <128>R:<088>$mip[round]} {-6}
-}
+};
 
 #alias {corpsetrig} {
   #send !study spellbook;
@@ -461,9 +494,9 @@
   #var mage[debuff][ma] {0};
   #var mage[debuff][ed] {0};
   #var mage[O][cast_buffer] {0};
-}
+};
 
-#alias {save_guild_vars} {#class mage_vars write {.tt/3k/vars/mage.var}}
+#alias {save_guild_vars} {#class mage_vars write {.tt/3k/vars/mage.var}};
 
 #alias {spellup} {
   #if {"%1"==""} {
@@ -519,7 +552,7 @@
       }
     }
   }
-}
+};
 
 #alias refm {
         #SEND !cast fabricate as dagger#dagger#dagger;

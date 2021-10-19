@@ -32,6 +32,10 @@
 	cooldowns_check;
 };
 
+#act {{^3Kingdoms welcomes you!$}} {
+	cooldowns_check;
+};
+
 
 #delay {2} {
 	cooldowns_check;
@@ -44,15 +48,15 @@
 		#if {"%%2"==="     Heal        You may heal yourself at this time."} {
 			set_cooldown hmheal 0;
 		} {
-			#nop +59 seconds because the timer only shows whole minutes;
-			set_cooldown hmheal @math{%%3*60 + 59};
+			#nop +118 seconds because the timer only shows whole minutes and ticker might be firing in one second;
+			set_cooldown hmheal @math{%%3*60 + 59 + ($ticker_seconds-1)};
 		};
 		#unact {{^     Heal        You must wait (\d+) min\(s\) to heal yourself.$}};
 	};
 };
 
 #act {You call forth high mortal energies to heal yourself!} {
-	set_cooldown hmheal 3600;
+	set_cooldown hmheal 3660;
 };
 
 #act {You need rest to use that power again.} {
@@ -62,10 +66,10 @@
 #nop *****Eternal Heal*****;
 
 #act {{^Syntax: \(heal \[target\]}} {
-#showme eternal heal;
+#nop #showme eternal heal;
 
 	#act {{(^You must wait( (\d+) minutes)?( (\d+) seconds)? to use this power again\.$)|(^You are able to use this power now\.$)}} {
-                #if {"%%2"==="You are able to use this power now."} {
+		#if {"%%2"==="You are able to use this power now."} {
 			set_cooldown eternalheal 0;
 		} {
 			#if {"%%4"===""} {
@@ -80,7 +84,7 @@
                                 #local seconds %%6;
                         };
 
-			set_cooldown eternalheal @math{$minutes*60 + $seconds};
+			set_cooldown eternalheal @math{$minutes*60 + $seconds + ($ticker_seconds-1)};
 		};
 		#unact {{(^You must wait( (\d+) minutes)?( (\d+) seconds)? to use this power again\.$)|(^You are able to use this power now\.$)}};
 	};
@@ -103,7 +107,7 @@
                 #local seconds %5;
         };
 
-        set_cooldown eternalheal @math{$minutes*60 + $seconds};
+        set_cooldown eternalheal @math{$minutes*60 + $seconds + ($ticker_seconds-1)};
 };
 
 
