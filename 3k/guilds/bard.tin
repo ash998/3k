@@ -1,6 +1,29 @@
+#if {!@file_exists{.tt/3k/vars/bard.var}}
+{
+	#class {bard_vars} {open};
+
+	#var bardv[cycle][type] {default};
+
+
+#nop When down to this many corpses, switch to gather cycle type;
+	#var bardv[cycle][min_corpses] {5};
+
+#nop When up to this many corpses, switch to spend cycle type, set to 0 to use coffin max;
+	#var bardv[cycle][max_corpses] {0};
+
+	#class bard_vars write {.tt/3k/vars/bard.var};
+	#class {bard_vars} {close};
+
+};
+
 #class {bard} {open}
 
-#var guild bard
+#var guild bard;
+
+#var bard[current_cycletype] {$bardv[cycle][type]};
+
+#nop TODO: This variable needs to be set by something else;
+#var bard[coffin][max] {25};
 
 /* HP Bars */
 #NOP bset custom_hp @hired:|@HP:&$HP2$& SP:&$SP2$& K:&$K2$& V:&$V2$& SM:&$S$&/&$SR$&% G:&$G2S$&/&$G2N$&[&$G2N%$&%] &$C$&&$NL$&@hired:|@A:&$AS$& &$P$&
@@ -17,13 +40,58 @@
 	#var my[gxp][current]		%11;
 	#var my[gxp][max]		%12;
 	#var my[gxp][per]		%13
-}
+};
 
 #act {|A: [[ %* ]]} {
 	update_status
-}
+};
+
+#function {guild_halt} {
+#nop No guild pauses implemented;
+        #return  0;
+};
+
+#function {guild_cycletype} {
+        #return $bard[current_cycletype];
+};
+
+#alias {bcycleset} {
+        #if {"%1"!="default" && "%1"!="gather" && "%1"!="spend"} {
+                #showme Usage: bcycleset [default|gather|spend];
+                #showme        If using "default", it will stay in default untill you set it to something else.;
+                #showme        If using "gather" or "spend", it will toggle between the two based on the values;
+                #showme        in bardv[cycle][min_corpses] and bardv[cycle][max_corpses].;
+                #showme        Your current cycle is: @guild_cycletype{};
+        } {
+                #var bard[current_cycletype] {%1};
+                #var bardv[cycle][type] {%1};
+		save_guild_vars;
+        }
+};
+
+#alias {bcyclecheck} {
+        #nop If we're in default, stay in default. Only swap between gather and spend.;
+        #if {"$bard[current_cycletype]"!="default"} {
+
+                #if {"$bard[current_cycletype]"=="gather"} {
+                        #if {!$bardv[cycle][max_corpses]} {#var _max_corpses {$bard[coffin][max]}} {#var _max_corpses {$bardv[cycle][max_corpses]}};
+                        #if {$corpses[coffin] >= $_max_corpses} {
+                                #var mage[current_cycletype] {spend};
+                                update_chat <138>Auto switching to spend cycle.<099>;
+                        };
+                } {
+                        #if {$corpses[coffin] < $bardv[cycle][min_corpses]} {
+                                #var mage[current_cycletype] {gather};
+                                update_chat <138>Auto switching to gather cycle.<099>;
+                        };
+                };
+        };
+};
+
+#alias {save_guild_vars} {#class bard_vars write {.tt/3k/vars/bard.var}};
 
 #alias {update_status} {
+	bcyclecheck;
         #if {"$cooler" == "on" || $corpses[cooler] > 0} {
                 #format {sb1_cooler} {%+2s} {$corpses[cooler]};
                 #var {sb1_cooler} { CL:<130>$sb1_cooler<088>}
@@ -59,8 +127,8 @@
 }
 
 #alias {corpsetrig} {
-	#send {!wrap};
-	#send {!get all}
+#nop	#send {!wrap};
+#nop	#send {!get all};
 }
 
 #class {bard} {close}
