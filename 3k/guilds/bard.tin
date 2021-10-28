@@ -76,12 +76,12 @@
                 #if {"$bard[current_cycletype]"=="gather"} {
                         #if {!$bardv[cycle][max_corpses]} {#var _max_corpses {$bard[coffin][max]}} {#var _max_corpses {$bardv[cycle][max_corpses]}};
                         #if {$corpses[coffin] >= $_max_corpses} {
-                                #var mage[current_cycletype] {spend};
+                                #var bard[current_cycletype] {spend};
                                 update_chat <138>Auto switching to spend cycle.<099>;
                         };
                 } {
                         #if {$corpses[coffin] < $bardv[cycle][min_corpses]} {
-                                #var mage[current_cycletype] {gather};
+                                #var bard[current_cycletype] {gather};
                                 update_chat <138>Auto switching to gather cycle.<099>;
                         };
                 };

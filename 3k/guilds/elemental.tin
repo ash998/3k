@@ -1,7 +1,74 @@
+#if {!@file_exists{.tt/3k/vars/elemental.var}}
+{
+	#class {elemental_vars} {open};
+
+	#var elementalv[cycle][type] {default};
+
+
+#nop When down to this many corpses, switch to gather cycle type;
+	#var elementalv[cycle][min_corpses] {5};
+
+#nop When up to this many corpses, switch to spend cycle type, set to 0 to use coffin max;
+	#var elementalv[cycle][max_corpses] {0};
+
+	#class elemental_vars write {.tt/3k/vars/elemental.var};
+	#class {elemental_vars} {close};
+
+};
+
 #class {elemental} {open}
 
 /* Set Guild Variable*/
 #var guild elemental
+
+#var elemental[current_cycletype] {$elementalv[cycle][type]};
+
+#nop TODO: This variable needs to be set by something else;
+#var elemental[coffin][max] {25};
+
+#function {guild_halt} {
+#nop No guild pauses implemented;
+        #return  0;
+};
+
+#function {guild_cycletype} {
+        #return $elemental[current_cycletype];
+};
+
+#alias {ecycleset} {
+        #if {"%1"!="default" && "%1"!="gather" && "%1"!="spend"} {
+                #showme Usage: ecycleset [default|gather|spend];
+                #showme        If using "default", it will stay in default untill you set it to something else.;
+                #showme        If using "gather" or "spend", it will toggle between the two based on the values;
+                #showme        in elementalv[cycle][min_corpses] and elementalv[cycle][max_corpses].;
+                #showme        Your current cycle is: @guild_cycletype{};
+        } {
+                #var elemental[current_cycletype] {%1};
+                #var elementalv[cycle][type] {%1};
+		save_guild_vars;
+        }
+};
+
+#alias {ecyclecheck} {
+        #nop If we're in default, stay in default. Only swap between gather and spend.;
+        #if {"$elemental[current_cycletype]"!="default"} {
+
+                #if {"$elemental[current_cycletype]"=="gather"} {
+                        #if {!$elementalv[cycle][max_corpses]} {#var _max_corpses {$elemental[coffin][max]}} {#var _max_corpses {$elementalv[cycle][max_corpses]}};
+                        #if {$corpses[coffin] >= $_max_corpses} {
+                                #var elemental[current_cycletype] {spend};
+                                update_chat <138>Auto switching to spend cycle.<099>;
+                        };
+                } {
+                        #if {$corpses[coffin] < $elementalv[cycle][min_corpses]} {
+                                #var elemental[current_cycletype] {gather};
+                                update_chat <138>Auto switching to gather cycle.<099>;
+                        };
+                };
+        };
+};
+
+#alias {save_guild_vars} {#class elemental_vars write {.tt/3k/vars/elemental.var}};
 
 
 /* HP Bars */
@@ -26,6 +93,7 @@
 
 /* Update Status Alias */
 #alias {update_status} {
+		ecyclecheck;
         #if {"$cooler" == "on" || $corpses[cooler] > 0} {
                 #format {sb1_cooler} {%+2s} {$corpses[cooler]};
                 #var {sb1_cooler} { CL:<130>$sb1_cooler<088>}
@@ -56,18 +124,17 @@
 		#showme {H:${my[hp][graph]} S:${my[sp][graph]} N:${my[gp1][graph]} E:${enemy[graph]} CF:<130>${corpses[coffin]}<088>${sb2_freezer}} {-3}
 	};
 	#if {"$draw[gline]" == "on"} {
-		#showme {$mip[gline][1]  $mip[gline][2]} {-6}
+		#showme {$mip[gline][1]  $mip[gline][2] <128>R:<088>$mip[round]} {-6}
 	}
 }
 
-
 /* Corpse Trigger */
 #alias {corpsetrig} {
-	slab;
-	wrap;
-	mdc;
-	cd;
-	get coins
+#nop	slab;
+#nop	wrap;
+#nop	mdc;
+#nop	cd;
+#nop	get coins
 }
 
 #class {elemental} {close}
