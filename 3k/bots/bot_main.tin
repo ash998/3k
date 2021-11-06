@@ -186,6 +186,7 @@ prompt >$nl$
 	#unalias {.bot};
 	#var bot 0;
 	#var mobname {};
+	#unact {^>$};
 }
 
 #alias {.bot} {
