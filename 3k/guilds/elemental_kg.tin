@@ -132,8 +132,8 @@
 	#format {corpses[inventory]}    {%+2s} {$corpses[inventory]};
 	#format {corpses[coffin]}       {%+2s} {$corpses[coffin]};
 	#if {"$draw[hpbar]" == "on"} {
-		#showme {H:${hp}/${hp_max}   S:${sp}/${sp_max}  N:${nrg}/${nrg_max}  E:     ${ehealth}%  IC:<130>${corpses[inventory]}<088>${sb1_cooler}  Cycle:<130>@guild_cycletype{}} {-4};
-		#showme {H:${my[hp][graph]}  S:${my[sp][graph]} N:${my[gp1][graph]} E:${enemy[graph]} CF:<130>${corpses[coffin]}<088>${sb2_freezer}} {-3}
+		#showme {H:${hp}/${hp_max}  S:${sp}/${sp_max}  N:${nrg}/${nrg_max}  E:   ${ehealth}%    IC:<130>${corpses[inventory]}<088>${sb1_cooler}  Cycle:<130>@guild_cycletype{}<088>  NC:<130>$elemental[nc]<088>  MD:<130>$elemental[md]<088>} {-4};
+		#showme {H:${my[hp][graph]}   S:${my[sp][graph]} N:${my[gp1][graph]} E:${enemy[graph]} CF:<130>${corpses[coffin]}<088>${sb2_freezer}} {-3}
 	};
 	#if {"$draw[gline]" == "on"} {
 		#showme {$mip[gline][1]  $mip[gline][2] <128>R:<088>$mip[round]} {-6}
@@ -148,6 +148,7 @@
 
 /* Corpse Trigger */
 #alias {corpsetrig} {
+#send {!xp};
 #var elemental[md] {0};
 #var elemental[age] {0};
 #var elemental[eval] {0};
@@ -157,7 +158,27 @@
 #alias {gs} {escore};
 #alias {gs2} {escore2};
 #alias {gwho} {ewho};
+#alias {ff} {
+#send {!evoke time stone};
+#send {!activate stone};
+#send {!despam};
+#send {!evoke time stone};
+#send {!activate stone};
+#send {!despam};
+#send {!evoke time stone};
+#send {!activate stone};
+#send {!despam};
+#send {!give time stone to %1};
+#send {!give time stone to %1};
+#send {!give time stone to %1};
+#send {!drop time stone};
+#send {!drop time stone};
+#send {!drop time stone};
+};
+#alias {el} {chat el};
+#alias {res} {#send !evoke resolve with %0;#send !evoke prismatic emission with %0};
 
+#act {^You focus inward, reaching back through the Astral plane to your home} {#var elemental[md] {1}};
 #act {^You combine a %*-%* soul gem with a %*-striped jade soul gem.} {#send !put gem in vortex};
 #act {^You combine a %*-striped jade soul gem with a %*-%* soul gem.} {#send !put gem in vortex};
 #act {^You focus inward, searching deep within yourself for the true link to} {#math {elemental[nc]} {$elemental[nc] - 1}};
@@ -166,9 +187,7 @@
 #act {^-- You may draw upon the forces of nature %d time} {#format elemental[nc] {%1} {%1}};
 #act {^You may not draw upon nature's power at this time.} {#send !hmheal};
 #act {^You need rest to use that power again.} {#send !hk};
-#act {{evaluate the strengths and weaknesses of (.*)}} {#if {"%2" == "Lrille, Killergate's Golden"} {#NOP} {#act {{-\> This \w seems to be most susceptible to (\w) attacks\.}} {#send !evoke resolve with %%2;#send !evoke prismatic emission with %%2;#unact {{-\> This \w seems to be most susceptible to (\w) attacks\.}}}}};
-
-#alias {eee} {#echo {-> This balangool seems to be most susceptible to mental attacks.}};
+#NOP #act {{evaluate the strengths and weaknesses of (.*)}} {#if {"%2" == "Lrille, Killergate's Golden"} {#NOP} {#act {{-\> This \w seems to be most susceptible to (\w) attacks\.}} {#send !evoke resolve with %%2;#send !evoke prismatic emission with %%2;#unact {{-\> This \w seems to be most susceptible to (\w) attacks\.}}}}};
 
 #gag {^You may not draw upon nature's power at this time.};
 #gag {^That mind cannot be depleted again, by you.};
