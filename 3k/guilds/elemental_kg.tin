@@ -148,10 +148,10 @@
 
 /* Corpse Trigger */
 #alias {corpsetrig} {
-#send {!xp};
-#var elemental[md] {0};
-#var elemental[age] {0};
-#var elemental[eval] {0};
+	#send {!xp};
+	#var elemental[md] {0};
+	#var elemental[age] {0};
+	#var elemental[eval] {0};
 }
 
 #alias {eval} {#send evoke evaluate};
@@ -159,21 +159,17 @@
 #alias {gs2} {escore2};
 #alias {gwho} {ewho};
 #alias {ff} {
-#send {!evoke time stone};
-#send {!activate stone};
-#send {!despam};
-#send {!evoke time stone};
-#send {!activate stone};
-#send {!despam};
-#send {!evoke time stone};
-#send {!activate stone};
-#send {!despam};
-#send {!give time stone to %1};
-#send {!give time stone to %1};
-#send {!give time stone to %1};
-#send {!drop time stone};
-#send {!drop time stone};
-#send {!drop time stone};
+	#loop 1 $my[blasts] cnt {
+		#send {!evoke time stone};
+		#send {!activate stone};
+		#send {!despam};
+	}
+	#loop 1 $my[blasts] cnt {
+		#send {!give time stone to %0};
+	}
+	#loop 1 $my[blasts] cnt {
+		#send {!drop time stone};
+	}
 };
 #alias {el} {chat el};
 #alias {res} {#send !evoke resolve with %0;#send !evoke prismatic emission with %0};
