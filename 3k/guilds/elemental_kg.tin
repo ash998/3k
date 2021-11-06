@@ -14,6 +14,9 @@
 	#class elemental_vars write {.tt/3k/vars/elemental.var};
 	#class {elemental_vars} {close};
 
+}
+{
+  #class elemental_vars read {.tt/3k/vars/elemental.var};
 };
 
 #class {elemental} {open}
