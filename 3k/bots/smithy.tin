@@ -1,0 +1,12 @@
+#class {bot} {open}
+
+#var {no_loop} {1}
+#var {no_home} {0}
+#var {hardmode} {0}
+#var {vacuum} {0}
+
+#var {botpath} {fix all}
+
+#act {^The Smith repairs} {#unact {^The Smith repairs};..};
+
+#class {bot} {close}
