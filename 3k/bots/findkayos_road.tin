@@ -1,0 +1,18 @@
+#class {bot} {open}
+
+#var {no_loop} {1}
+#var {no_home} {0}
+#var {hardmode} {0}
+#var {vacuum} {0}
+
+#var {botpath} {e;e;s;w;w;s;n;w;w;n;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;e;e;e;e;e;n;e;w;w;w;w;w;w;w;w;w;w;w;w;w;w;w;w;w;w;w;e;e;e;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;e;e;e;n;w;w;w;n;n;s;s;e;e;n;e;e;n;w;s;s;s;w;s;w;s;w;s;w;s;w;w;w;w;w;w;w;s;w;e;e;e;e;e;e;e;s;w;w;w;w;w;w;w;w;w;s;e;e;e;e;e;e;e;e;e;s;w;w;w;w;w;w;w;w;w;e;e;e;e;n;n;n;n;n;w;w;w;w;w;w;w;w;w}
+
+#act {An Interdimensional Portal} {
+        #act {^>$} {
+                #unact {^>$};
+                killbot
+        };
+        #bell
+}
+
+#class {bot} {close}
