@@ -1,32 +1,311 @@
+#if {!@file_exists{.tt/3k/vars/priest.var}}
+{
+
+#nop No priest.var file, load some defaults and make it.;
+  #class {priest_vars} {open};
+
+#nop Buffs spells;
+  #var priestv[auto][barkskin] {1};
+  #var priestv[auto][vestment] {1};
+  #var priestv[auto][protection] {1};
+  #var priestv[auto][proelem] {1};
+  #var priestv[auto][propower] {1};
+  #var priestv[auto][bless] {1};
+  #var priestv[auto][beneficence] {1};
+  #var priestv[auto][haste] {1};
+
+#nop Cooldowns;
+  #var priestv[auto][beseech] {1};
+  #var priestv[auto][beseech_at] {1000};
+
+  #var priestv[auto][grind_invin] {1};
+  #var priestv[auto][grind_invin_reserve] {2};
+  #var priestv[auto][spirit_invin] {1};
+  #var priestv[auto][delta_hp_invin] {1};
+  #var priestv[auto][invin] {0};
+  #var priestv[auto][invin_at] {1500};
+  #var priestv[auto][invin_delta_hp_trigger] {2500};
+
+#nop Other;
+  #var priestv[auto][beckon] {0};
+  #var priestv[auto][phold] {1};
+
+  #var priestv[spellup][1] {protection};
+  #var priestv[spellup][2] {vestment};
+  #var priestv[spellup][3] {prkt2};
+  #var priestv[spellup][4] {barkskin};
+  #var priestv[spellup][5] {bless};
+  #var priestv[spellup][6] {beneficence};
+  #var priestv[spellup][7] {proelem};
+  #var priestv[spellup][8] {propower};
+  #var priestv[spellup][9] {servant};
+  #var priestv[spellup][10] {c1};
+  
+  
+#nop Set priestv[cycle][type] to gather or spend depending on your current type gathers or spends;
+  #var priestv[cycle][type] {default};
+
+#nop When down to this many corpses, switch to gather cycle type;
+  #var priestv[cycle][min_corpses] {5};
+
+#nop When up to this many corpses, switch to spend cycle type, set to 0 to use coffin max;
+  #var priestv[cycle][max_corpses] {0};
+
+  #class priest_vars write {.tt/3k/vars/priest.var};
+  #class {priest_vars} {close};
+
+} 
+{
+  #class priest_vars read {.tt/3k/vars/priest.var};
+}
+
 #class {priest} {open}
 
-#var guild priest
+#alias {save_guild_vars} {#class priest_vars write {.tt/3k/vars/priest.var}};
 
-#act {{HP: (\d+)/(\d+) SP: (\d+)/(\d+) MANA: (\d+)/(\d+) PTY: \((\d+)\%\) E: \[([\w\s\-\~\,\(\)\']+)(?: : )?(\w+)?\]}} {
-	#var {my[hp][current]}	{%2};
-	#var {my[hp][max]}	{%3};
-	#var {my[sp][current]}	{%4};
-	#var {my[sp][max]}	{%5};
-	#var {my[gp1][current]}	{%6};
-	#var {my[gp1][max]}	{%7};
-	#var {my[gp2][current]}	{%8};
-	#var {ehealth}		{%9};
-}
 
-#act {{GXP\%: \[(\d+.\d+)\%\] PROT: (ON|OFF) VEST: (ON|OFF) BARK: (ON|OFF)}} {
-	#var {gxp}	{%2};
-	#var {prot}	{%3};
-	#var {vest}	{%4};
-	#var {bark}	{%5};
-}
+/* Initialization */
+#var guild priest;
+#var priest {};
+#var priest[current_cycletype] {$priestv[cycle][type]};
+#var priest[debuff][cast_buffer] {0};
+#var priest[debuff][phold] {0};
+#var priest[beckon][spirits] {0};
+#var priest[beckon][switching_damage_for_spirit] {0};
+#var priest[beckon][killing_spirit] {0};
+#var priest[beckon][summoned] {0};
+#var priest[buff][haste] {0};
+#var priest[buff][invin][buffered] {0};
+#var priest[beseech][buffered] {0};
+
+
+/* Cycle automation */
+
+
+#function {guild_halt} {
+#nop No guild pauses implemented;
+        #return  0;
+};
+
+#function {guild_cycletype} {
+        #return $priest[current_cycletype];
+};
+
+#alias {bcycleset} {
+        #if {"%1"!="default" && "%1"!="gather" && "%1"!="spend"} {
+                #showme Usage: bcycleset [default|gather|spend];
+                #showme        If using "default", it will stay in default untill you set it to something else.;
+                #showme        If using "gather" or "spend", it will toggle between the two based on the values;
+                #showme        in priestv[cycle][min_corpses] and priestv[cycle][max_corpses].;
+                #showme        Your current cycle is: @guild_cycletype{};
+        } {
+                #var priest[current_cycletype] {%1};
+                #var priestv[cycle][type] {%1};
+		save_guild_vars;
+        }
+};
+
+#alias {bcyclecheck} {
+        #nop If we're in default, stay in default. Only swap between gather and spend.;
+        #if {"$priest[current_cycletype]"!="default"} {
+
+                #if {"$priest[current_cycletype]"=="gather"} {
+                        #if {!$priestv[cycle][max_corpses]} {#var _max_corpses {$priest[coffin][max]}} {#var _max_corpses {$priestv[cycle][max_corpses]}};
+                        #if {$corpses[coffin] >= $_max_corpses} {
+                                #var priest[current_cycletype] {spend};
+                                update_chat <138>Auto switching to spend cycle.<099>;
+                        };
+                } {
+                        #if {$corpses[coffin] < $priestv[cycle][min_corpses]} {
+                                #var priest[current_cycletype] {gather};
+                                update_chat <138>Auto switching to gather cycle.<099>;
+                        };
+                };
+        };
+};
+
+#nop hpbar hp#dhp#sp#mana#sto#mhl#NL#cl#invin2#coffin#pgxxl#dgxp#NL#bark#vest#prot#elem#power#bless#bene;
+#nop The hp bar is in 3 lines, all automation will be done from the 3rd line;
+
+#act {{^HP: (\d+)/(\d+) <DHP>: (-*)(\d+) SP: (\d+)/(\d+) MANA: (\d+)/(\d+) STO: (\d+)/(\d+) E: \[(((.*)? : (\d+)%)|(None))\] }} {
+	#var {my[hp][current]}				{%2};
+	#var {my[hp][max]}					{%3};
+	#if {"%4"==="-"} {
+		#math {priest[hp][delta]} 		{%5*-1};
+	} {
+		#var {priest[hp][delta]} 		{%5};
+	};
+	#var {my[sp][current]}				{%6};
+	#var {my[sp][max]}					{%7};
+	#var {my[gp1][current]}				{%8};
+	#var {my[gp1][max]}					{%9};
+	#var priest[gp1][stored][current]	{%10};
+	#var priest[gp1][stored][max]		{%11};
+
+	#if {"%17"==="None"} {
+		#var {ehealth}					{0};
+		#var priest[enemyname]			{};
+	} {
+		#var priest[enemyname]			{%15};
+		#var {ehealth}					{%16};
+	};
+
+#nop	#showme HP: $my[hp][current] Delta: $priest[hp][delta] E: $priest[enemyname] $ehealth;
+
+};
+
+#act {{^CL: \[(\**)(\d+)\%\] INVIN: (\d+)/(\d+) \((\d+)\%\) C: (\d+)/(\d+) GXP\%: \[(\d+).(\d+)\%\] \<DGX\>: (\d+) $}} {
+	#var priest[beseech]				{%2};
+	#var priest[cleansing]				{%3};
+	#var priest[invin][current]			{%4};
+	#var priest[invin][max]				{%5};
+	#var priest[invin][percent]			{%6};
+	#var corpses[coffin]				{%7};
+	#var priest[coffin][max]			{%8};
+	#var priest[gxp][int]				{%9};
+	#var priest[gxp][frc]				{%9};
+	#var priest[gxp][delta]				{%11};
+
+	#math {priest[gxp][percent]} {($priest[gxp][int]*1000.0 + $priest[gxp][frc]*1.0)/1000.0};
+	#if {$priest[invin][percent]} {
+		#var priest[buff][invin] {1};
+	};
+
+#nop	#showme Beseech: $priest[beseech] Coffin: $corpses[coffin]/$priest[coffin][max] Deltagxp: $priest[gxp][delta] GxpP: $priest[gxp][percent];
+};
+
+
+#act {{^BARK: (.*?) VEST: (.*?) PROT: (.*?) ELE: (.*?) POW: (.*?) BLESS: (.*?) BENE: (.*?)$}} {
+	#if {"%2"==="ON"} {#var priest[buff][barkskin] {1}} {#var priest[buff][barkskin] {0}};
+	#if {"%3"==="ON"} {#var priest[buff][vestment] {1}} {#var priest[buff][vestment] {0}};
+	#if {"%4"==="ON"} {#var priest[buff][protection] {1}} {#var priest[buff][protection] {0}};
+	#if {"%5"==="ON"} {#var priest[buff][proelem] {1}} {#var priest[buff][proelem] {0}};
+	#if {"%6"==="ON"} {#var priest[buff][propower] {1}} {#var priest[buff][propower] {0}};
+	#if {"%7"==="ON"} {#var priest[buff][bless] {1}} {#var priest[buff][bless] {0}};
+	#if {"%8"==="ON"} {#var priest[buff][beneficence] {1}} {#var priest[buff][beneficence] {0}};
+
+
+
+	#if {$ehealth} {
+#nop INVIN;
+		#if {$priest[invin][percent]<10 && $priest[invin][current] && !priest[buff][invin][buffered]} {
+			#local do_invin {0};
+			#local hp_lost {@math{-1 * $priest[hp][delta]} };
+
+			#if {$priestv[auto][delta_hp_invin] && $hp_lost >= $priestv[auto][invin_delta_hp_trigger]} {
+				#local do_invin {1};
+			};
+
+			#if {$priestv[auto][grind_invin] && $priestv[auto][invin_at] >= $my[gp1][current] && $priest[invin][current] > $priestv[auto][grind_invin_reserve]} {
+				#if {"$priest[beseech]"===""} {
+					#local do_invin {1};
+				};
+			};
+			
+			#if {$priestv[auto][spirit_invin] && $priest[beckon][killing_spirit]} {
+				#local do_invin {1};
+			};
+
+			#if {$priestv[auto][invin]} {
+				#local do_invin {1};
+			};
+
+			#if {$do_invin} {
+				#send !invin;
+				#var priest[buff][invin][buffered] {1};
+			};
+
+		};
+
+#nop BESEECH;
+		#if {"$priest[beseech]"!==""} {
+			#if {$priestv[auto][beseech] && $priestv[auto][beseech_at] >= $my[gp1][current] && !$priest[beseech][buffered]} {
+				#send !beseech;
+				#var priest[beseech][buffered] {1};
+			};
+		};
+		
+		#if {!priest[beseech][buffered] && $priestv[auto][beseech_at] >= $my[gp1][current]} {
+			#send !unwrap;
+			#send !offer;
+		};
+
+		priest_debuff_automation;
+		
+		#if {priestv[auto][beckon] && !priest[beckon][summoned]} {
+			#if ($my[sp][current]<750) {
+				#send !soulforce;
+			};
+			#send !rift;
+			#send !beckon;
+			#send !dispelrift;
+		};
+
+	};
+
+	#if (!$priest[buff][protection] && $priestv[auto][protection]) {
+		#if ($my[sp][current]<250) {
+			#send !soulforce;
+		};
+		#send !protection;
+	};
+
+	#if (!$priest[buff][vestment] && $priestv[auto][vestment]) {
+		#if ($my[sp][current]<250) {
+			#send !soulforce;
+		};
+		#send !vestment;
+	};
+
+	#if (!$priest[buff][barkskin] && $priestv[auto][barkskin]) {
+		#if ($my[sp][current]<250) {
+			#send !soulforce;
+		};
+		#send !barkskin;
+	};
+
+	#if (!$priest[buff][haste] && $riestv[auto][haste]) {
+		#if ($my[sp][current]<250) {
+			#send !soulforce;
+		};
+		#send !haste;
+	};
+
+	#if (!$priest[buff][bless] && $priestv[auto][bless]) {
+		#if ($my[sp][current]<250) {
+			#send !soulforce;
+		};
+		#send !bless;
+	};
+
+	#if (!$priest[buff][proelem] && $priestv[auto][proelem]) {
+		#if ($my[sp][current]<250) {
+			#send !soulforce;
+		};
+		#send !proelem;
+	};
+
+	#if (!$priest[buff][propower] && $priestv[auto][propower]) {
+		#if ($my[sp][current]<250) {
+			#send !soulforce;
+		};
+		#send !propower;
+	};
+
+	#if (!$priest[buff][beneficence] && $riestv[auto][beneficence]) {
+		#if ($my[sp][current]<250) {
+			#send !soulforce;
+		};
+		#send !beneficence;
+	};
+
+
+	update_status;
+#nop	#showme Bark: $priest[buff][barkskin] Bene: $priest[buff][beneficence];
+};
+
 
 #alias {update_status} {
-	#if {my[hp][current] < my[hp][max]} {
-		!lifeforce
-	};
-	#if {my[sp][current] < my[sp][max]} {
-		!soulforce
-	};
 
 	#var    {my[hp][graph]}         {@graph{$my[hp][current];${my[hp][max]}}};
 	#var    {my[sp][graph]}         {@graph{$my[sp][current];$my[sp][max]}};
@@ -45,33 +324,202 @@
 
 	#showme {HP:$hp/$hp_max SP:$sp/$sp_max MN:$gp1/$gp1_max PY:$gp2/$gp2_max E:$ehealth} {-4};
 	#showme {H:$my[hp][graph] S:$my[sp][graph] M:$my[gp1][graph] P:$my[gp2][graph] E:$enemy[graph]} {-3};
-	#showme {$mip[gline][1]  $mip[gline][2]} {-6}
-}
+	#showme {$mip[gline][1]  $mip[gline][2]} {-6};
+};
+
+/* priest automation setup alias */
+#alias {pauto} {
+
+  #regex {%0} {{^(.+) (.+)$}}
+  {
+    #var _setting {&2};
+    #var _value {&3};
+  }
+  {
+    #regex {%0} {{^(.+)$}} {
+      #var _setting {&2};
+      #var _value {_noval};
+    }
+    {
+      #var _setting {_noval};
+      #var _value {_noval};
+    }
+  };
 
 
+  #regex {%0} {^$} {
+    #showme Usage: pauto <setting> [<value>];
+    #showme Value can be omitted for settings that toggle on/off (0/1 values).;
+    #foreach {*priestv[auto][]} {item} {#showme Setting $item  Current value: $priestv[auto][$item]}; 
+  };
+
+  #if {"$_setting"!="_noval"}
+  {
+    #if {"$_value"!="_noval"} {#var priestv[auto][$_setting] {$_value};#showme $_setting is now set to $_value};
+    #if {"$_value"=="_noval"} {
+      #if {$priestv[auto][$_setting]} {
+        #var priestv[auto][$_setting] {0};
+        #showme $_setting is now toggled off.;
+      } 
+      {
+        #var priestv[auto][$_setting] {1};
+        #showme $_setting is now toggled on.;
+      }
+    }
+  }
+};
+
+
+#alias {corpsetrig} {
+	#var priest[debuff][cast_buffer] {0};
+	#var priest[debuff][phold] {0};
+	#if {$priest[beckon][killing_spirit]} {
+		#math {priest[beckon][spirits]} {$priest[beckon][spirits]-1};
+		#if {$priest[beckon][spirits]} {
+			#send !kill spirit;
+		} {
+			#send !hplan $priest[damage_spell];
+			#var priest[beckon][killing_spirit] {0};
+		};
+	};
+};
 
 /* Heals */
 #NOP Guardian
-#unvar guard
+#unvar priest[guard];
+
 #act {%w\'s health status: HP: [%d/%d] SP: [%d/%d]} {
-	#format {guard[name]} {%l} {%1};
-	#var {guard[hp][cur]}	{%2};
-	#var {guard[hp][max]}	{%3};
-	#var {guard[sp][cur]}	{%4};
-	#var {guard[sp][max]}	{%5};
+	#format {priest[guard][name]} {%l} {%1};
+	#var {priest[guard][hp][cur]}	{%2};
+	#var {priest[guard][hp][max]}	{%3};
+	#var {priest[guard][sp][cur]}	{%4};
+	#var {priest[guard][sp][max]}	{%5};
 
 
-	#if {"$guard[hp][lim]" != "" && $guard[hp][cur] < $guard[hp][lim] } {
-		!invigorate $guard[name]
+	#if {"$priest[guard][hp][lim]" != "" && $priest[guard][hp][cur] < $priest[guard][hp][lim] } {
+		!invigorate $priest[guard][name]
 	};
-	#if {"$guard[sp][lim]" != "" && $guard[sp][cur] < $guard[sp][lim] } {
-		!radiance $guard[name]
+	#if {"$priest[guard][sp][lim]" != "" && $priest[guard][sp][cur] < $priest[guard][sp][lim] } {
+		!radiance $priest[guard][name]
 	}
 }
 
-#alias {guard %1 %2} {
-	#var {guard[hp][lim]} {%1};
-	#var {guard[sp][lim]} {%2}
+#alias {priest[guard] %1 %2} {
+	#var {priest[guard][hp][lim]} {%1};
+	#var {priest[guard][sp][lim]} {%2}
 }
 
-#class {preist} {close}
+
+/* debuffs */
+
+#alias {priest_debuff_automation} {
+	#if {!priest[debuff][cast_buffer]} {
+		#if {$priestv[auto][phold] && !$priest[debuff][phold] && $my[sp][current]>200} {
+		  #send !cast phold;
+		  #var priest[debuff][cast_buffer] {1};
+		};
+	};
+};
+
+
+/* buffs */
+
+#act {You are already affected by a haste spell.} {
+	#var priest[buff][haste] {1};
+};
+
+#act {You feel yourself slow back down to normal speed.} {
+	#var priest[buff][haste] {0};
+};
+
+#act {{^'Wise and powerful .*?, hasten my reflexes and quicken my body!'$}} {
+	#var priest[buff][haste] {1};
+};
+
+
+#act {{^Channeling your divine energy inward, you focus on making your flesh$}} {
+	#var priest[buff][invin][buffered] {0};
+};
+
+/* Attack spells */
+
+#alias {c1} {#send !hplan soulshatter};
+#alias {c2} {#send !hplan acidspray};
+#alias {c3} {#send !hplan lightningstrike};
+#alias {c4} {#send !hplan twister};
+#alias {c5} {#send !hplan sunray};
+#alias {c6} {#send !hplan smite};
+#alias {c7} {#send !hplan word};
+#alias {c8} {#send !hplan flamestrike};
+#alias {c9} {#send !hplan chilltouch};
+
+#act {{^HPLAN: You set your hplan command to be: (.*?)\.$}} {
+	#if {!priest[beckon][switching_damage_for_spirit]} {
+		#var priest[damage_spell] {%2};
+	} {
+		#var priest[beckon][switching_damage_for_spirit] {0};
+	};
+};
+
+/* Helper acts */
+
+/* phold */
+#act {{^You point a finger at .*?, calling to .*? to hold your enemy\.$}} {
+	#var priest[debuff][cast_buffer] {0};
+	#var priest[debuff][phold] {1};
+};
+
+#act {{.*? is already being held by some other means\.$}} {
+	#var priest[debuff][cast_buffer] {0};
+	#var priest[debuff][phold] {1};
+};
+
+#act {{.*? will not be affected by a hold spell\.$}} {
+	#var priest[debuff][cast_buffer] {0};
+	#var priest[debuff][phold] {1};
+};
+
+/* beckon/rift */
+
+#act {An angry spirit bursts forth from the plane rift!} {
+	#math {priest[beckon][spirits]} {$priest[beckon][spirits]+1};
+	#if {!$priest[beckon][killing_spirit]} {
+		#send !kill spirit;
+		#send !hplan lightningstrike;
+		#var priest[beckon][switching_damage_for_spirit] {1};
+		#var priest[debuff][phold] {0};
+	};
+	#var priest[beckon][killing_spirit] {1};
+};
+
+#act {{^As if stepping through a tear in space, .*? crosses into reality$}} {
+	#var priest[beckon][summoned] {1};
+};
+
+
+#act {{^The .*? fades mysteriously into the ether\.$}} {
+	#var priest[beckon][summoned] {0};
+};
+
+#act {{^You have already beckoned a being from the rift!$}} {
+	#var priest[beckon][summoned] {1};
+};
+
+/* miscelaneous */
+#act {The roots loosen then dislodge from the ground.} {
+	#send !taproot;
+};
+
+#act {You are blind.} {
+	#send !cblind;
+};
+
+#act {You are blinded by the spirit's curse.} {
+	#send !cblind;
+};
+
+#act {{^.*? rushes to you and touches your forehead gently. You feel}} {
+	#var priest[beseech][buffered] {0};
+};
+
+#class {priest} {close}
