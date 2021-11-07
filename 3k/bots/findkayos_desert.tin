@@ -1,0 +1,18 @@
+#class {bot} {open}
+
+#var {no_loop} {1}
+#var {no_home} {0}
+#var {hardmode} {0}
+#var {vacuum} {0}
+
+#var {botpath} {e;w;w;s;w;s;w;s;w;n;w;n;w;e;e;e;e;e;n;w;w;w;w;w;w;n;e;e;e;e;e;e;e;e;e;e;n;w;w;w;w;w;w;w;w;w;w;e;n;e;e;e;e;e;e;e;e;n;w;w;w;w;w;w;w;e;n;e;e;n;s;e;s;s;s;s;s;e}
+
+#act {An Interdimensional Portal} {
+        #act {^>$} {
+                #unact {^>$};
+                killbot
+        };
+        #bell
+}
+
+#class {bot} {close}
