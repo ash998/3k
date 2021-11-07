@@ -1,19 +1,15 @@
 #if {!@file_exists{.tt/3k/vars/elemental.var}}
 {
 	#class {elemental_vars} {open};
-
 	#var elementalv[cycle][type] {default};
-
 
 #nop When down to this many corpses, switch to gather cycle type;
 	#var elementalv[cycle][min_corpses] {5};
 
 #nop When up to this many corpses, switch to spend cycle type, set to 0 to use coffin max;
 	#var elementalv[cycle][max_corpses] {0};
-
 	#class elemental_vars write {.tt/3k/vars/elemental.var};
 	#class {elemental_vars} {close};
-
 }
 {
   #class elemental_vars read {.tt/3k/vars/elemental.var};
@@ -41,44 +37,43 @@
 
 #function {guild_halt} {
 #nop No guild pauses implemented;
-        #return  0;
+	#return  0;
 };
 
 #function {guild_cycletype} {
-        #return $elemental[current_cycletype];
+	#return $elemental[current_cycletype];
 };
 
 #alias {ecycleset} {
-        #if {"%1"!="default" && "%1"!="gather" && "%1"!="spend"} {
-                #showme Usage: ecycleset [default|gather|spend];
-                #showme        If using "default", it will stay in default untill you set it to something else.;
-                #showme        If using "gather" or "spend", it will toggle between the two based on the values;
-                #showme        in elementalv[cycle][min_corpses] and elementalv[cycle][max_corpses].;
-                #showme        Your current cycle is: @guild_cycletype{};
-        } {
-                #var elemental[current_cycletype] {%1};
-                #var elementalv[cycle][type] {%1};
-		save_guild_vars;
-        }
+	#if {"%1"!="default" && "%1"!="gather" && "%1"!="spend"} {
+		#showme Usage: ecycleset [default|gather|spend];
+		#showme        If using "default", it will stay in default untill you set it to something else.;
+		#showme        If using "gather" or "spend", it will toggle between the two based on the values;
+		#showme        in elementalv[cycle][min_corpses] and elementalv[cycle][max_corpses].;
+		#showme        Your current cycle is: @guild_cycletype{};
+	} {
+		#var elemental[current_cycletype] {%1};
+		#var elementalv[cycle][type] {%1};
+save_guild_vars;
+	}
 };
 
 #alias {ecyclecheck} {
-        #nop If we're in default, stay in default. Only swap between gather and spend.;
-        #if {"$elemental[current_cycletype]"!="default"} {
-
-                #if {"$elemental[current_cycletype]"=="gather"} {
-                        #if {!$elementalv[cycle][max_corpses]} {#var _max_corpses {$elemental[coffin][max]}} {#var _max_corpses {$elementalv[cycle][max_corpses]}};
-                        #if {$corpses[coffin] >= $_max_corpses} {
-                                #var elemental[current_cycletype] {spend};
-                                update_chat <138>Auto switching to spend cycle.<099>;
-                        };
-                } {
-                        #if {$corpses[coffin] < $elementalv[cycle][min_corpses]} {
-                                #var elemental[current_cycletype] {gather};
-                                update_chat <138>Auto switching to gather cycle.<099>;
-                        };
-                };
-        };
+	#nop If we're in default, stay in default. Only swap between gather and spend.;
+	#if {"$elemental[current_cycletype]"!="default"} {
+		#if {"$elemental[current_cycletype]"=="gather"} {
+			#if {!$elementalv[cycle][max_corpses]} {#var _max_corpses {$elemental[coffin][max]}} {#var _max_corpses {$elementalv[cycle][max_corpses]}};
+			#if {$corpses[coffin] >= $_max_corpses} {
+				#var elemental[current_cycletype] {spend};
+				update_chat <138>Auto switching to spend cycle.<099>;
+			};
+		} {
+			#if {$corpses[coffin] < $elementalv[cycle][min_corpses]} {
+				#var elemental[current_cycletype] {gather};
+				update_chat <138>Auto switching to gather cycle.<099>;
+			};
+		};
+	};
 };
 
 #alias {save_guild_vars} {#class elemental_vars write {.tt/3k/vars/elemental.var}};
@@ -106,18 +101,18 @@
 #alias {update_status} {
 	#if {"$enemy[hp]" == ""} {#var elemental[incombat] {0}} {#var elemental[incombat] {1}};
 	ecyclecheck;
-        #if {"$cooler" == "on" || $corpses[cooler] > 0} {
-                #format {sb1_cooler} {%+2s} {$corpses[cooler]};
-                #var {sb1_cooler} { CL:<130>$sb1_cooler<088>}
-        } {
-                #var {sb1_cooler} {}
-        };
-        #if {"$freezer" == "on" || $corpses[freezer] > 0} {
-                #format {sb2_freezer} {%+2s} {$corpses[freezer]};
-                #var {sb2_freezer} { FZ:<130>$sb2_freezer<088>}
-        } {
-                #var {sb2_freezer} {}
-        };
+	#if {"$cooler" == "on" || $corpses[cooler] > 0} {
+		#format {sb1_cooler} {%+2s} {$corpses[cooler]};
+		#var {sb1_cooler} { CL:<130>$sb1_cooler<088>}
+	} {
+		#var {sb1_cooler} {}
+	};
+	#if {"$freezer" == "on" || $corpses[freezer] > 0} {
+		#format {sb2_freezer} {%+2s} {$corpses[freezer]};
+		#var {sb2_freezer} { FZ:<130>$sb2_freezer<088>}
+	} {
+		#var {sb2_freezer} {}
+	};
 	#var {my[hp][graph]}		{@graph{$my[hp][current];$my[hp][max]}};
 	#var {my[sp][graph]}		{@graph{$my[sp][current];$my[sp][max]}};
 	#var {my[gp1][graph]}		{@graph{$my[gp1][current];$my[gp1][max]}};
@@ -137,12 +132,11 @@
 	};
 	#if {"$draw[gline]" == "on"} {
 		#showme {$mip[gline][1]  $mip[gline][2] <128>R:<088>$mip[round]} {-6}
-	}
+	};
 
-	/* Elemental logic */
-
-	/* Need gem logic here when all else fails */
-
+	#if {$my[reset] > 96 AND $enemy[hp] < 90 AND $my[blasts] > 0 AND $bot} {ff $mobname};
+	#if {"$my[equip]" == "off" AND $bot AND "$bots[stepper]" == "zelligars"} {#send !evoke equipollence};
+	#if {"$my[equip]" == "on" AND $bot AND "$bots[stepper]" != "zelligars"} {#send !evoke equipollence};
 
 }
 
@@ -162,14 +156,14 @@
 	#loop 1 $my[blasts] cnt {
 		#send {!evoke time stone};
 		#send {!activate stone};
-		#send {!despam};
-	}
+		#send {!despam}
+	};
 	#loop 1 $my[blasts] cnt {
-		#send {!give time stone to %0};
-	}
+		#send {!give time stone to %0}
+	};
 	#loop 1 $my[blasts] cnt {
-		#send {!drop time stone};
-	}
+		#send {!drop time stone}
+	};
 };
 #alias {el} {chat el};
 #alias {res} {#send !evoke resolve with %0;#send !evoke prismatic emission with %0};
@@ -179,6 +173,7 @@
 #act {^You combine a %*-striped jade soul gem with a %*-%* soul gem.} {#send !put gem in vortex};
 #act {^You focus inward, searching deep within yourself for the true link to} {#math {elemental[nc]} {$elemental[nc] - 1}};
 #act {^Your gems have reset} {#var elemental[nc] {2}};
+#act {^Your time stones have reset} {#var elemental[nc] {2}};
 #act {^As the last bit of life force escapes your enemy you quickly capture its} {#send !combine};
 #act {^-- You may draw upon the forces of nature %d time} {#format elemental[nc] {%1} {%1}};
 #act {^You may not draw upon nature's power at this time.} {#send !hmheal};
