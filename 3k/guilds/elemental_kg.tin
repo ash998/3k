@@ -34,6 +34,7 @@
 #var elemental[md] {0};
 #var elemental[age] {0};
 #var elemental[eval] {0};
+#var elemental[atomic] {0};
 
 #function {guild_halt} {
 #nop No guild pauses implemented;
@@ -134,9 +135,9 @@ save_guild_vars;
 		#showme {$mip[gline][1]  $mip[gline][2] <128>R:<088>$mip[round]} {-6}
 	};
 
-	#if {$my[reset] > 96 AND $enemy[hp] < 90 AND $my[blasts] > 0 AND $bot} {ff $mobname};
-	#if {"$my[equip]" == "off" AND $bot AND "$bots[stepper]" == "zelligars"} {#send !evoke equipollence};
-	#if {"$my[equip]" == "on" AND $bot AND "$bots[stepper]" != "zelligars"} {#send !evoke equipollence};
+	#if {$elemental[atomic] == 0 && $my[reset] > 94 && $enemy[hp] > 20 && $my[blasts] > 0 && "$mobname" != ""} {#var elemental[atomic] {1};ff $mobname;#delay {4} {#var elemental[atomic] {0}}};
+	#if {"$my[equip]" == "off" && $bot && "$bots[stepper]" == "zelligars"} {#send !evoke equipollent};
+	#if {"$my[equip]" == "on" && $bot && "$bots[stepper]" != "zelligars"} {#send !evoke equipollent};
 
 }
 
@@ -146,8 +147,8 @@ save_guild_vars;
 	#var elemental[md] {0};
 	#var elemental[age] {0};
 	#var elemental[eval] {0};
-}
-
+};
+#alias {k} {#send {!kill %0};#var mobname {%0}};
 #alias {eval} {#send evoke evaluate};
 #alias {gs} {escore};
 #alias {gs2} {escore2};
@@ -164,6 +165,42 @@ save_guild_vars;
 	#loop 1 $my[blasts] cnt {
 		#send {!drop time stone}
 	};
+};
+#alias prof10m {
+#send {!dscaler chess 150};
+#send {!dscaler mahjongg 99};
+#send {!dscaler sectionz 91};
+#send {!dscaler smithy 91};
+#send {!dscaler trans 117};
+#send {!dscaler treehouse 110};
+#send {!dscaler zelligars 150};
+};
+#alias prof15m {
+#send {!dscaler chess 150};
+#send {!dscaler mahjongg 99};
+#send {!dscaler sectionz 105};
+#send {!dscaler smithy 91};
+#send {!dscaler trans 117};
+#send {!dscaler treehouse 115};
+#send {!dscaler zelligars 150};
+};
+#alias prof20m {
+#send {!dscaler chess 150};
+#send {!dscaler mahjongg 99};
+#send {!dscaler sectionz 110};
+#send {!dscaler smithy 91};
+#send {!dscaler trans 117};
+#send {!dscaler treehouse 120};
+#send {!dscaler zelligars 150};
+};
+#alias prof25m {
+#send {!dscaler chess 150};
+#send {!dscaler mahjongg 100};
+#send {!dscaler sectionz 115};
+#send {!dscaler smithy 91};
+#send {!dscaler trans 118};
+#send {!dscaler treehouse 122};
+#send {!dscaler zelligars 150};
 };
 #alias {el} {chat el};
 #alias {res} {#send !evoke resolve with %0;#send !evoke prismatic emission with %0};
