@@ -325,9 +325,13 @@
 	#format {gp2_max}               {%+4s} {$my[gp2][max]};
 	#format {ehealth}               {%+7s} {$enemy[hp]%%};
 
-	#showme {HP:$hp/$hp_max SP:$sp/$sp_max MN:$gp1/$gp1_max PY:$gp2/$gp2_max E:$ehealth} {-4};
-	#showme {H:$my[hp][graph] S:$my[sp][graph] M:$my[gp1][graph] P:$my[gp2][graph] E:$enemy[graph]} {-3};
-	#showme {$mip[gline][1]  $mip[gline][2]} {-6};
+	#if {"$draw[hpbar]"==="on"} {
+		#showme {HP:$hp/$hp_max SP:$sp/$sp_max MN:$gp1/$gp1_max PY:$gp2/$gp2_max E:$ehealth} {-4};
+		#showme {H:$my[hp][graph] S:$my[sp][graph] M:$my[gp1][graph] P:$my[gp2][graph] E:$enemy[graph]} {-3};
+	};
+	#if {"$draw[gline]"==="on"} {
+		#showme {$mip[gline][1]  $mip[gline][2]} {-6};
+	};
 };
 
 /* priest automation setup alias */
@@ -489,6 +493,7 @@
 /* beckon/rift */
 
 #act {An angry spirit bursts forth from the plane rift!} {
+	update_chat <138>Angry spirit.<099>;
 	#math {priest[beckon][spirits]} {$priest[beckon][spirits]+1};
 	#if {!$priest[beckon][killing_spirit]} {
 		#send !kill spirit;
