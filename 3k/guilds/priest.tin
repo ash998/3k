@@ -77,7 +77,7 @@
 #var priest[buff][haste] {0};
 #var priest[buff][invin][buffered] {0};
 #var priest[cooldown][beseech][buffered] {0};
-
+#var priest[damage_spell] {soulshatter};
 
 
 /* Cycle automation */
