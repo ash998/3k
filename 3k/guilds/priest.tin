@@ -417,7 +417,7 @@
 #alias {priest_debuff_automation} {
 	#if {!$priest[debuff][cast_buffer]} {
 		#if {$priestv[auto][phold] && !$priest[debuff][phold] && $my[sp][current]>200} {
-		  #send !cast phold;
+		  #send !phold;
 		  #var priest[debuff][cast_buffer] {1};
 		};
 	};
