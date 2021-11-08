@@ -33,18 +33,18 @@
 			#delay {consume_bioplast} {#send !consume bioplast} {0.5}
 		}
 	};
-        #if {"$cooler" == "on" || $corpses[cooler] > 0} {
-                #format {sb1_cooler} {%+2s} {$corpses[cooler]};
-                #var {sb1_cooler} { CL:<130>$sb1_cooler<088>}
-        } {
-                #var {sb1_cooler} {}
-        };
-        #if {"$freezer" == "on" || $corpses[freezer] > 0} {
-                #format {sb2_freezer} {%+2s} {$corpses[freezer]};
-                #var {sb2_freezer} { FZ:<130>$sb2_freezer<088>}
-        } {
-                #var {sb2_freezer} {}
-        };
+	#if {"$cooler" == "on" || $corpses[cooler] > 0} {
+			#format {sb1_cooler} {%+2s} {$corpses[cooler]};
+			#var {sb1_cooler} { CL:<130>$sb1_cooler<088>}
+	} {
+			#var {sb1_cooler} {}
+	};
+	#if {"$freezer" == "on" || $corpses[freezer] > 0} {
+			#format {sb2_freezer} {%+2s} {$corpses[freezer]};
+			#var {sb2_freezer} { FZ:<130>$sb2_freezer<088>}
+	} {
+			#var {sb2_freezer} {}
+	};
 	#var	{my[hp][graph]}		{@graph{$my[hp][current];$my[hp][max]}};
 	#var	{my[sp][graph]}		{@graph{$my[sp][current];$my[sp][max]}};
 	#var	{my[gp1][graph]}	{@graph{$my[gp1][current];100}};
@@ -62,13 +62,17 @@
 	#format {relin_r}		{%+3s} {$my[relinquish][reset]};
 	#format {bio}			{%+3s} {$my[bioplasts]};
 	#format {ehealth}		{%+8s} {@colscale{$enemy[hp];100}\%};
-        #format {corpses[inventory]}    {%+2s} {$corpses[inventory]};
-        #format {corpses[truck]}	{%+2s} {$corpses[truck]};
-        #format {corpses[coffin]}	{%+2s} {$corpses[coffin]};
-        #format {corpses[freezer]}	{%+2s} {$corpses[freezer]};
-	#showme {<088>HP:${hp}/${hp_max} SP:${sp}/${sp_max} ST:${stam}%  PP:${pp}%  FF:${ff}%  R:${relin}/${relin_r}\% BP:${bio} IC:<138>${corpses[inventory]}<088>${sb1_cooler}} {-4};
-	#showme {H:${my[hp][graph]} S:${my[sp][graph]} ST:${my[gp1][graph]} P:${my[gp2][graph]} F:${my[ff][graph]} E:${enemy[graph]}     CF:<138>${corpses[coffin]}<088>${sb2_freezer}} {-3};
-	#showme {$mip[gline][1]  $mip[gline][2]} {-6}
+	#format {corpses[inventory]}    {%+2s} {$corpses[inventory]};
+	#format {corpses[truck]}	{%+2s} {$corpses[truck]};
+	#format {corpses[coffin]}	{%+2s} {$corpses[coffin]};
+	#format {corpses[freezer]}	{%+2s} {$corpses[freezer]};
+	#if {"$draw[hpbar]" == "on"} {
+		#showme {<088>HP:${hp}/${hp_max} SP:${sp}/${sp_max} ST:${stam}%  PP:${pp}%  FF:${ff}%  R:${relin}/${relin_r}\% BP:${bio} IC:<138>${corpses[inventory]}<088>${sb1_cooler}} {-4};
+		#showme {H:${my[hp][graph]} S:${my[sp][graph]} ST:${my[gp1][graph]} P:${my[gp2][graph]} F:${my[ff][graph]} E:${enemy[graph]}     CF:<138>${corpses[coffin]}<088>${sb2_freezer}} {-3};
+	};
+	#if {"$draw[gline]" == "on"} {
+		#showme {$mip[gline][1]  $mip[gline][2]} {-6}
+	};
 }
 
 #alias {corpsetrig} {

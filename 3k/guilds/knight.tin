@@ -112,9 +112,13 @@
 	#format {gxn_last}	{%+2s} {$gxn_last};
 	#format {gxn_time}	{%+9s} {$gxn_time};
 	#format {ehealth}	{%+8s} {@colscale{$enemy[hp];100}\%};
-	#showme {HP:${hp}/${hp_max} SP:${sp}/${sp_max} STM:${stm}/${stm_max}  GXN: ${gxn}(${gxn_last})${gxn_time}    E:${ehealth}    IC:<130>${corpses[inventory]}<088>${sb1_cooler}} {-4};
-	#showme {H:${my[hp][graph]} S:${my[sp][graph]} STM:${my[gp1][graph]} STN:${my[gp2][graph]} G:${gxn_graph} E:${enemy[graph]} CF:<130>${corpses[coffin]}<088>${sb2_freezer}} {-3};
-	#line ignore {#showme {$mip[gline][1]  $mip[gline][2]} {-6}}
+	#if {"$draw[hpbar]" == "on"} {
+		#showme {HP:${hp}/${hp_max} SP:${sp}/${sp_max} STM:${stm}/${stm_max}  GXN: ${gxn}(${gxn_last})${gxn_time}    E:${ehealth}    IC:<130>${corpses[inventory]}<088>${sb1_cooler}} {-4};
+		#showme {H:${my[hp][graph]} S:${my[sp][graph]} STM:${my[gp1][graph]} STN:${my[gp2][graph]} G:${gxn_graph} E:${enemy[graph]} CF:<130>${corpses[coffin]}<088>${sb2_freezer}} {-3};
+	};
+	#if {"$draw[gline]" == "on"} {
+		#line ignore {#showme {$mip[gline][1]  $mip[gline][2]} {-6}};
+	};
 }
 
 #act {{GXP: (?:[\d\,\s]+) Needed: (?:[\d\,\-]+) (?:\s+)\[\{(?:.*)\}\] ([\d\.]+)\%}} {

@@ -51,9 +51,13 @@
 	#format {gp2_max}	{%+4s}	{<128>$my[gp2][max]<088>};
 	#format {g2n}		{%-10s}	{$my[gxp][tnl]};
 	#format {ehealth}	{%+6s} {@colscale{$enemy[hp];100}};
-	#showme {HP:$hp/$hp_max SP:$sp/$sp_max PE:$gp1/$gp1_max  ST:$gp2/$gp2_max  G:$g2n E:$ehealth\%} {-4};
-	#showme {H:$my[hp][graph] S:$my[sp][graph] PE:$my[gp1][graph] ST:$my[gp2][graph] G:$my[gxp][graph] E:$enemy[graph]} {-3};
-	#showme {$mip[gline][1]  $mip[gline][2]} {-6}
+	#if {"$draw[hpbar]" == "on"} {
+		#showme {HP:$hp/$hp_max SP:$sp/$sp_max PE:$gp1/$gp1_max  ST:$gp2/$gp2_max  G:$g2n E:$ehealth\%} {-4};
+		#showme {H:$my[hp][graph] S:$my[sp][graph] PE:$my[gp1][graph] ST:$my[gp2][graph] G:$my[gxp][graph] E:$enemy[graph]} {-3};
+	};
+	#if {"$draw[gline]" == "on"} {
+		#showme {$mip[gline][1]  $mip[gline][2]} {-6};
+	};
 }
 
 #alias {corpsetrig} {

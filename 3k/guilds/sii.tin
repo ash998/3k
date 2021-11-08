@@ -59,9 +59,13 @@
         #format {corpses[truck]}	{%+2s} {$corpses[truck]};
         #format {corpses[coffin]}	{%+2s} {$corpses[coffin]};
         #format {corpses[freezer]}	{%+2s} {$corpses[freezer]};
-	#showme {<088>HP:${hp}/${hp_max} SP:${sp}/${sp_max} FO:${fo}/${fo_max} CO:${co}/${co_max} OL:${ol}/${ol_max} E: ${ehealth}    IC:<138>${corpses[inventory]}<088>${sb1_cooler}} {-4};
-	#showme {H:${my[hp][graph]} S:${my[sp][graph]} F:${my[gp1][graph]} C:${my[control][graph]} O:${my[gp2][graph]} E:${enemy[graph]} CF:<138>${corpses[coffin]}<088>${sb2_freezer}} {-3};
-	#showme {$mip[gline][1]  $mip[gline][2]} {-6}
+	#if {"$draw[hpbar]" == "on"} {
+		#showme {<088>HP:${hp}/${hp_max} SP:${sp}/${sp_max} FO:${fo}/${fo_max} CO:${co}/${co_max} OL:${ol}/${ol_max} E: ${ehealth}    IC:<138>${corpses[inventory]}<088>${sb1_cooler}} {-4};
+		#showme {H:${my[hp][graph]} S:${my[sp][graph]} F:${my[gp1][graph]} C:${my[control][graph]} O:${my[gp2][graph]} E:${enemy[graph]} CF:<138>${corpses[coffin]}<088>${sb2_freezer}} {-3};
+	};
+	#if {"$draw[gline]" == "on"} {
+		#showme {$mip[gline][1]  $mip[gline][2]} {-6};
+	};
 }
 
 
