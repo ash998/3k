@@ -19,7 +19,7 @@
 
 #send {!vlist};
 #send {!escore2};
-#send {!reflex CLEAR\n!reflex add sp 85% evoke mental depletion\n!reflex add sp 6% evoke natural convergence\n!reflex add sp 80% evoke soul wave\n!reflex add gp1 60% evoke energy drain};
+#send {!reflex CLEAR\n!reflex add hp 99% evoke rebuild\n!reflex add sp 85% evoke mental depletion\n!reflex add sp 6% evoke natural convergence\n!reflex add sp 80% evoke soul wave\n!reflex add gp1 60% evoke energy drain};
 
 /* Set Guild Variable*/
 #var guild elemental
