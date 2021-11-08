@@ -35,6 +35,7 @@
 #var elemental[age] {0};
 #var elemental[eval] {0};
 #var elemental[atomic] {0};
+#var elemental[atomicgem] {0};
 
 #function {guild_halt} {
 #nop No guild pauses implemented;
@@ -136,9 +137,8 @@ save_guild_vars;
 	};
 
 	#if {$elemental[atomic] == 0 && $my[reset] > 94 && $enemy[hp] > 20 && $my[blasts] > 0 && "$mobname" != ""} {#var elemental[atomic] {1};ff $mobname;#delay {4} {#var elemental[atomic] {0}}};
-	#if {"$my[equip]" == "off" && $bot && "$bots[stepper]" == "zelligars"} {#send !evoke equipollent};
-	#if {"$my[equip]" == "on" && $bot && "$bots[stepper]" != "zelligars"} {#send !evoke equipollent};
-
+	#if {$elemental[atomic] == 0 && "$my[equip]" == "off" && $bot && "$bots[stepper]" == "zelligars"} {#var elemental[atomic] {1};#send {!evoke equipollent};#delay {4} {#var elemental[atomic] {0}}};
+	#if {$elemental[atomicgem] == 0 && $cooldown[eternalheal] && $cooldown[hmheal] && $my[sp] < 100} {#var elemental[atomicgem] {1};#send {!get gem from vortex\n!release gem\n!put gem in vortex};#delay {4} {#var elemental[atomicgem] {0}}};
 }
 
 /* Corpse Trigger */
@@ -202,12 +202,13 @@ save_guild_vars;
 #send {!dscaler treehouse 122};
 #send {!dscaler zelligars 150};
 };
-#alias {el} {chat el};
-#alias {res} {#send !evoke resolve with %0;#send !evoke prismatic emission with %0};
+#alias {el} {chat time};
+#alias {ju} {chat el};
+#alias {res} {#send {!evoke resolve with %0};#send {!evoke prismatic emission with %0}};
 
 #act {^You focus inward, reaching back through the Astral plane to your home} {#var elemental[md] {1}};
-#act {^You combine a %*-%* soul gem with a %*-striped jade soul gem.} {#send !put gem in vortex};
-#act {^You combine a %*-striped jade soul gem with a %*-%* soul gem.} {#send !put gem in vortex};
+#act {^You combine a %*-%* soul gem with a %*-striped jade soul gem.} {#send {!put gem in vortex};#send {!put gem in disc}};
+#act {^You combine a %*-striped jade soul gem with a %*-%* soul gem.} {#send {!put gem in vortex};#send {!put gem in disc}};
 #act {^You focus inward, searching deep within yourself for the true link to} {#math {elemental[nc]} {$elemental[nc] - 1}};
 #act {^Your gems have reset} {#var elemental[nc] {2}};
 #act {^Your time stones have reset} {#var elemental[nc] {2}};
