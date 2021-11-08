@@ -80,6 +80,7 @@
 #var priest[damage_spell] {soulshatter};
 
 
+
 /* Cycle automation */
 
 
@@ -374,7 +375,11 @@
 
 #alias {corpsetrig} {
 	#var priest[debuff][cast_buffer] {0};
+	#var priest[cooldown][beseech][buffered] {0};
+	#var priest[buff][invin][buffered] {0};
+
 	#var priest[debuff][phold] {0};
+	#send !create reagents;
 	#if {$priest[beckon][killing_spirit]} {
 		#math {priest[beckon][spirits]} {$priest[beckon][spirits]-1};
 		#if {$priest[beckon][spirits]} {
@@ -522,6 +527,12 @@
 
 #act {{^.*? rushes to you and touches your forehead gently. You feel}} {
 	#var priest[cooldown][beseech][buffered] {0};
+};
+
+#act {{^You are already busy casting a spell of this type\.$}} {
+	#var priest[debuff][cast_buffer] {0};
+	#var priest[cooldown][beseech][buffered] {0};
+	#var priest[buff][invin][buffered] {0};
 };
 
 #class {priest} {close}
