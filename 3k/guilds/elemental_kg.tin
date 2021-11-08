@@ -229,7 +229,7 @@ save_guild_vars;
 #gag {^as much as possible.};
 #gag {^Your form shimmers and becomes impenetrable.};
 #gag {^You have become grounded in this plane yet again.};
-#gag {^A bolt of pure energy flies out of the sky striking Rimalkin!};
+#gag {^A bolt of pure energy flies out of the sky striking %*!};
 #gag {^Your great speed allows you to attack again!};
 
 #class {elemental} {close}
