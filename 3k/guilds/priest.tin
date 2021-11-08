@@ -233,8 +233,9 @@
 		};
 
 		priest_debuff_automation;
-		
-		#if {$priestv[auto][beckon] && !$priest[beckon][summoned]} {
+
+#nop BECKON - don't try summoning if we're killing an angry spirit, don't want to risk multiples, and the beckon spirits don't work well against angry spirits;		
+		#if {$priestv[auto][beckon] && !$priest[beckon][summoned] && !$priest[beckon][killing_spirit]} {
 			#if {$my[sp][current]<750} {
 				#send !soulforce;
 			};
