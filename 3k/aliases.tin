@@ -132,9 +132,9 @@
 	#if {"$draw[canvas]"=="on"} {
 		#var draw[canvas] {off};
                 #var draw[map] {off};
-                #var draw[gline] {off};
+                #var draw[gline] {on};
                 #var draw[caption] {off};
-                #var draw[hpbar] {off};
+                #var draw[hpbar] {on};
 	} {
                 #var draw[canvas] {on};
                 #var draw[map] {on};
