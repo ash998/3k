@@ -59,7 +59,7 @@ prompt >$nl$
 
 #nop #alias {_check_mob} {#NOP}
 
-#act {{^=S=}} {_room_short} {1};
+#act {{^=S=}} {_room_short} {2};
 
 #alias {_room_short} {
         #var stepping 1;

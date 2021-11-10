@@ -168,43 +168,111 @@ tthelp_add botclear Usage: botclear. Will clear everything from the cycler so yo
 	botdraw;
 };
 
+#alias {tester} {
+	#local room_to_go_to %1;
+	#map list {{roomnote} {$room_to_go_to%*} {variable} {_room_info}};
+	#foreach {*_room_info[]} {_room_vnum} {
+		#map get {roomname} {_room_name} {$_room_vnum};
+		#break;
+	};
+	#showme $_room_name;
+};
+
 tthelp_add thisarea Usage: thisarea. Will load the current area from the current cycle and start running the bot in it.;
 #alias {thisarea} {
 #show CALLED: thisarea;
-        #list {multicycle[$world][$guild][type][@cycletype{}][botcycle]} {get} {$multicycle[$world][$guild][type][@cycletype{}][cycle]} {multicycle[$world][$guild][type][@cycletype{}][currentarea]};
+	#list {multicycle[$world][$guild][type][@cycletype{}][botcycle]} {get} {$multicycle[$world][$guild][type][@cycletype{}][cycle]} {multicycle[$world][$guild][type][@cycletype{}][currentarea]};
 
-        #if {$dungeon[scaler][$multicycle[$world][$guild][type][@cycletype{}][currentarea]][$world][$guild]} {scaler $dungeon[scaler][$multicycle[$world][$guild][type][@cycletype{}][currentarea]][$world][$guild]};
+	#if {$dungeon[scaler][$multicycle[$world][$guild][type][@cycletype{}][currentarea]][$world][$guild]} {scaler $dungeon[scaler][$multicycle[$world][$guild][type][@cycletype{}][currentarea]][$world][$guild]};
 
-        #var roomnote {};
-        #read .tt/3k/bots/$multicycle[$world][$guild][type][@cycletype{}][currentarea].tin;
-        #if {"$roomnote"!=""} {go $roomnote} {go $multicycle[$world][$guild][type][@cycletype{}][currentarea]};
+	#var roomnote {};
+	#var roomtrigger {};
 
-        #delay {3} {- $multicycle[$world][$guild][type][@cycletype{}][currentarea];#delay {1} {..}};
+	#read .tt/3k/bots/$multicycle[$world][$guild][type][@cycletype{}][currentarea].tin;
+
+	#if {"$roomnote"!=""} {
+		#local room_to_go_to $roomnote;
+	} {
+		#local room_to_go_to $multicycle[$world][$guild][type][@cycletype{}][currentarea];
+	};
+
+	go $room_to_go_to;
+
+	#if {"$roomtrigger"!=""} {
+		#var _roomtrigger {$roomtrigger};
+	} {
+		#map list {{roomnote} {$room_to_go_to%*} {variable} {_room_info}};
+		#foreach {*_room_info[]} {_room_vnum} {
+			#map get {roomname} {_room_name} {$_room_vnum};
+			#break;
+		};
+		#var _roomtrigger {$_room_name};
+	};
+
+	#unvar multicycle[$world][$guild][type][@cycletype{}][savedbotstate];
+
+	#class {botcycle_room_trigger} {open};
+	#act {{\Q$_roomtrigger\E}} {
+		- $multicycle[$world][$guild][type][@cycletype{}][currentarea];
+		#delay {1} {..};
+		#class {botcycle_room_trigger} {kill};
+		
+	} {1};
+	#class {botcycle_room_trigger} {close};
+
 #nop        #delay {4} {..};
+	botdraw;
+	save_botcycle;
 };
+
 
 tthelp_add nextarea Usage: nextarea. Will load the next area from the current cycle and start running the bot in it.;
 #alias {nextarea} {
 #show CALLED: nextarea;
-        #if {$multicycle[$world][$guild][type][@cycletype{}][cycle] < &{multicycle[$world][$guild][type][@cycletype{}][botcycle][]}} {
-                #math multicycle[$world][$guild][type][@cycletype{}][cycle] {$multicycle[$world][$guild][type][@cycletype{}][cycle]+1}
-        } {
-                #var multicycle[$world][$guild][type][@cycletype{}][cycle] 1
-        };
+	#if {$multicycle[$world][$guild][type][@cycletype{}][cycle] < &{multicycle[$world][$guild][type][@cycletype{}][botcycle][]}} {
+			#math multicycle[$world][$guild][type][@cycletype{}][cycle] {$multicycle[$world][$guild][type][@cycletype{}][cycle]+1}
+	} {
+			#var multicycle[$world][$guild][type][@cycletype{}][cycle] 1
+	};
 
-        #list {multicycle[$world][$guild][type][@cycletype{}][botcycle]} {get} {$multicycle[$world][$guild][type][@cycletype{}][cycle]} {multicycle[$world][$guild][type][@cycletype{}][currentarea]};
+	#list {multicycle[$world][$guild][type][@cycletype{}][botcycle]} {get} {$multicycle[$world][$guild][type][@cycletype{}][cycle]} {multicycle[$world][$guild][type][@cycletype{}][currentarea]};
 
-        #if {$dungeon[scaler][$multicycle[$world][$guild][type][@cycletype{}][currentarea]][$world][$guild]} {scaler $dungeon[scaler][$multicycle[$world][$guild][type][@cycletype{}][currentarea]][$world][$guild]};
+	#if {$dungeon[scaler][$multicycle[$world][$guild][type][@cycletype{}][currentarea]][$world][$guild]} {scaler $dungeon[scaler][$multicycle[$world][$guild][type][@cycletype{}][currentarea]][$world][$guild]};
 
-        #var roomnote {};
-        #read .tt/3k/bots/$multicycle[$world][$guild][type][@cycletype{}][currentarea].tin;
-        #if {"$roomnote"!=""} {go $roomnote} {go $multicycle[$world][$guild][type][@cycletype{}][currentarea]};
+	#var roomnote {};
+	#var roomtrigger {};
 
+	#read .tt/3k/bots/$multicycle[$world][$guild][type][@cycletype{}][currentarea].tin;
 
+	#if {"$roomnote"!=""} {
+		#local room_to_go_to $roomnote;
+	} {
+		#local room_to_go_to $multicycle[$world][$guild][type][@cycletype{}][currentarea];
+	};
+
+	go $room_to_go_to;
+
+	#if {"$roomtrigger"!=""} {
+		#var _roomtrigger {$roomtrigger};
+	} {
+		#map list {{roomnote} {$room_to_go_to%*} {variable} {_room_info}};
+		#foreach {*_room_info[]} {_room_vnum} {
+			#map get {roomname} {_room_name} {$_room_vnum};
+			#break;
+		};
+		#var _roomtrigger {$_room_name};
+	};
 
 	#unvar multicycle[$world][$guild][type][@cycletype{}][savedbotstate];
+#nop #SHORTEST PATH: Already there.;
+	#class {botcycle_room_trigger} {open};
+	#act {{\Q$_roomtrigger\E}} {
+		- $multicycle[$world][$guild][type][@cycletype{}][currentarea];
+		#delay {1} {..};
+		#class {botcycle_room_trigger} {kill};
+	} {1};
+	#class {botcycle_room_trigger} {close};
 
-        #delay {3} {- $multicycle[$world][$guild][type][@cycletype{}][currentarea];#delay {1} {..}};
 #nop        #delay {4} {..};
 	botdraw;
 	save_botcycle;

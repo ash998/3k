@@ -4,6 +4,7 @@
 #var {no_home} {0}
 #var {hardmode} {1}
 #var {vacuum} {1}
+#var {roomtrigger} {You feel your body's structure broken down into pure};
 
 #var {botpath} {doorway;onward;doorway;onward;doorway;onward;doorway;onward;doorway;onward;doorway;onward;doorway;onward;doorway;onward;doorway;onward;doorway;light;will}
 
