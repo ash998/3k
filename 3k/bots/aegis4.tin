@@ -4,6 +4,7 @@
 #var {no_home} {0}
 #var {hardmode} {0}
 #var {vacuum} {1}
+#var {roomtrigger} {Aegis Gloabal - Level 4};
 
 #var {botpath} {w;w;w;w;w;w;w;n;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;w;w;w;w;w;s;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;w;w;w;w;w;s;e;e;e;e;e;e;e;e;e;s;w;w;w;w;w;w;w;w;w;s;e;e;e;e;e;
 e;e;e;e;s;w;w;w;w;w;w;w;w;w;n;n;n;n;n;n;n;n;e;e;e;e;e;e;e}
