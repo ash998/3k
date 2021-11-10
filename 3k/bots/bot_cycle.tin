@@ -178,6 +178,7 @@ tthelp_add botclear Usage: botclear. Will clear everything from the cycler so yo
 	#showme $_room_name;
 };
 
+
 tthelp_add thisarea Usage: thisarea. Will load the current area from the current cycle and start running the bot in it.;
 #alias {thisarea} {
 #show CALLED: thisarea;
@@ -201,12 +202,20 @@ tthelp_add thisarea Usage: thisarea. Will load the current area from the current
 	#if {"$roomtrigger"!=""} {
 		#var _roomtrigger {$roomtrigger};
 	} {
+#nop Find the room name from the map;
 		#map list {{roomnote} {$room_to_go_to%*} {variable} {_room_info}};
 		#foreach {*_room_info[]} {_room_vnum} {
 			#map get {roomname} {_room_name} {$_room_vnum};
 			#break;
 		};
-		#var _roomtrigger {$_room_name};
+#nop Remove any trailing exits in the room because they can come in any order;
+		#regex {$_room_name} {{(.*)( \(.*?\)$)}} {
+			#var _roomtrigger {&2};
+		} { 
+			#regex {$_room_name} {{(.*)$}} {
+				#var _roomtrigger {&2};
+			}
+		};
 	};
 
 	#unvar multicycle[$world][$guild][type][@cycletype{}][savedbotstate];
@@ -255,12 +264,20 @@ tthelp_add nextarea Usage: nextarea. Will load the next area from the current cy
 	#if {"$roomtrigger"!=""} {
 		#var _roomtrigger {$roomtrigger};
 	} {
+#nop Find the room name from the map;
 		#map list {{roomnote} {$room_to_go_to%*} {variable} {_room_info}};
 		#foreach {*_room_info[]} {_room_vnum} {
 			#map get {roomname} {_room_name} {$_room_vnum};
 			#break;
 		};
-		#var _roomtrigger {$_room_name};
+#nop Remove any trailing exits in the room because they can come in any order;
+		#regex {$_room_name} {{(.*)( \(.*?\)$)}} {
+			#var _roomtrigger {&2};
+		} { 
+			#regex {$_room_name} {{(.*)$}} {
+				#var _roomtrigger {&2};
+			}
+		};
 	};
 
 	#unvar multicycle[$world][$guild][type][@cycletype{}][savedbotstate];
