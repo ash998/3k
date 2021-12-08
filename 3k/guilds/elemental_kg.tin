@@ -36,6 +36,7 @@
 #var elemental[eval] {0};
 #var elemental[atomic] {0};
 #var elemental[atomicgem] {0};
+#var elemental[atomicnc] {0};
 
 #function {guild_halt} {
 #nop No guild pauses implemented;
@@ -47,8 +48,8 @@
 };
 
 #alias {ecycleset} {
-	#if {"%1"!="default" && "%1"!="gather" && "%1"!="spend"} {
-		#showme Usage: ecycleset [default|gather|spend];
+	#if {"%1"!="default" && "%1"!="gather" && "%1"!="spend" && "%1"!="aegis"} {
+		#showme Usage: ecycleset [default|gather|spend|aegis];
 		#showme        If using "default", it will stay in default untill you set it to something else.;
 		#showme        If using "gather" or "spend", it will toggle between the two based on the values;
 		#showme        in elementalv[cycle][min_corpses] and elementalv[cycle][max_corpses].;
@@ -130,7 +131,7 @@ save_guild_vars;
 	#format {corpses[coffin]}       {%+2s} {$corpses[coffin]};
 	#if {"$draw[hpbar]" == "on"} {
 		#showme {H:${hp}/${hp_max}  S:${sp}/${sp_max}  N:${nrg}/${nrg_max}  E:   ${ehealth}%    IC:<130>${corpses[inventory]}<088>${sb1_cooler}  Cycle:<130>@guild_cycletype{}<088>  NC:<130>$elemental[nc]<088>  MD:<130>$elemental[md]<088>} {-4};
-		#showme {H:${my[hp][graph]}   S:${my[sp][graph]} N:${my[gp1][graph]} E:${enemy[graph]} CF:<130>${corpses[coffin]}<088>${sb2_freezer}} {-3}
+		#showme {H:${my[hp][graph]}   S:${my[sp][graph]} N:${my[gp1][graph]} E:${enemy[graph]} CF:<130>${corpses[coffin]} <088>${sb2_freezer}} {-3}
 	};
 	#if {"$draw[gline]" == "on"} {
 		#showme {$mip[gline][1]  $mip[gline][2] <128>R:<088>$mip[round]} {-6}
@@ -138,7 +139,8 @@ save_guild_vars;
 
 	#if {$elemental[atomic] == 0 && $my[reset] > 94 && $enemy[hp] > 20 && $my[blasts] > 0 && "$mobname" != ""} {#var elemental[atomic] {1};ff $mobname;#delay {4} {#var elemental[atomic] {0}}};
 	#if {$elemental[atomic] == 0 && "$my[equip]" == "off" && $bot && "$bots[stepper]" == "zelligars"} {#var elemental[atomic] {1};#send {!evoke equipollent};#delay {4} {#var elemental[atomic] {0}}};
-	#if {$elemental[atomicgem] == 0 && $cooldown[eternalheal] && $cooldown[hmheal] && $my[sp] < 100} {#var elemental[atomicgem] {1};#send {!get gem from vortex\n!release gem\n!put gem in vortex};#delay {4} {#var elemental[atomicgem] {0}}};
+	#if {$elemental[atomicnc] == 0 && $elemental[nc] > 0 && $my[reset] > 98 && $my[sp][current] < 4100} {#var elemental[atomicnc] {1};#send {!evoke natural convergence};#delay {10} {#var elemental[atomicnc] {0}}};
+	#if {$elemental[atomicgem] == 0 && $cooldown[eternalheal] && $cooldown[hmheal] && $my[sp][current] < 100} {#var elemental[atomicgem] {1};#send {!get gem from vortex\n!release gem\n!put gem in vortex};#delay {4} {#var elemental[atomicgem] {0}}};
 }
 
 /* Corpse Trigger */
@@ -166,46 +168,66 @@ save_guild_vars;
 		#send {!drop time stone}
 	};
 };
-#alias prof10m {
-#send {!dscaler chess 150};
-#send {!dscaler mahjongg 99};
-#send {!dscaler sectionz 91};
-#send {!dscaler smithy 91};
-#send {!dscaler trans 117};
-#send {!dscaler treehouse 110};
-#send {!dscaler zelligars 150};
-};
-#alias prof15m {
-#send {!dscaler chess 150};
-#send {!dscaler mahjongg 99};
-#send {!dscaler sectionz 105};
-#send {!dscaler smithy 91};
-#send {!dscaler trans 117};
-#send {!dscaler treehouse 115};
-#send {!dscaler zelligars 150};
-};
-#alias prof20m {
-#send {!dscaler chess 150};
-#send {!dscaler mahjongg 99};
-#send {!dscaler sectionz 110};
-#send {!dscaler smithy 91};
-#send {!dscaler trans 117};
-#send {!dscaler treehouse 120};
-#send {!dscaler zelligars 150};
+#alias profile_nobalangool {
+dscaler aegis1 95;
+dscaler aegis2 95;
+dscaler aegis3 95;
+dscaler aegis4 95;
+dscaler aegis5 95;
+dscaler chess 150;
+dscaler mahjongg 99;
+dscaler sectionz 91;
+dscaler smithy 91;
+dscaler trans 117;
+dscaler treehouse 110;
+dscaler zelligars 150;
+dscaler rim2 91;
 };
 #alias prof25m {
-#send {!dscaler chess 150};
-#send {!dscaler mahjongg 100};
-#send {!dscaler sectionz 115};
-#send {!dscaler smithy 91};
-#send {!dscaler trans 118};
-#send {!dscaler treehouse 122};
-#send {!dscaler zelligars 150};
+dscaler chess 150;
+dscaler mahjongg 100;
+dscaler sectionz 115;
+dscaler smithy 91;
+dscaler trans 117;
+dscaler treehouse 122;
+dscaler zelligars 150;
+dscaler rim2 91;
+};
+#alias prof30m {
+dscaler aegis1 110;
+dscaler aegis2 110;
+dscaler aegis3 110;
+dscaler aegis4 110;
+dscaler aegis5 110;
+dscaler chess 150;
+dscaler mahjongg 110;
+dscaler sectionz 117;
+dscaler smithy 91;
+dscaler trans 135;
+dscaler treehouse 129;
+dscaler zelligars 150;
+dscaler rim2 91;
+};
+#alias prof45m {
+dscaler aegis1 119;
+dscaler aegis2 119;
+dscaler aegis3 119;
+dscaler aegis4 119;
+dscaler aegis5 119;
+dscaler chess 150;
+dscaler mahjongg 115;
+dscaler sectionz 125;
+dscaler smithy 91;
+dscaler trans 150;
+dscaler treehouse 129;
+dscaler zelligars 150;
+dscaler rim2 91;
 };
 #alias {el} {chat time};
 #alias {ju} {chat el};
 #alias {res} {#send {!evoke resolve with %0};#send {!evoke prismatic emission with %0}};
 
+#act {^Sorry, they have no excess energy to drain.} {update_chat <118>!!! Mob cannot be energy drained !!!<099>};
 #act {^You focus inward, reaching back through the Astral plane to your home} {#var elemental[md] {1}};
 #act {^You combine a %*-%* soul gem with a %*-striped jade soul gem.} {#send {!put gem in vortex};#send {!put gem in disc}};
 #act {^You combine a %*-striped jade soul gem with a %*-%* soul gem.} {#send {!put gem in vortex};#send {!put gem in disc}};
