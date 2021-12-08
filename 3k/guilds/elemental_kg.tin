@@ -62,8 +62,17 @@ save_guild_vars;
 };
 
 #alias {ecyclecheck} {
-	#nop If we're in default, stay in default. Only swap between gather and spend.;
-	#if {"$elemental[current_cycletype]"!="default"} {
+	#nop Only swap between gather and spend.;
+	#local {is_gatherspend} {0};
+	#if {"$elemental[current_cycletype]"=="gather"} {
+		#local {is_gatherspend} {1};
+	};
+
+	#if {"$elemental[current_cycletype]"=="spend"} {
+		#local {is_gatherspend} {1};
+	};
+
+	#if {$is_gatherspend} {
 		#if {"$elemental[current_cycletype]"=="gather"} {
 			#if {!$elementalv[cycle][max_corpses]} {#var _max_corpses {$elemental[coffin][max]}} {#var _max_corpses {$elementalv[cycle][max_corpses]}};
 			#if {$corpses[coffin] >= $_max_corpses} {
