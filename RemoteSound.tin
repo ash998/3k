@@ -1,0 +1,10 @@
+#class {RemoteSound} {open}
+
+#script {RemoteSoundIP} {cat ".tt/.RemoteSoundServerIP"};
+#script {RemoteSoundPort} {cat ".tt/.RemoteSoundServerPort"};
+
+#alias {playsound} {
+	#system {echo -n %0 | netcat $RemoteSoundIP[1] $RemoteSoundPort[1] &};
+};
+
+#class {RemoteSound} {close}
