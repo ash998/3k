@@ -153,7 +153,7 @@
 	};
 
 #nop	#showme HP: $my[hp][current] Delta: $priest[hp][delta] E: $priest[enemyname] $enemy[hp];
-
+	priest_check_attackspell;
 };
 
 #act {{^CL: \[(\**)(\d+)\%\] INVIN: (\d+)/(\d+) \((\d+)\%\) C: (\d+)/(\d+) GXP\%: \[(\d+).(\d+)\%\] \<DGX\>: (\d+) $}} {
@@ -218,6 +218,9 @@
 			};
 
 		};
+
+#nop priest[gp1][stored][current];
+
 
 #nop BESEECH;
 		#if {"$priest[beseech]"!==""} {
@@ -310,25 +313,27 @@
 
 
 #alias {update_status} {
-
 	#var    {my[hp][graph]}         {@graph{$my[hp][current];${my[hp][max]}}};
 	#var    {my[sp][graph]}         {@graph{$my[sp][current];$my[sp][max]}};
 	#var    {my[gp1][graph]}        {@graph{$my[gp1][current];$my[gp1][max]}};
 	#var    {my[gp2][graph]}        {@graph{$my[gp2][current];$my[gp2][max]}};
 	#var    {enemy[graph]}          {@graph{$enemy[hp];100}};
-	#format {hp}                    {%+4s} {$my[hp][current]};
-	#format {hp_max}                {%+4s} {$my[hp][max]};
-	#format {sp}                    {%+4s} {$my[sp][current]};
-	#format {sp_max}                {%+4s} {$my[sp][max]};
+	#var	{priest[coffin][graph]}	{@graph{$corpses[coffin];$priest[coffin][max]}};
+	#format {hp}                    {%+5s} {$my[hp][current]};
+	#format {hp_max}                {%+5s} {$my[hp][max]};
+	#format {sp}                    {%+5s} {$my[sp][current]};
+	#format {sp_max}                {%+5s} {$my[sp][max]};
 	#format {gp1}                   {%+4s} {$my[gp1][current]};
 	#format {gp1_max}               {%+4s} {$my[gp1][max]};
 	#format {gp2}                   {%+4s} {$my[gp2][current]};
 	#format {gp2_max}               {%+4s} {$my[gp2][max]};
 	#format {ehealth}               {%+7s} {$enemy[hp]%%};
+	#format {corpses_cur}		{%+4s} {$corpses[coffin]};
+	#format {corpses_max}		{%+4s} {$priest[coffin][max]};
 
 	#if {"$draw[hpbar]"==="on"} {
-		#showme {HP:$hp/$hp_max SP:$sp/$sp_max MN:$gp1/$gp1_max PY:$gp2/$gp2_max E:$ehealth} {-4};
-		#showme {H:$my[hp][graph] S:$my[sp][graph] M:$my[gp1][graph] P:$my[gp2][graph] E:$enemy[graph]} {-3};
+		#showme {HP:$hp/$hp_max SP:$sp/$sp_max MN:$gp1/$gp1_max P:$gp2/$gp2_max  E:$ehealth   C:$corpses_cur/$corpses_max <128>R:<088>$mip[round]} {-4};
+		#showme {HP: $my[hp][graph] SP: $my[sp][graph] MN:$my[gp1][graph]P:$my[gp2][graph] E:$enemy[graph]C:$priest[coffin][graph]} {-3};
 	};
 	#if {"$draw[gline]"==="on"} {
 		#showme {$mip[gline][1]  $mip[gline][2]} {-6};
@@ -377,6 +382,14 @@
   }
 };
 
+#alias {mudauto} {
+	#send !reflex clear;
+	#send !repeat off;
+	#send !panic off;
+	#send !reflex add gp1 <500 unwrap;
+	#send !reflex add gp1 <500 offer;
+	#send !prkt1;
+};
 
 #alias {corpsetrig} {
 	#var priest[debuff][cast_buffer] {0};
@@ -395,6 +408,11 @@
 		};
 	};
 };
+
+#alias {gs} {#send !gscore;};
+
+#alias {gs2} {#send !gscore2;};
+
 
 /* Heals */
 #NOP Guardian
@@ -473,6 +491,26 @@
 	};
 };
 
+#alias {priest_check_attackspell} {
+	#var {priest_best_spell} {soulshatter};
+	#if {"$roomarea"=="Aegis Global"} {
+		#regex {$priest[enemyname]} {{.*Aegis.*}} {#var {priest_best_spell} {acidspray};} {
+			#regex {$priest[enemyname]} {{.*Calvin.*}} {#var {priest_best_spell} {soulshatter};} {
+				#var {priest_best_spell} {sunray};
+			};
+		};
+	};
+
+	#if {"$roomarea"=="Hotel Transylvania"} {
+		#var {priest_best_spell} {sunray};
+	};
+	
+	#if {"$priest[damage_spell]"!="$priest_best_spell"} {
+		#send !hplan $priest_best_spell;
+	};
+};
+
+
 /* Helper acts */
 
 /* phold */
@@ -489,6 +527,12 @@
 #act {{.*? will not be affected by a hold spell\.$}} {
 	#var priest[debuff][cast_buffer] {0};
 	#var priest[debuff][phold] {1};
+};
+
+/* drink (for drunken master) put drink wine in ktrig or corpse trigger */
+#act {{^There is no reason to 'drink' here\.$}} {
+	#send !createbw drink;
+	#send !drink wine;
 };
 
 /* beckon/rift */
@@ -517,6 +561,33 @@
 #act {{^You have already beckoned a being from the rift!$}} {
 	#var priest[beckon][summoned] {1};
 };
+
+#act {That is not here or it is uninteresting. (priest_summon?)} {
+#nop This one requires you to add "exa priest_summon" to for example ktrig (or just to corpsetrig);
+	#var priest[beckon][summoned] {0};
+};
+
+/* protection recast before they drop */
+#act {The strands of your protective aura begin to break apart, then fade away.} {
+	#send !protection;
+	#delay {2} {#send !protection;};
+};
+
+#act {Your bark-like skin begins to itch and soften.} {
+	#send !barkskin;
+	#delay {2} {#send !barkskin;};
+};
+
+#act {Your body feels flush as you feel the elemental protection begin to wane.} {
+        #send !proelem;
+        #delay {2} {#send !proelem;};
+};
+
+#act {Your hair stands on end as you suddenly feel the prickle of surrounding energy rush toward you.} {
+        #send !propower;
+        #delay {2} {#send !propower;};
+};
+
 
 /* miscelaneous */
 #act {The roots loosen then dislodge from the ground.} {
