@@ -3,7 +3,7 @@
 #var {no_loop} {1}
 #var {no_home} {0}
 #var {hardmode} {0}
-#nop #var {vacuum} {1}
+#nop #var {vacuum} {0}
 
 #var {zellgloves} {0}
 
