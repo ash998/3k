@@ -561,7 +561,7 @@
 	#var priest[beckon][killing_spirit] {1};
 };
 
-act {{^Galan, aid my struggle with a tear to the nether planes!$}} {
+#act {{^Galan, aid my struggle with a tear to the nether planes!$}} {
         #var priest[debuff][cast_buffer] {0};
 	#var priest[debuff][rift] {1};
 };
