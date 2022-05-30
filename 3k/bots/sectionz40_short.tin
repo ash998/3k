@@ -6,11 +6,13 @@
 #var {vacuum} {1}
 #var {roomnote} {sectionz}
 
-#var {botpath} {enter $sectionz[40];s;w;d;s;se;ne;n;u;w;s;w;s;e;e;d;n;n;e;e;d;e;se;n;n;u;s;se;d;n;w;w;s;enter portal;w;nw;n;u;s;se;ne;n;d;n;w;n;d;w;n;d;w;n;n;e;d;w;s;s;w;u;w;w;enter portal;w;n;n;e;e;d;s;s;e;e;d;s;w;n;d;n;ne;e;e;e;se;se;e;e;ne;e}
+#var {botpath} {sz40_enter;s;w;d;s;se;ne;n;u;w;s;w;s;e;e;d;n;n;e;e;d;e;se;n;n;u;s;se;d;n;w;w;s;enter portal;w;nw;n;u;s;se;ne;n;d;n;w;n;d;w;n;d;w;n;n;e;d;w;s;s;w;u;w;w;enter portal;w;n;n;e;e;d;s;s;e;e;d;s;w;n;d;n;ne;e;e;e;se;se;e;e;ne;e}
 
 #act {^=M= {A Clone Soldier|A Cloud Eye|A Groma|A Leago|A Leeva|A Massive Generator|A Ripper|A Spiral Gun|Balba|Brain|Galga|Zamuza}} {
 	#var mobname balangool;
         _check_mob
 }
+
+#alias {sz40_enter} {#map goto 25088;enter $sectionz[40]}
 
 #class {bot} {close}

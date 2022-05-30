@@ -16,7 +16,7 @@
 
 #nop Cooldowns;
   #var priestv[auto][beseech] {1};
-  #var priestv[auto][beseech_at] {1000};
+  #var priestv[auto][beseech_at] {1800};
 
   #var priestv[auto][grind_invin] {1};
   #var priestv[auto][grind_invin_reserve] {2};
@@ -24,11 +24,12 @@
   #var priestv[auto][delta_hp_invin] {1};
   #var priestv[auto][invin] {0};
   #var priestv[auto][invin_at] {1500};
-  #var priestv[auto][invin_delta_hp_trigger] {2500};
+  #var priestv[auto][invin_delta_hp_trigger] {3000};
 
 #nop Other;
   #var priestv[auto][beckon] {0};
   #var priestv[auto][phold] {1};
+  #var priestv[auto][rift] {1};
 
   #var priestv[spellup][1] {protection};
   #var priestv[spellup][2] {vestment};
@@ -186,7 +187,6 @@
 	#if {"%7"==="ON"} {#var priest[buff][bless] {1}} {#var priest[buff][bless] {0}};
 	#if {"%8"==="ON"} {#var priest[buff][beneficence] {1}} {#var priest[buff][beneficence] {0}};
 
-
 	#if {"$enemy[hp]"!=""} {
 #nop INVIN;
 #nop #showme ENEMY: $enemy[hp];
@@ -221,6 +221,11 @@
 
 #nop priest[gp1][stored][current];
 
+#nop MASK;
+		#if {$priest[corpse][combatstart]==1} {
+			#send hplan2 drop corpse/offer corpse/offer corpse;
+			#var priest[corpse][combatstart] {0};
+		};
 
 #nop BESEECH;
 		#if {"$priest[beseech]"!==""} {
@@ -230,10 +235,10 @@
 			};
 		};
 		
-		#if {!$priest[cooldown][beseech][buffered] && $priestv[auto][beseech_at] >= $my[gp1][current]} {
-			#send !unwrap;
-			#send !offer;
-		};
+#nop		#if {!$priest[cooldown][beseech][buffered] && $priestv[auto][beseech_at] >= $my[gp1][current]} {
+#nop			#send !unwrap;
+#nop			#send !offer;
+#nop		};
 
 		priest_debuff_automation;
 
@@ -244,7 +249,6 @@
 			};
 			#send !rift;
 			#send !beckon;
-			#send !dispelrift;
 		};
 
 	};
@@ -395,8 +399,11 @@
 	#var priest[debuff][cast_buffer] {0};
 	#var priest[cooldown][beseech][buffered] {0};
 	#var priest[buff][invin][buffered] {0};
+        #var priest[corpse][combatstart] {1};
+
 
 	#var priest[debuff][phold] {0};
+	#var priest[debuff][rift] {0};
 	#send !create reagents;
 	#if {$priest[beckon][killing_spirit]} {
 		#math {priest[beckon][spirits]} {$priest[beckon][spirits]-1};
@@ -447,6 +454,11 @@
 		#if {$priestv[auto][phold] && !$priest[debuff][phold] && $my[sp][current]>200} {
 		  #send !phold;
 		  #var priest[debuff][cast_buffer] {1};
+		} {
+			#if {$priestv[auto][rift] && !$priest[debuff][rift] && $my[sp][current]>450} {
+				#send !rift;
+				#var priest[debuff][cast_buffer] {1};
+			};
 		};
 	};
 };
@@ -547,6 +559,16 @@
 		#var priest[debuff][phold] {0};
 	};
 	#var priest[beckon][killing_spirit] {1};
+};
+
+act {{^Galan, aid my struggle with a tear to the nether planes!$}} {
+        #var priest[debuff][cast_buffer] {0};
+	#var priest[debuff][rift] {1};
+};
+
+#act {{^There is already a planar rift here.$}} {
+        #var priest[debuff][cast_buffer] {0};
+        #var priest[debuff][rift] {1};
 };
 
 #act {{^As if stepping through a tear in space, .*? crosses into reality$}} {
