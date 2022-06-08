@@ -30,6 +30,8 @@
   #var priestv[auto][beckon] {0};
   #var priestv[auto][phold] {1};
   #var priestv[auto][rift] {1};
+  #var priestv[auto][gemini_mask] {0};
+
 
   #var priestv[spellup][1] {protection};
   #var priestv[spellup][2] {vestment};
@@ -222,7 +224,7 @@
 #nop priest[gp1][stored][current];
 
 #nop MASK;
-		#if {$priest[corpse][combatstart]==1} {
+		#if {$priest[corpse][combatstart]==1 && $priestv[auto][gemini_mask]==1} {
 			#send hplan2 drop corpse/offer corpse/offer corpse;
 			#var priest[corpse][combatstart] {0};
 		};
@@ -386,13 +388,32 @@
   }
 };
 
+
+#alias {mask} {
+	#if {$priestv[auto][gemini_mask]==1} {
+		priestv[auto][gemini_mask] 0;
+		mudauto;
+		#showme ---->Mask off<----;
+	} {
+		priestv[auto][gemini_mask] 1;
+		mudauto;
+		#showme ---->Mask on<----;
+	};
+};
+
 #alias {mudauto} {
 	#send !reflex clear;
 	#send !repeat off;
 	#send !panic off;
-	#send !reflex add gp1 <500 unwrap;
-	#send !reflex add gp1 <500 offer;
-	#send !prkt1;
+	#send !reflex add gp1 <400 unwrap;
+	#send !reflex add gp1 <400 offer;
+
+	#if {$priestv[auto][gemini_mask]==1} {
+		#send !reflex add gp1 <1200 hplan2 unwrap/offer corpse/astore 500/offer corpse;
+		#send prkt3;
+	} {
+		#send !prkt;
+	}
 };
 
 #alias {corpsetrig} {
