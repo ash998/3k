@@ -129,7 +129,7 @@
         };
 };
 
-#nop hpbar hp#dhp#sp#mana#sto#mhl#NL#cl#invin2#coffin#pgxxl#dgxp#NL#bark#vest#prot#elem#power#bless#bene;
+#nop hpbar hp#dhp#sp#mana#sto#mhl#NL#cl3#invin2#coffin#pgxxl#dgxp#NL#bark#vest#prot#elem#power#bless#bene;
 #nop The hp bar is in 3 lines, all automation will be done from the 3rd line;
 
 #act {{^HP: (\d+)/(\d+) <DHP>: (-*)(\d+) SP: (\d+)/(\d+) MANA: (\d+)/(\d+) STO: (\d+)/(\d+) E: \[(((.*)? : (\d+)%)|(none))\] $}} {
@@ -159,7 +159,7 @@
 	priest_check_attackspell;
 };
 
-#act {{^CL: \[(\**)(\d+)\%\] INVIN: (\d+)/(\d+) \((\d+)\%\) C: (\d+)/(\d+) GXP\%: \[(\d+).(\d+)\%\] \<DGX\>: (\d+) $}} {
+#act {{^CL: \[(\d+)\|(\d+)\%\] INVIN: (\d+)/(\d+) \((\d+)\%\) C: (\d+)/(\d+) GXP\%: \[(\d+).(\d+)\%\] \<DGX\>: (\d+) $}} {
 	#var priest[beseech]				{%2};
 	#var priest[cleansing]				{%3};
 	#var priest[invin][current]			{%4};
@@ -201,7 +201,7 @@
 			};
 
 			#if {$priestv[auto][grind_invin] && $priestv[auto][invin_at] >= $my[gp1][current] && $priest[invin][current] > $priestv[auto][grind_invin_reserve]} {
-				#if {"$priest[beseech]"===""} {
+				#if {"$priest[beseech]"==="0"} {
 					#local do_invin {1};
 				};
 			};
@@ -230,7 +230,7 @@
 		};
 
 #nop BESEECH;
-		#if {"$priest[beseech]"!==""} {
+		#if {"$priest[beseech]"!=="0"} {
 			#if {$priestv[auto][beseech] && $priestv[auto][beseech_at] >= $my[gp1][current] && !$priest[cooldown][beseech][buffered]} {
 				#send !beseech;
 				#var priest[cooldown][beseech][buffered] {1};
