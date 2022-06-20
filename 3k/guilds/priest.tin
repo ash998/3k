@@ -391,11 +391,11 @@
 
 #alias {mask} {
 	#if {$priestv[auto][gemini_mask]==1} {
-		priestv[auto][gemini_mask] 0;
+		#var priestv[auto][gemini_mask] 0;
 		mudauto;
 		#showme ---->Mask off<----;
 	} {
-		priestv[auto][gemini_mask] 1;
+		#var priestv[auto][gemini_mask] 1;
 		mudauto;
 		#showme ---->Mask on<----;
 	};
