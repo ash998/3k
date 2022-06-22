@@ -96,7 +96,7 @@
         #return $priest[current_cycletype];
 };
 
-#alias {pcycleset} {
+#alias {gcycleset} {
         #if {"%1"!="default" && "%1"!="gather" && "%1"!="spend"} {
                 #showme Usage: bcycleset [default|gather|spend];
                 #showme        If using "default", it will stay in default untill you set it to something else.;

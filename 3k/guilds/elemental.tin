@@ -35,9 +35,9 @@
         #return $elemental[current_cycletype];
 };
 
-#alias {ecycleset} {
+#alias {gcycleset} {
         #if {"%1"!="default" && "%1"!="gather" && "%1"!="spend"} {
-                #showme Usage: ecycleset [default|gather|spend];
+                #showme Usage: gcycleset [default|gather|spend];
                 #showme        If using "default", it will stay in default untill you set it to something else.;
                 #showme        If using "gather" or "spend", it will toggle between the two based on the values;
                 #showme        in elementalv[cycle][min_corpses] and elementalv[cycle][max_corpses].;
@@ -136,5 +136,12 @@
 #nop	cd;
 #nop	get coins
 }
+
+#alias {mudauto} {
+	#send !reflex clear;
+	#send !panic off;
+	#send !repeat combat/evoke energy drain/0/1;
+	#send !ekt1;
+};
 
 #class {elemental} {close}

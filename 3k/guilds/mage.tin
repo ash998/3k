@@ -189,7 +189,7 @@
 	#return $mage[current_cycletype];
 };
 
-#alias {mcycleset} {
+#alias {gcycleset} {
 	#if {"%1"!="default" && "%1"!="gather" && "%1"!="spend"} {
 		#showme Usage: cycleset [default|gather|spend];
 		#showme        If using "default", it will stay in default untill you set it to something else.;
@@ -557,6 +557,19 @@
     }
   }
 };
+
+#alias {mudauto} {
+	#send !reflex clear;
+	#send !repeat off;
+	#send !reflex add gp1 >88% unwrap;
+	#send !reflex add gp1 >88% cast spell tap on corpse;
+	#send !reflex add gp1 >88% cast corpse blast;
+	#send !reflex add gp1 >95% cast secure shelter;
+	#send !reflex add hp <700 cast secure shelter;
+	#send !panic hmheal/400/1;
+	#send !mkt1;
+};
+
 
 #alias refm {
         #SEND !cast fabricate as dagger#dagger#dagger;
