@@ -162,6 +162,7 @@ tthelp_add botclear Usage: botclear. Will clear everything from the cycler so yo
 	#foreach {*multicycle[$world][$guild][type][]} {cycletype} {
 		#var multicycle[$world][$guild][type][$cycletype][cycle] {0};
 		#var multicycle[$world][$guild][type][$cycletype][botcycle] {};
+		#var bots[position] {0};
 		#unvar multicycle[$world][$guild][type][$cycletype][savedbotstate];
 	};
 	save_botcycle;
@@ -315,8 +316,8 @@ tthelp_add cyclesave Usage: don't use this, it's an internal alias.;
 tthelp_add _cycleload Usage: don't use this, it's an internal alias.;
 #alias {_cycleload} {
 #show CALLED: _cycleload, PARAMETER: %1;
-	#if {""!=="$multicycle[$world][$guild][type][%1][savedbotstate][position]"} {
-#show DEBUG: _cycleload #IF statment is true. Position: $multicycle[$world][$guild][type][%1][savedbotstate][position];
+	#if {""!=="$multicycle[$world][$guild][type][%1][savedbotstate][length]"} {
+#show DEBUG: _cycleload #IF statment is true. Position: $multicycle[$world][$guild][type][%1][savedbotstate][length];
                 - $multicycle[$world][$guild][type][%1][savedbotstate][stepper];
                 #var bots[length] $multicycle[$world][$guild][type][%1][savedbotstate][length];
                 #var bots[path] $multicycle[$world][$guild][type][%1][savedbotstate][path];

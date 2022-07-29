@@ -29,6 +29,7 @@
 #nop Other;
   #var priestv[auto][beckon] {0};
   #var priestv[auto][phold] {1};
+  #var priestv[auto][curse] {1};
   #var priestv[auto][rift] {1};
   #var priestv[auto][gemini_mask] {0};
 
@@ -73,6 +74,7 @@
 #var priest[current_cycletype] {$priestv[cycle][type]};
 #var priest[debuff][cast_buffer] {0};
 #var priest[debuff][phold] {0};
+#var priest[debuff][curse] {0};
 #var priest[beckon][spirits] {0};
 #var priest[beckon][switching_damage_for_spirit] {0};
 #var priest[beckon][killing_spirit] {0};
@@ -156,7 +158,9 @@
 	};
 
 #nop	#showme HP: $my[hp][current] Delta: $priest[hp][delta] E: $priest[enemyname] $enemy[hp];
-	priest_check_attackspell;
+
+#nop Don't need to check attack spells at glvl 100, so commented this out, but can be useful before glvl 100;
+#nop	priest_check_attackspell;
 };
 
 #act {{^CL: \[(\d+)\|(\d+)\%\] INVIN: (\d+)/(\d+) \((\d+)\%\) C: (\d+)/(\d+) GXP\%: \[(\d+).(\d+)\%\] \<DGX\>: (\d+) $}} {
@@ -225,7 +229,7 @@
 
 #nop MASK;
 		#if {$priest[corpse][combatstart]==1 && $priestv[auto][gemini_mask]==1} {
-			#send hplan2 drop corpse/offer corpse/offer corpse;
+			#send hplan2 drop corpse/offer corpse/ast/offer corpse;
 			#var priest[corpse][combatstart] {0};
 		};
 
@@ -409,11 +413,12 @@
 	#send !reflex add gp1 <400 offer;
 
 	#if {$priestv[auto][gemini_mask]==1} {
-		#send !reflex add gp1 <1200 hplan2 unwrap/offer corpse/astore 500/offer corpse;
+		#send !reflex add gp1 <1200 hplan2 unwrap/offer corpse/ast/offer corpse;
 		#send prkt3;
 	} {
 		#send !prkt;
-	}
+	};
+	#send !reflex add gp1 <2500 aretrieve 100;
 };
 
 #alias {corpsetrig} {
@@ -424,6 +429,7 @@
 
 
 	#var priest[debuff][phold] {0};
+	#var priest[debuff][curse] {0};
 	#var priest[debuff][rift] {0};
 	#send !create reagents;
 	#if {$priest[beckon][killing_spirit]} {
@@ -479,6 +485,11 @@
 			#if {$priestv[auto][rift] && !$priest[debuff][rift] && $my[sp][current]>450} {
 				#send !rift;
 				#var priest[debuff][cast_buffer] {1};
+			} {
+				#if {$priestv[auto][curse] && !$priest[debuff][curse] && $my[sp][current]>350} {
+					#send !curse;
+					#var priest[debuff][cast_buffer] {1};
+				};
 			};
 		};
 	};
@@ -515,6 +526,7 @@
 #alias {c7} {#send !hplan word};
 #alias {c8} {#send !hplan flamestrike};
 #alias {c9} {#send !hplan chilltouch};
+#alias {c0} {#send !hplan unmake};
 
 #act {{^HPLAN: You set your hplan command to be: (.*?)\.$}} {
 	#if {!$priest[beckon][switching_damage_for_spirit]} {
@@ -567,6 +579,24 @@
 	#send !createbw drink;
 	#send !drink wine;
 };
+
+
+/* curse */
+#act {{^Uttering a word to .*?, you curse .*?\!$}} {
+	#var priest[debuff][cast_buffer] {0};
+	#var priest[debuff][phold] {1};
+};
+
+#act {{.*? is already cursed\.$}} {
+	#var priest[debuff][cast_buffer] {0};
+	#var priest[debuff][curse] {1};
+};
+
+#act {{^Who would you like to curse?$}} {
+	#var priest[debuff][cast_buffer] {0};
+	#var priest[debuff][curse] {1};
+};
+
 
 /* beckon/rift */
 
@@ -646,6 +676,10 @@
 };
 
 #act {{^.*? rushes to you and touches your forehead gently. You feel}} {
+	#var priest[cooldown][beseech][buffered] {0};
+};
+
+#act {{^You beseech!}} {
 	#var priest[cooldown][beseech][buffered] {0};
 };
 
