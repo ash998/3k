@@ -160,7 +160,7 @@ tthelp_add ba Usage: ba <stepper path> [cycle type];
 		save_botcycle;
 	        botdraw;
 	};
-	#else {#show The %0 cycle does not exists, nothing was added.;};
+	#else {#show The %2 cycle does not exists, nothing was added.;};
 };
 
 tthelp_add br Usage: br <cycle number> [cycle type];
@@ -184,7 +184,7 @@ tthelp_add br Usage: br <cycle number> [cycle type];
 		save_botcycle;
 		botdraw;
 	};
-	#else {#show The %0 cycle does not exists, nothing was removed.;};
+	#else {#show The %2 cycle does not exists, nothing was removed.;};
 };
 
 tthelp_add botclear Usage: botclear. Will clear everything from the cycler so you can start from scratch.;
