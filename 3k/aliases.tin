@@ -145,6 +145,32 @@
 	redraw;
 }
 
+#alias {listbots} {
+	#script {bot_areas} {ls ~/.tt/3k/bots};
+	#local areas_line_counter {0};
+	#local areas_line {};
+	#foreach {*bot_areas[]} {area} {
+		#local areas_skip {0};
+		#if {$areas_line_counter==4} {
+			#showme $areas_line;
+			#local areas_line_counter {0};
+			#local areas_line {};
+			#local areas_skip {0};
+		};
 
+		#regex {$bot_areas[$area]} {{.*(bot\_).*}} {
+			#math areas_skip {1};
+		};
+
+		#if {$areas_skip==0} {
+			#replace {bot_areas[$area]} {.tin} {};
+			#format {areas_cur} {%-20s} {$bot_areas[$area]};
+			#local areas_line {$areas_line $areas_cur};
+			#var areas_line_counter {@math{$areas_line_counter+1}};
+		};
+	};
+
+	#showme $areas_line;
+}
 
 #class {aliases} {close}
