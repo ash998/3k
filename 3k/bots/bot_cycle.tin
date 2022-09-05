@@ -123,38 +123,68 @@ tthelp_add gogo Usage: gogo clean to run everything from scratch, gogo continue 
 	#return $multicycle[$world][$guild][current];
 };
 
+
+#alias {cycleadd} {
+	#var cycle_already_exists {0};
+	#foreach {*multicycle[$world][$guild][type]} {curtype} {
+		#if {"$multicycle[$world][$guild][type][$curtype]"=="%0"} {
+			#var cycle_already_exists {1};
+			#break;
+		};
+	};
+	#if {$cycle_already_exists==0} {
+		#list {multicycle[$world][$guild][type]} {add} {%0};
+		botdraw;
+		save_botcycle;
+	};
+	#else {#show The %0 cycle already exists.;};
+};
+
+#alias {cycledel} {
+	#if {"$multicycle[$world][$guild][type][%0]"!=""} {
+		#unvar multicycle[$world][$guild][type][%0];
+		botdraw;
+		save_botcycle;
+	};
+	#else {#show The %0 cycle does not exists, nothing was deleted.;};
+};
+
 tthelp_add ba Usage: ba <stepper path> [cycle type];
 #alias {ba} {
-	#if {"%2"==""}	{#var cycletype {default}}
-			{#var cycletype {%2}};
-
-	#var botpath {%1};
-
-        #if {!$multicycle[$world][$guild][type][$cycletype][cycle]} {#var multicycle[$world][$guild][type][$cycletype][cycle] 1};
-        #list {multicycle[$world][$guild][type][$cycletype][botcycle]} {add} {%1};
-	save_botcycle;
-        botdraw;
+	#if {"$multicycle[$world][$guild][type][%2]"!=""} {
+		#if {"%2"==""}	{#var cycletype {default}}
+				{#var cycletype {%2}};
+		#var botpath {%1};
+	        #if {!$multicycle[$world][$guild][type][$cycletype][cycle]} {#var multicycle[$world][$guild][type][$cycletype][cycle] 1};
+	        #list {multicycle[$world][$guild][type][$cycletype][botcycle]} {add} {%1};
+		save_botcycle;
+	        botdraw;
+	};
+	#else {#show The %0 cycle does not exists, nothing was added.;};
 };
 
 tthelp_add br Usage: br <cycle number> [cycle type];
 #alias {br} {
-        #if {"%2"==""}	{#var cycletype {default}}
-			{#var cycletype {%2}};
+	#if {"$multicycle[$world][$guild][type][%2]"!=""} {
+	        #if {"%2"==""}	{#var cycletype {default}}
+				{#var cycletype {%2}};
 
-	#var cyclenum {%1};
+		#var cyclenum {%1};
 
-	#list {multicycle[$world][$guild][type][$cycletype][botcycle]} {del} {$cyclenum};
+		#list {multicycle[$world][$guild][type][$cycletype][botcycle]} {del} {$cyclenum};
 
-	#if {$cyclenum == $multicycle[$world][$guild][type][$cycletype][cycle]} {
-		#nop If we're deleting the saved cycle, zero out the saved cycle;
-		#unvar multicycle[$world][$guild][type][$cycletype][savedbotstate];
+		#if {$cyclenum == $multicycle[$world][$guild][type][$cycletype][cycle]} {
+			#nop If we're deleting the saved cycle, zero out the saved cycle;
+			#unvar multicycle[$world][$guild][type][$cycletype][savedbotstate];
+		};
+
+		#if {$cyclenum < $multicycle[$world][$guild][type][$cycletype][cycle]} {
+			#math {multicycle[$world][$guild][type][$cycletype][cycle]} {$multicycle[$world][$guild][type][$cycletype][cycle] - 1};
+		};
+		save_botcycle;
+		botdraw;
 	};
-
-	#if {$cyclenum < $multicycle[$world][$guild][type][$cycletype][cycle]} {
-		#math {multicycle[$world][$guild][type][$cycletype][cycle]} {$multicycle[$world][$guild][type][$cycletype][cycle] - 1};
-	};
-	save_botcycle;
-	botdraw;
+	#else {#show The %0 cycle does not exists, nothing was removed.;};
 };
 
 tthelp_add botclear Usage: botclear. Will clear everything from the cycler so you can start from scratch.;
