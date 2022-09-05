@@ -123,7 +123,7 @@ tthelp_add gogo Usage: gogo clean to run everything from scratch, gogo continue 
 	#return $multicycle[$world][$guild][current];
 };
 
-
+tthelp_add gogo Usage: cycleadd <cycle name>;
 #alias {cycleadd} {
 	#var cycle_already_exists {0};
 	#foreach {*multicycle[$world][$guild][type]} {curtype} {
@@ -140,6 +140,7 @@ tthelp_add gogo Usage: gogo clean to run everything from scratch, gogo continue 
 	#else {#show The %0 cycle already exists.;};
 };
 
+tthelp_add gogo Usage: cycledel <cycle name>;
 #alias {cycledel} {
 	#if {"$multicycle[$world][$guild][type][%0]"!=""} {
 		#unvar multicycle[$world][$guild][type][%0];
